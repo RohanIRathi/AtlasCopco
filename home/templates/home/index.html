@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<head>
+
+<link rel="stylesheet" href="bootstrap-4.5.2-dist/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist/js/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="style.css">
+
+<title>Book Visit</title>
+</head>
+
+
+<body>
+    {% csrf_token %}
+	<form action="book_visit_serv" method="post">
+	<div>	
+		<div class="container">
+			<div class="column">
+				<div class="book-css">
+					<h1 class="text-center">Book a visit</h1>
+
+
+					<div class="input-group">
+          			<div class="input-group-text">
+          				<svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-card-text" fill="black" xmlns="http://www.w3.org/2000/svg">
+  						<path fill-rule="evenodd" d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+  						<path fill-rule="evenodd" d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8zm0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
+						</svg>
+		   			</div>
+		   			<input type="name" class="form-control" placeholder="Full Name" id="name"><br>
+		   		</div><br>
+
+		   			<div>	
+		 			<label><input type="date" class="form-control" placeholder="select Date" id="date"></label><label><input type="text" class="form-control"placeholder="time" id="time" onfocus="(this.type='time')"></label>
+		 			</div><br>
+
+		 		<div class="input-group">
+          			
+		   			<input type="name" class="form-control" placeholder="ID Proof No.(e.g.Aadhar No)" id="adhar"><br>
+		   		</div><br>
+
+
+		   		<div class="input-group">
+          			
+		   			<input type="name" class="form-control" placeholder="Address" id="address"><br>
+		   		</div>
+
+		   		<label style="color:white">Purpose of the Visit</label><br>
+  				
+  					<ul class="ks-cboxtags">
+  					  <li>
+    				  <input type="checkbox" id="checkboxOne" value="personal"><label for="checkboxOne">Personal</label></li>
+
+			   		  <li>
+    				  <input type="checkbox" id="checkboxTwo" value="industrial"><label for="checkboxTwo">Industrial</label></li>
+    				</ul>  
+   
+   				   
+	
+
+
+
+					<label style="color:white">Select Hospital facility you want</label><br>
+		   		
+		   			
+  					<ul class="ks-cboxtags">
+  					  <li>
+    				  <input type="checkbox" id="checkboxthree" value="lunch"><label for="checkboxthree">Lunch</label></li>
+
+   					 <li>
+    				  <input type="checkbox" id="checkboxfour" value="dinner"><label for="checkboxfour">Dinner</label></li>
+
+   				   <li>
+    				  <input type="checkbox" id="checkboxfive" value="breakfast"><label for="checkboxfive">Breakfast</label></li>
+			
+
+				<div class='button-control-sign'>
+   					 <button div class="btn btn-primary btn-lg btn-block">Confirm Visit</div>    
+   				 </div>
+
+
+	   			</div>	
+			</div>
+		</div>
+	</div>	 
+</form>
+</body>
