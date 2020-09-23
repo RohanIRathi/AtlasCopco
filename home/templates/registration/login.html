@@ -1,68 +1,67 @@
+{% load static %}
 <!DOCTYPE html>
 <head>
-
-<link rel="stylesheet" href="bootstrap-4.5.2-dist/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist/css/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist/js/bootstrap.css">
-<link rel="stylesheet" type="text/css" href="style.css">
-<title>Login</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/css/bootstrap.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/js/bootstrap.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
+	<title>Login</title>
 </head>
 <body>
 <form action="{% url 'login' %}" method="post">
-{% csrf_token %}
-<div class="container">
-	<div class="row">
-		<div class="col-md-5">
-		
-			<h1 class="text-center">LOGIN</h1>
-			
-			
-			<label class="label-control-label">Email ID</label>
-			
-			<div class="input-group">
-          		<div class="input-group-text">
-          			<svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-envelope-fill" fill="black">
-  						<path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
-					</svg>
-		   		</div>
-       
-				<input type="email" class="form-control" name="mail" placeholder="E-mail">
-				{% comment %} changed input type to email {% endcomment %}
-			</div>
-     
-
-			<label class="label-control-label">Password</label>
-			<div class="input-group">
-				<div class="input-group-text">
-          			<svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns="http://www.w3.org/2000/svg">
-  						<path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
-  						<path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
-					</svg>
-		   		</div>
-				
-				<input type="password" class="form-control" name="pass1" placeholder="password">
-			</div>
-		<!--- ---->
-
-
-
+	{% csrf_token %}
+	<div class="container">
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-5">
+			
+				<h1 class="text-center">LOGIN</h1>
 				
-				<input type="checkbox"><small>Remember me</small>
-			</div>
-			<div class="col-md-6">
-				<a href="#"><p class="text-right">Forgot Password</p></a>
-			</div>
-		</div>	
+				
+				<label class="label-control-label">Email ID</label>
+				
+				<div class="input-group">
+					<div class="input-group-text">
+						<svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-envelope-fill" fill="black">
+							<path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
+						</svg>
+					</div>
+		
+					<input type="email" class="form-control" name="mail" placeholder="E-mail">
+					{% comment %} changed input type to email {% endcomment %}
+				</div>
+		
 
-		<div class='button-control'>
-			<input type="submit" div class="btn btn-primary btn-lg btn-block">Login</div>		
-		</div>
+				<label class="label-control-label">Password</label>
+				<div class="input-group">
+					<div class="input-group-text">
+						<svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns="http://www.w3.org/2000/svg">
+							<path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
+							<path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
+						</svg>
+					</div>
+					
+					<input type="password" class="form-control" name="pass1" placeholder="password">
+				</div>
+			<!--- ---->
 
+
+
+			<div class="row">
+				<div class="col-md-6">
+					
+					<input type="checkbox"><small>Remember me</small>
+				</div>
+				<div class="col-md-6">
+					<a href="#"><p class="text-right">Forgot Password</p></a>
+				</div>
+			</div>	
+
+			<div class='button-control'>
+				<input type="submit" div class="btn btn-primary btn-lg btn-block">Login</div>		
+			</div>
+
+			</div>
 		</div>
-	</div>
-	</form>
+		</form>
 	
 	</body>
 </html>

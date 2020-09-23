@@ -7,7 +7,7 @@
 
 }
 body{
-	background-image: url(Abhi.jpg);
+	background: white url("images/Abhi.jpg") no-repeat;
 	background-attachment: fixed;
 	background-size: cover;
 	font-family: tahoma;
