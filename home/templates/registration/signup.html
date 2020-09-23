@@ -11,7 +11,8 @@
 
 
 <body>
-<form action="signup_serv" method="post">
+<form action="{% url 'user-signup' %}" method="post" >
+{% csrf_token %}
 <div class="container">
 <div class="row">
 <div class="col-md-5">
@@ -30,6 +31,16 @@
         <input type="email" class="form-control" name="mail" placeholder="E-mail" id="email">
       </div>
 
+      <label class="label-control-label">Username</label>
+      <div class="input-group">
+        <div class="input-group-text">
+                <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-envelope-fill" fill="black">
+              <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
+          </svg>
+          </div>
+
+        <input type="text" class="form-control" name="username" placeholder="Username" id="username">
+      </div>
 
       <label class="label-control-label">Password</label>
       <div class="input-group">
@@ -58,7 +69,7 @@
       </div>
       
     
-      <select class="dropdown">
+      <select class="dropdown" name="role" >
         <option style="margin-bottom: 30px">Role...</option>
         <option>faculty</option>
         <option>HOD</option>
@@ -66,9 +77,13 @@
 
 
       <div class='button-control-sign'>
-    <button div class="btn btn-primary btn-lg btn-block">Sign up</div>    
+          <button  class="btn btn-primary btn-lg btn-block">Sign up</button>
+      </div>
     </div>
 
+    {% for message in messages %}
+    <h2>{{ message }}</h2>
+    {% endfor %}
 
     </div>
   </div>
