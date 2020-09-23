@@ -4,9 +4,13 @@ from django.core.validators import MinLengthValidator, MaxLengthValidator
 class User(models.Model): # the user model includes the admin, employee and security guard
     username = models.CharField(max_length=200, validators=[MinLengthValidator(4,"Minimum 4 characters are required"),]) # username for login, can be same as the email
     email = models.EmailField() # email for registration
-    mobile = models.IntegerField(validators=[MinLengthValidator(10, 'Enter a 10 digit mobile number'), MaxLengthValidator(10)]) # mobile no for registration
+    mobile = models.CharField(max_length=10, validators=[MinLengthValidator(10, 'Enter a 10 digit mobile number'), MaxLengthValidator(10)]) # mobile no for registration
     pic = models.ImageField(upload_to='media') # photo of the user
     admin = models.BooleanField(default=False) # admin status availability
+    password = models.CharField(max_length=128, default='', validators=[MinLengthValidator(6,"Password must contain atleast 6 characters")])
+    
+    def __str__(self):
+        return self.email
     
 class Visitor(models.Model):
     name = models.CharField(max_length=200, validators=[MinLengthValidator(2,'Minimum 2 Characters are required')]) # name of the visitor
