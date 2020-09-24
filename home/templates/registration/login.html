@@ -7,6 +7,16 @@
 	<title>Login</title>
 </head>
 <body>
+<!-- messages -->
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show mx-5" role="alert">
+  <strong>Message : </strong> {{ message }}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endfor %}
+
 <form action="{% url 'login' %}" method="post">
 	{% csrf_token %}
 	<div class="container">
@@ -60,6 +70,7 @@
 			</div>
 
 			</div>
+
 		</div>
 		</form>
 	

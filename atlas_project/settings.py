@@ -30,9 +30,12 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+local_apps =[
     'entry.apps.EntryConfig',
     'home.apps.HomeConfig',
+]
+
+default_apps=[
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+third_party_apps =[]
+
+INSTALLED_APPS = local_apps + default_apps + third_party_apps
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -13,7 +13,6 @@ def signup(request):
         password = request.POST['pass']
         confirm_password = request.POST['password']
         role = request.POST['role']
-        print(username, email, password, confirm_password, role)
         if password != confirm_password:
             messages.info(request, 'Passwords not matching!')
             return redirect(request.path)
@@ -27,6 +26,7 @@ def signup(request):
             user = User(username=username, email=email, password=password)
             user.save()
             print("New User created")
+            messages.success(request,'New User created for '+username)
             return redirect('/')
 
     return render(request, 'registration/signup.html')

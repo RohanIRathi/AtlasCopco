@@ -1,16 +1,25 @@
-
+{% load static %}
 <!DOCTYPE html>
 <head>
 
-<link rel="stylesheet" href="bootstrap-4.5.2-dist/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist/css/bootstrap.css">
-  <link rel="stylesheet" type="text/css" href="bootstrap-4.5.2-dist/js/bootstrap.css">
-  <link rel="stylesheet" type="text/css" href="style.css">
-<title>Sign up</title>
+<link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/css/bootstrap.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/js/bootstrap.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
+	<title>Signup</title>
 </head>
 
 
 <body>
+<!-- messages -->
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show mx-5" role="alert">
+  <strong>Message : </strong> {{ message }}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endfor %}
+
 <form action="{% url 'user-signup' %}" method="post" >
 {% csrf_token %}
 <div class="container">
@@ -81,9 +90,7 @@
       </div>
     </div>
 
-    {% for message in messages %}
-    <h2>{{ message }}</h2>
-    {% endfor %}
+
 
     </div>
   </div>
