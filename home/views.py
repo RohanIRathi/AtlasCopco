@@ -1,47 +1,39 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate
-from .forms import LoginForm,SignupForm
+from django.contrib.auth import authenticate, login, logout
+from .forms import CreateUserForm,CreateEmployeeForm
 from entry.models import *
 
 
 def signup(request):
+    if request.method == "POST":
+        form = CreateUserForm(request.POST)
+        employee_form = CreateEmployeeForm(request.POST)
+        if form.is_valid() and employee_form.is_valid():
+            user = form.save()
+            employee = employee_form.save(commit=False)
+            employee.user = user
+            employee.save()
+            user = form.cleaned_data.get('username')
+            messages.success(request, 'Account was created '  )
+            return redirect('/')
+    form = CreateUserForm()
+    employee_form = CreateEmployeeForm()
+    context = {'form': form, 'employee_form': employee_form}
+    return render(request, 'registration/signup.html',context)
 
-    if request.method == 'POST':
+
+def login_validate(request):
+    if request.method == "POST":
         username = request.POST['username']
-        email = request.POST['mail']
-        password = request.POST['pass']
-        confirm_password = request.POST['password']
-        role = request.POST['role']
-        if password != confirm_password:
-            messages.info(request, 'Passwords not matching!')
-            return redirect(request.path)
-        elif User.objects.filter(username=username).exists():
-            messages.info(request,'Username taken!')
-            return redirect(request.path)
-        elif User.objects.filter(email=email).exists():
-            messages.info(request,'Email already exists!')
-            return redirect(request.path)
-        else:
-            user = User(username=username, email=email, password=password)
-            user.save()
-            print("New User created")
-            messages.success(request,'New User created for '+username)
-            return redirect('/')
-
-    return render(request, 'registration/signup.html')
-
-
-def login(request):
-    form = LoginForm(request.POST)
-    if request.method == 'POST':
-        user = User.objects.get(email=(request.POST.get('mail')).lower())
-        if request.POST.get('pass1') == user.password.rstrip():
-            print('success')
+        password = request.POST['password']
+        user = authenticate(request,username=username, password=password)
+        if user is not None:
+            print('User')
+            login(request, user)
             return redirect('/')
         else:
-            form = LoginForm()
-            print('No success\n\n')
-            return render(request, "registration/login.html", {'form': form})
-    else:
-        return render(request, 'registration/login.html', {'form': form})
+            print('Not a User')
+            messages.info(request, "Username or Password incorrect !")
+
+    return render(request, 'registration/login.html')
