@@ -16,7 +16,7 @@ def signup(request):
             employee.save()
             user = form.cleaned_data.get('username')
             messages.success(request, 'Account was created '  )
-            return redirect('/')
+            return redirect('/login/')
     form = CreateUserForm()
     employee_form = CreateEmployeeForm()
     context = {'form': form, 'employee_form': employee_form}
