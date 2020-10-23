@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <head>
 
-<link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/css/bootstrap.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/css/bootstrap.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/js/bootstrap.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
 	<title>Signup</title>
@@ -46,14 +46,14 @@
 
       <label class="label-control-label">Password</label>
       <div class="input-group">
-           <div class="input-group-text">
-                    <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns=   "http://www.w3.org/2000/svg">
-                     <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
-                     <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
-                     </svg>
-           </div>
-            {{ form.password1 }}
-           <!--<input type="password" class="form-control" name="pass" placeholder="Password" id="pass">-->
+        <div class="input-group-text">
+          <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns=   "http://www.w3.org/2000/svg">
+            <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
+            <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
+          </svg>
+        </div>
+        {{ form.password1 }}
+        <!--<input type="password" class="form-control" name="pass" placeholder="Password" id="pass">-->
         <span id = "password" class="text-danger"></span>
       </div>
 
@@ -61,12 +61,12 @@
       <label class="label-control-label">Confirm Password</label>
       <div class="input-group">
         <div class="input-group-text">
-                    <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns=   "http://www.w3.org/2000/svg">
-                     <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
-                     <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
-                     </svg>
-           </div>
-          {{ form.password2 }}
+          <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns=   "http://www.w3.org/2000/svg">
+            <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
+            <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
+          </svg>
+        </div>
+        {{ form.password2 }}
         <!--<input type="password" class="form-control" name="password" placeholder="Re-Type Password" id="conpass">-->
         <span id = "cpassword" class="text-danger"></span>
       </div>
@@ -74,29 +74,28 @@
       <label class="label-control-label">Admin</label>
       <div class="input-group">
         <div class="input-group-text">
-                    <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns=   "http://www.w3.org/2000/svg">
-                     <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
-                     <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
-                     </svg>
-           </div>
-          {{ employee_form.admin }}
+          <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns=   "http://www.w3.org/2000/svg">
+            <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
+            <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
+          </svg>
+        </div>
+        {{ employee_form.admin }}
         <!--<input type="password" class="form-control" name="password" placeholder="Re-Type Password" id="conpass">-->
         <span id = "admin" class="text-danger"></span>
       </div>
 
-      <div class='center'>
+      <!-- <div class='center'>
           <button  class="btn btn-primary btn-lg btn-block">Sign up</button>
-      </div>
+      </div> -->
     </div>
 
 
 
     </div>
   </div>
-</div>
 
     <div class="text-center">
-       <input type="submit" value="Sign Up" class="btn btn-primary btn-lg px-5">
+      <input type="submit" value="Sign Up" class="btn btn-primary btn-lg px-5">
     </div>
 </form>
 </body>
