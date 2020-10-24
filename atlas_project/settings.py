@@ -30,12 +30,12 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-local_apps =[
+local_apps = [
     'entry.apps.EntryConfig',
     'home.apps.HomeConfig',
 ]
 
-default_apps=[
+default_apps= [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +44,7 @@ default_apps=[
     'django.contrib.staticfiles',
 ]
 
-third_party_apps =[]
+third_party_apps = ['crispy_forms',]
 
 INSTALLED_APPS = local_apps + default_apps + third_party_apps
 
@@ -127,3 +127,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
