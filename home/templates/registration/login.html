@@ -1,4 +1,5 @@
 {% load static %}
+{% comment %} {% load crispy_forms_tags %} {% endcomment %}
 <!DOCTYPE html>
 <head>
 	<link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/css/bootstrap.css' %}">
@@ -25,8 +26,11 @@
 
 				<h1 class="text-center">LOGIN</h1>
 
-
-				<label class="label-control-label">Username</label>
+				{% comment %} {{ form|crispy }} {% endcomment %}
+				<div id="div_id_username" class="form-group"> <label for="id_username" class=" requiredField" style="color: white;">
+                Username<span class="asteriskField">*</span> </label> <div class=""> <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" class="textinput textInput form-control" required id="id_username" placeholder="Username"> </div> </div> <div id="div_id_password" class="form-group"> <label for="id_password" class=" requiredField" style="color: white;">
+                Password<span class="asteriskField">*</span> </label> <div class=""> <input type="password" name="password" autocomplete="current-password" class="textinput textInput form-control" required id="id_password" placeholder="Password"> </div> </div>
+				{% comment %} <label class="label-control-label">Username</label>
 
 				<div class="input-group">
 					<div class="input-group-text">
@@ -36,7 +40,7 @@
 					</div>
 
 					<input type="text" class="form-control" name="username" placeholder="Username">
-					{% comment %} changed input type to email {% endcomment %}
+					
 				</div>
 
 
@@ -63,10 +67,10 @@
 				<div class="col-md-6">
 					<a href="#"><p class="text-right">Forgot Password</p></a>
 				</div>
-			</div>
+			</div> {% endcomment %}
 
 			<div class='button-control'>
-				<input type="submit" div class="btn btn-primary btn-lg btn-block">Login</div>
+				<input type="submit" div class="btn btn-primary btn-lg btn-block" value="Log in">
 			</div>
 
 			</div>
