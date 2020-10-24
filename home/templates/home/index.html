@@ -1,90 +1,50 @@
 {% load static %}
 
 <!DOCTYPE html>
+
 <head>
 
-<link rel="stylesheet" href="{% static 'home/bootstrap-4.5.2-dist/css/bootstrap.min.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/css/bootstrap.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/js/bootstrap.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
-<title>Sign up</title>
+    <link rel="stylesheet" href="{% static 'home/bootstrap-4.5.3-dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.3-dist/css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.3-dist/js/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
+    <title>AtlasCopco</title>
 </head>
 
 
 <body>
+    <div class="container mt-5">
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Atlas Copco</h1>
+                                    </div>
+                                    <form action="{% url 'home' %}" class="user" name="form1" method="POST">
+                                        <div class="form-group">
+                                            <input type="email" name="email" class="form-control form-control-user" placeholder="Email">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" name="password" class="form-control form-control-user" placeholder="Password">
+                                        </div>
+                                        <input type="submit" name="login_btn" class="btn btn-primary btn-user btn-block" value="Login">
+                                        <hr>
+                                    </form>
 
-<!-- messages -->
-{% for message in messages %}
-<div class="alert alert-{{ message.tags }} alert-dismissible fade show mx-5" role="alert">
-  <strong>Message : </strong> {{ message }}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-{% endfor %}
-
-<form action="{% url 'home' %}" method="post">
-<div class="container">
-<div class="row">
-<div class="col-md-5">
-      
-    <h2 class="text-center">Sign up</h2>
-
-
-      <label class="label-control-label">E-mail</label>
-      <div class="input-group">
-        <div class="input-group-text">
-                <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-envelope-fill" fill="black">
-              <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
-          </svg>
-          </div>
-
-        <input type="email" class="form-control" name="mail" placeholder="E-mail" id="email">
-      </div>
-
-
-      <label class="label-control-label">Password</label>
-      <div class="input-group">
-           <div class="input-group-text">
-                    <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns=   "http://www.w3.org/2000/svg">
-                     <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
-                     <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
-                     </svg>
-           </div>
-
-           <input type="password" class="form-control" name="pass" placeholder="Password" id="pass">
-        <span id = "password" class="text-danger"></span>
-      </div>
-
-
-      <label class="label-control-label">Confirm Password</label>
-      <div class="input-group">
-        <div class="input-group-text">
-                    <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns=   "http://www.w3.org/2000/svg">
-                     <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
-                     <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
-                     </svg>
-           </div>
-        <input type="password" class="form-control" name="password" placeholder="Re-Type Password" id="conpass">
-        <span id = "cpassword" class="text-danger"></span>
-      </div>
-      
-    
-      <select class="dropdown">
-        <option style="margin-bottom: 30px">Role...</option>
-        <option>faculty</option>
-        <option>HOD</option>
-      </select>    
-
-
-      <div class='button-control-sign'>
-    <button div class="btn btn-primary btn-lg btn-block">Sign up</div>    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-
-    </div>
-  </div>
-</div>
-</form>
 </body>
+
 </html>
