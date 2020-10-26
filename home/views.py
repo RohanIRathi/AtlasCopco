@@ -1,8 +1,12 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
+
 from .forms import CreateUserForm,CreateEmployeeForm
 from entry.models import *
+from django.db.models import F
 
 
 def signup(request):
@@ -37,3 +41,10 @@ def login_validate(request):
             messages.info(request, "Username or Password incorrect !")
 
     return render(request, 'registration/login.html')
+
+class VisitorListView(LoginRequiredMixin, ListView):
+    def get(self, request):
+        visitor_list = Visitor.objects.filter(in_time = F('out_time'))
+        context = {'visitor_list': visitor_list}
+        
+        return render(request, 'home/home.html', context)
