@@ -1,5 +1,4 @@
 {% extends 'home/base.html' %}
-
 {% block content %}
 
     <div id="layoutSidenav_content">
@@ -89,7 +88,8 @@
                                                 </form>
                                             </td>
                                             <td>
-                                                <form action="#" method="post">
+                                                <form action="{% url 'entry:generateQR' visitor.id %}" method="post">
+                                                    {% csrf_token %}
                                                     <input type="hidden" name="scan_id" value="">
                                                     <button type="submit" name="scan_btn" class="btn btn-danger"> SCAN </button>
                                                 </form>
