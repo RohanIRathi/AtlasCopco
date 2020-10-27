@@ -10,3 +10,6 @@ The `login.html` and `signup.html` files for login and signup respectively are p
 The `home.html` file for home template is present in *home/templates/home* folder
 <br /><br />
 All the static files (images, css, js) are present in *home/templates/registration*
+
+
+pyzbar installation is required

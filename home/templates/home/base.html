@@ -20,7 +20,7 @@
 
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
         <a class="navbar-brand" href="dashboard.html">Atlas Copco</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" ><i class="fas fa-bars"></i></button>
+        <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
         <span class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0 navbar-brand"> Welcome, {{ user.first_name }} </span>
         <!-- Navbar-->
@@ -38,13 +38,11 @@
             </li>
         </ul>
     </nav>
-    {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-    {% endif %}
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %} {% endif %}
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #173F5F;">
@@ -59,7 +57,7 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Admin Registration
                         </a>
-                        <a class="nav-link" href="add_security.php">
+                        <a class="nav-link" href="add_security.html">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Security Registration
                         </a>
@@ -71,8 +69,8 @@
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="#">ADD new visitor</a>
-                                <a class="nav-link" href="#">Filled Form</a>
+                                <a class="nav-link" href="visitor_booking.html">ADD new visitor</a>
+                                <a class="nav-link" href="filled_form.html">Filled Form</a>
                             </nav>
                         </div>
                         <div class="sb-sidenav-menu-heading">Addons</div>
@@ -87,32 +85,32 @@
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="large">Logged in as:  {{ request.user }}</div>
+                    <div class="large">Logged in as: {{ request.user }}</div>
                 </div>
             </nav>
         </div>
         <!--<div id="layoutSidenav_content">-->
-        {% block content %}
-        {% endblock content %}
+        {% block content %} {% endblock content %}
     </div>
-    <div class="footer">
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Atlas Copco 2020</div>
-                    <div>
-                        <a href="#">Privacy Policy</a> &middot;
-                        <a href="#">Terms &amp; Conditions</a>
+    <div id="layoutSidenav_content">
+        <div class="footer">
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Atlas Copco 2020</div>
+                        <div>
+                            <a href="#">Privacy Policy</a> &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </footer>
+            </footer>
+        </div>
     </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<script src="js/scripts.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="js/scripts.js"></script>
 </body>
 
 </html>
