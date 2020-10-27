@@ -1,8 +1,200 @@
-<!DOCTYPE html>
-<head>
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
 
-</head>
+{% block content %}
+	<div id="layoutSidenav_content">
+		<main>
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="col-xl-10 col-lg-10 col-md-10">
+						<div class="card o-hidden border-0 shadow-lg my-5">
+							<div class="card-body p-0">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="p-5">
+											<div class="text-center">
+												<h1 class="h4 text-gray-900 mb-4">Add Visitor</h1>
+											</div>
+											<form class="user" method="post" enctype="multipart/form-data">
+												{% csrf_token %}
+												{% comment %} {{ form|crispy }} {% endcomment %}
 
-<body>
-    
-</body>
+												<div class="row">
+													<div class="col">
+														<div id="div_id_name" class="form-group pb-2">
+															<label for="id_name" class=" requiredField">Name<span class="asteriskField">*</span> </label> 
+															<div class=""> <input type="text" name="name" maxlength="200" class="textinput textInput form-control form-control-user" required id="id_name"> </div>
+														</div>
+													</div>
+													<div class="col">
+														<div id="div_id_purpose" class="form-group pb-2">
+															<label for="id_purpose" class=" requiredField">Purpose<span class="asteriskField">*</span> </label>
+															<div class=""> <input type="text" name="purpose" maxlength="200" class="textinput textInput form-control form-control-user" required id="id_purpose"> </div>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col">
+														<div id="div_id_mobile" class="form-group">
+															<label for="id_mobile" class=" requiredField">Mobile<span class="asteriskField">*</span> </label>
+															<div class=""> <input type="number" name="mobile" class="numberinput form-control form-control-user" pattern="[0-9]{10}" title="Should contain 10 number only" required id="id_mobile"> </div>
+														</div>
+													</div>
+													<div class="col">
+														<div id="div_id_email" class="form-group">
+															<label for="id_email" class=" requiredField">Email<span class="asteriskField">*</span> </label>
+															<div class=""> <input type="email" name="email" maxlength="254" class="emailinput form-control form-control-user" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please Enter a Valid Email Id" required id="id_email"> </div>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col">
+														<div id="div_id_no_of_people" class="form-group">
+															<label for="id_no_of_people" class=" requiredField">No of people<span class="asteriskField">*</span> </label>
+															<div class=""> <input type="number" name="no_of_people" class="numberinput form-control form-control-user" required id="id_no_of_people"> </div>
+														</div>
+													</div>
+													<div class="col">
+														<div id="div_id_photo_id_number" class="form-group">
+															<label for="id_photo_id_number" class=" requiredField">Photo id number</label>
+															<div class=""> <input type="text" name="photo_id_number" maxlength="20" class="textinput textInput form-control form-control-user" id="id_photo_id_number"> </div>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col">
+														<div id="div_id_photo_id" class="form-group"> 
+															<label for="id_photo_id" class=" requiredField">Photo id</label>
+															<div class=""> <input type="file" name="photo_id" accept="image/*" class="clearablefileinput form-control-file is-invalid form-control-user" id="id_photo_id"> <p id="error_1_id_photo_id" class="invalid-feedback">
+																</p>
+															</div>
+														</div>
+													</div>
+													<div class="col">
+														<div id="div_id_user" class="form-group">
+															<label for="id_user" class=" requiredField">User<span class="asteriskField">*</span> </label>
+															<div class=""> 
+																<select name="user" class="select form-control" required id="id_user">
+																	<option value="">---------</option>
+																	{% for employee in employees %}
+																		<option value="{{ employee.user.id }}" selected>{{ employee.user.username }}</option>
+																	{% endfor %}
+																	{% comment %} <option value="2">user123</option> {% endcomment %}
+																</select>
+															</div>
+														</div>
+													</div>
+												</div>
+
+												{% comment %} <div class="row">
+													<div class="col">
+														<div class="form-group pb-2">
+															<label>First Name</label>
+															<input type="text" class="form-control form-control-user" placeholder="Enter First Name" name="first_name" required>
+														</div>
+													</div>
+													<div class="col">
+														<div class="form-group pb-2">
+															<label>Last Name</label>
+															<input type="text" class="form-control form-control-user" placeholder="Enter Last Name" name="last_name" required>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col">
+														<div class="form-group pb-2">
+															<label>Email</label>
+															<input type="email" name="email" class="form-control form-control-user" placeholder="Enter Email">
+														</div>
+													</div>
+													<div class="col">
+														<div class="form-group pb-2">
+															<label>No.of Visitors</label>
+															<input type="number" name="no_of_visitor" class="form-control form-control-user" placeholder="Enter No.of Visitors">
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col">
+														<div class="form-group pb-2">
+															<label>Date</label>
+															<input type="date" class="form-control form-control-user" placeholder="Enter Date" name="date" required>
+														</div>
+													</div>
+													<div class="col">
+														<div class="form-group pb-2">
+															<label>Time</label>
+															<input type="time" class="form-control form-control-user" placeholder="Enter Time" name="time" required>
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col">
+														<div class="form-group pb-2">
+															<label>ID Proof No.</label>
+															<input type="text" name="Govt_ID" class="form-control form-control-user" placeholder="Enter ID No.">
+														</div>
+													</div>
+													<div class="col">
+														<div class="form-group pb-2">
+															<label>Phone No.</label>
+															<input type="text" name="Phone_no" class="form-control form-control-user" placeholder="Enter Phone No.">
+														</div>
+													</div>
+
+												</div>
+												<div class="row">
+													<div class="col">
+														<div class="form-group pb-2">
+															<label>ID Proof Photo</label>
+															<input type="file" id="img" name="img" accept="image/*" class="form-control " placeholder="Photo" style="border: none;">
+														</div>
+													</div>
+													<div class="col">
+														<div class="form-group pb-2">
+
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col">
+														<div class="form-group pb-2">
+															<label>Purpose Of Visit</label><br>
+															<label class="radio-inline  mr-3">
+															<input type="radio" class="form-control form-control-user" name="optradio">Personal
+														</label>
+															<label class="radio-inline  mr-3">
+															<input type="radio"class="form-control form-control-user" name="optradio">Industrial
+														</label>
+														</div>
+													</div>
+													<div class="col">
+														<div class="form-group pb-2">
+															<label>Hospitality</label><br>
+															<label class="radio-inline mr-3">
+															<input type="radio" class="form-control form-control-user" name="optradio1">Breakfast
+														</label>
+															<label class="radio-inline mr-3">
+															<input type="radio" class="form-control form-control-user" name="optradio1">Lunch
+														</label>
+															<label class="radio-inline  mr-3">
+															<input type="radio"class="form-control form-control-user" name="optradio1">Dinner
+														</label>
+														</div>
+													</div>
+												</div> {% endcomment %}
+												<hr>
+												<input type="submit" name="add_btn" value="Add" class="btn btn-primary btn-user btn-block" style="border-radius: 10rem;">
+												<hr>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+{% endblock content %}

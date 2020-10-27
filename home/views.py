@@ -1,14 +1,24 @@
-from django.contrib import messages
 from django.shortcuts import redirect, render
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import F
+from django.urls import reverse
 from django.views.generic import ListView
 
 from .forms import CreateUserForm, CreateEmployeeForm
 from entry.models import *
-from django.db.models import F
 
+def is_admin(user):
+    try:
+        admin = Employee.objects.get(user=user.id).admin
+        return admin
+    except:
+        return False
 
+@login_required
+@user_passes_test(is_admin)
 def signup(request):
     if request.method == "POST":
         form = CreateUserForm(request.POST)
@@ -35,18 +45,14 @@ def login_validate(request):
         if user is not None:
             print('User')
             login(request, user)
-            return redirect('/home')
+            return redirect(request.GET.get('next', 'home'))
         else:
             print('Not a User')
             messages.info(request, "Email or Password incorrect !")
 
     return render(request, 'registration/login.html')
 
-
-def test(request):
-    return render(request, 'home/test.html')
-
-
+@login_required
 def logout_user(request):
     logout(request)
     return redirect('/')
@@ -54,7 +60,7 @@ def logout_user(request):
 
 class VisitorListView(LoginRequiredMixin, ListView):
     def get(self, request):
-        visitor_list = Visitor.objects.all()
+        visitor_list = Visitor.objects.filter(out_time__isnull=True)
         print(visitor_list)
         context = {'visitor_list': visitor_list}
 

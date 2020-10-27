@@ -1,8 +1,8 @@
+{% extends 'home/base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 {{ form.errors }}
 {{ employee_form.errors }}
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <head>
 
   <link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/css/bootstrap.css' %}">
@@ -12,7 +12,8 @@
 </head>
 
 
-<body>
+<body> -->
+{% block content %}
 <form action="{% url 'user-signup' %}" method="post" >
     {% csrf_token %}
 
@@ -29,16 +30,16 @@
           <small id="hint_id_username" class="form-text text-muted">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
         </div>
       </div>
-      <div id="div_id_first_name" class="form-group"> <label for="id_first_name" class="">First name</label>
-        <div class=""> <input type="text" name="first_name" maxlength="150" class="textinput textInput form-control" id="id_first_name">
+      <div id="div_id_first_name" class="form-group"> <label for="id_first_name" class=" requiredField">First name<span class="asteriskField">*</span> </label>
+        <div class=""> <input type="text" name="first_name" maxlength="150" class="textinput textInput form-control" required id="id_first_name">
         </div>
       </div>
       <div id="div_id_last_name" class="form-group"> <label for="id_last_name" class="">Last name</label>
         <div class=""> <input type="text" name="last_name" maxlength="150" class="textinput textInput form-control" id="id_last_name">
         </div>
       </div>
-      <div id="div_id_email" class="form-group"> <label for="id_email" class="">Email address</label>
-        <div class=""> <input type="email" name="email" maxlength="254" class="emailinput form-control" id="id_email">
+      <div id="div_id_email" class="form-group"> <label for="id_email" class="">Email address<span class="asteriskField">*</span> </label>
+        <div class=""> <input type="email" name="email" maxlength="254" class="emailinput form-control" required id="id_email">
         </div>
       </div>
       <div id="div_id_password1" class="form-group"> <label for="id_password1" class=" requiredField">Password<span class="asteriskField">*</span> </label>
@@ -148,5 +149,6 @@
       <input type="submit" value="Sign Up" class="btn btn-primary btn-lg px-5">
     </div>
 </form>
-</body>
-</html>
+{% endblock content %}
+<!-- </body>
+</html> -->
