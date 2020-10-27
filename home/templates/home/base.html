@@ -18,13 +18,11 @@
 
 <body>
 
-    {% block navbar %}
-
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
         <a class="navbar-brand" href="dashboard.html">Atlas Copco</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+        <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" ><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
-        <span class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0 navbar-brand"></span>
+        <span class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0 navbar-brand"> Welcome, {{ user.first_name }} </span>
         <!-- Navbar-->
         <ul class="navbar-nav ml-auto ">
             <li class="nav-item dropdown">
@@ -34,12 +32,19 @@
                     <a class="dropdown-item" href="#">Activity Log</a>
                     <div class="dropdown-divider"></div>
                     <form>
-                        <button class="dropdown-item" type="submit" name="logout-btn">Logout</button>
+                        <a class="dropdown-item" type="button" name="logout-btn" href="{% url 'logout' %}">Logout</a>
                     </form>
                 </div>
             </li>
         </ul>
     </nav>
+    {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+    {% endif %}
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #173F5F;">
@@ -82,18 +87,15 @@
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="large">Logged in as:</div>
+                    <div class="large">Logged in as:  {{ request.user }}</div>
                 </div>
             </nav>
         </div>
         <!--<div id="layoutSidenav_content">-->
-
-        {% endblock navbar %} {% if messages %} {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            {{ message }}
-        </div>
-        {% endfor %} {% endif %}
-
+        {% block content %}
+        {% endblock content %}
+    </div>
+    <div class="footer">
         <footer class="py-4 bg-light mt-auto">
             <div class="container-fluid">
                 <div class="d-flex align-items-center justify-content-between small">
@@ -105,8 +107,12 @@
                 </div>
             </div>
         </footer>
-
-
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="js/scripts.js"></script>
 </body>
 
 </html>
