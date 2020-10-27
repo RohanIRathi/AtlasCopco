@@ -3,8 +3,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
+from django.core.mail import EmailMessage
+from django.conf import settings
 
+import os
 from datetime import datetime
+from PIL import Image
 from .forms import *
 import cv2
 import numpy as np
@@ -24,8 +28,9 @@ def new_visitor(request):
                 visitor = form.save(commit=False)
                 visitor.in_time = datetime.now()
                 visitor.save()
-                visitor.qrcode = generateQR(visitor.id)
-                # send_qrcode_email(visitor.email) # email to send the qr code to the visitor
+                qrcodeimg = generateQR(visitor.id)
+                visitor.qrcode = qrcodeimg
+                send_qrcode_email(visitor.email, qrcodeimg) # email to send the qr code to the visitor
                 visitor.save()
                 messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
                 return redirect('/')
@@ -76,6 +81,7 @@ def scanQR(request, **kwargs):
                 visitor.out_time = datetime.now()
                 visitor.save()
                 messages.success(request, f'QR Code scanned successfully!')
+                cv2.destroyAllWindows()
                 return redirect(f'{reverse("home")}')
 
         key = cv2.waitKey(1)
@@ -83,3 +89,15 @@ def scanQR(request, **kwargs):
             break
         
         template_name = 'home/home.html'
+        
+def send_qrcode_email(to_email, qrcodeimg):
+    subject = 'QR Code for entry in Atlas Copco'
+    message = '''Hello!\nYou have been granted the permission to visit Atlas Copco as a visitor!\n 
+            PFA an attached QR Code which you will have to show when you leave our premises!'''
+    email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
+    email.content_subtype='html'
+    
+    with open(os.path.join(settings.BASE_DIR, '') + qrcodeimg, mode='rb') as file:
+        email.attach(os.path.join(settings.BASE_DIR, '') + qrcodeimg, file.read(), 'image/png')
+    
+    email.send(fail_silently=False)
