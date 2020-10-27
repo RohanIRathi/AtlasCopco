@@ -28,16 +28,16 @@ def generateQR(request, id):
         box_size=5,
         border=4
     )
-    user = str(request.user)
+    visitor =Visitor.objects.get(id=id)
+    img_name = visitor.name + "_" + visitor.in_time
     qr.add_data(id)  # visitors id
-    qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
-    img.save("./media/qrcodes/" + user + ".png")
+    img.save("./media/qrcodes/" + img_name + ".png")
     visitor = Visitor.objects.get(id=id)  # visitors id
-    visitor.qrcode = "/media/qrcodes/" + user + ".png"
+    visitor.qrcode = "/media/qrcodes/" + img_name + ".png"
     visitor.save()
-    scan = scanQR(request, id)
-    if scan:
+
+    if scanQR(request, id):
         messages.success(request,"Scanning Successful!")
         return redirect('/home/')
 
