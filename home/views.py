@@ -65,3 +65,10 @@ class VisitorListView(LoginRequiredMixin, ListView):
         context = {'visitor_list': visitor_list}
 
         return render(request, 'home/home.html', context)
+
+class NotVisitedListView(LoginRequiredMixin, ListView):
+    def get(self, request):
+        visitor_list = Visitor.objects.filter(in_time__isnull=True)
+        context = {'visitor_list': visitor_list}
+        
+        return render(request, 'home/not_visited.html', context)
