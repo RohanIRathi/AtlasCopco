@@ -1,3 +1,4 @@
+from home.views import AllVisitorsListView
 from django.urls import path
 from . import views
 from django.views.generic import TemplateView
@@ -8,7 +9,8 @@ urlpatterns = [
     path('login/', views.login_validate, name='login'),
     path('signup/', views.signup, name='user-signup'),
     path('', views.VisitorListView.as_view(), name='home'),
-    # path('test/', views.test, name='test'),
+    path('notvisited/', views.NotVisitedListView.as_view(), name='not-visited'),
+    path('allvisitors/', views.AllVisitorsListView.as_view(), name='all-visitors'),
     path('logout/', views.logout_user, name='logout'),
 
     # password reset urls

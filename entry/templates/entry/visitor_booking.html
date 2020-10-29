@@ -9,6 +9,9 @@
 					<div class="col-xl-10 col-lg-10 col-md-10">
 						<div class="card o-hidden border-0 shadow-lg my-5">
 							<div class="card-body p-0">
+								{% if form.errors %}
+									{{ form.errors }}
+								{% endif %}
 								<div class="row">
 									<div class="col-lg-12">
 										<div class="p-5">
@@ -75,11 +78,10 @@
 															<label for="id_user" class=" requiredField">User<span class="asteriskField">*</span> </label>
 															<div class=""> 
 																<select name="user" class="select form-control" required id="id_user">
-																	<option value="">---------</option>
+																	<option value="" selected>---------</option>
 																	{% for employee in employees %}
-																		<option value="{{ employee.user.id }}" selected>{{ employee.user.username }}</option>
+																		<option value="{{ employee.user.id }}">{{ employee.user.username }}</option>
 																	{% endfor %}
-																	{% comment %} <option value="2">user123</option> {% endcomment %}
 																</select>
 															</div>
 														</div>
