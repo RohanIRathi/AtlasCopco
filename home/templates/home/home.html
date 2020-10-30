@@ -1,19 +1,21 @@
-{% extends 'home/base.html' %} {% block content %}
+{% extends 'home/base.html' %}{% block content %}
 
 <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid">
             <h1 class="mt-4">Dashboard</h1>
             <div class="row mt-5 ">
+                {% if request.user.admin %}
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-primary text-white">
-                        <div class="card-body">Total Admin Card</div>
+                        <div class="card-body">Total User Card</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="#">View Details</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-primary  text-white">
                         <div class="card-body">Total Registraions</div>
@@ -47,7 +49,7 @@
     <main>
         <div class="container-fluid">
             <!-- DataTales Example -->
-            <div class="card shadow mb-4">
+            <div class="card shadow mb-4 mt-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">New Visitor
                         <a href="{% url 'entry:new-visitor' %}" class="ml-3 btn btn-primary text-left">Add</a>
@@ -64,7 +66,7 @@
                                     <th> No.of Visitors </th>
                                     <th> Time </th>
                                     <th> EDIT </th>
-                                    <th> SCAN </th>
+                                    <th> QR Generation </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,7 +87,7 @@
                                     <td>
                                         <form action="{% url 'entry:scanQR' visitor.id %}" method="post">
                                             <input type="hidden" name="scan_id" value="">
-                                            <button type="submit" name="scan_btn" class="btn btn-danger"> SCAN </button>
+                                            <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
                                         </form>
                                     </td>
                                 </tr>
@@ -100,7 +102,19 @@
         </div>
         <!-- /.container-fluid -->
     </main>
-
+    <div class="footer">
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Atlas Copco 2020</div>
+                    <div>
+                        <a href="#">Privacy Policy</a> &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 </div>
 
 {% endblock content %}
