@@ -5,5 +5,5 @@ from django.forms import ModelForm
 
 class NewVisitorForm(ModelForm):
     class Meta:
-        model = Employee
-        exclude = ['user']
+        model = Visitor
+        exclude = ['in_time', 'out_time', 'token', 'qrcode']
