@@ -1,46 +1,65 @@
-{% extends 'home/base.html' %}
+{% extends 'home/base.html' %} {% block content %}
 
-{% block content %}
+<div id="layoutSidenav_content">
+    <main style="margin-top: 30px;">
+        <div class="container-fluid">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h5 class="m-0 font-weight-bold text-primary">DETAILS
+                    </h5>
+                </div>
+                <div class="card-body mt-3">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 
-<div>
-    <label>Name :    </label>
-    {{ visitor.name }}
+                            <tbody>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>{{ visitor.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td>{{ visitor.email }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Phone No</td>
+                                    <td>{{ visitor.mobile }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Purpose</td>
+                                    <td>{{ visitor.purpose }}</td>
+                                </tr>
+                                <tr>
+                                    <td>No. of Visitors</td>
+                                    <td>{{ visitor.no_of_people }}</td>
+                                </tr>
+                                <tr>
+                                    <td>In Time</td>
+                                    <td>{{ visitor.in_time }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Out Time</td>
+                                    <td>{{ visitor.in_time }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Employee to Visit</td>
+                                    <td>{{ visitor.visitor.user.username }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Photo Id No. </td>
+                                    <td>{{ visitor.visitor.photo_id_number }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Photo Id</td>
+                                    <td>{{ visitor.photo_id }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
-<div>
-    <label>Email Id :    </label>
-    {{ visitor.email }}
-</div>
-<div>
-    <label>Mobile No. :    </label>
-    {{ visitor.mobile }}
-</div>
-<div>
-    <label>Purpose of Visit :    </label>
-    {{ visitor.purpose }}
-</div>
-<div>
-    <label>No of people :    </label>
-    {{ visitor.no_of_people }}
-</div>
-<div>
-    <label>Photo Id No. :    </label>
-    {{ visitor.photo_id_number }}
-</div>
-<div>
-    <label>Photo Id :    </label>
-    {{ visitor.photo_id }}
-</div>
-<div>
-    <label>In Time :    </label>
-    {{ visitor.in_time }}
-</div>
-<div>
-    <label>Out Time :    </label>
-    {{ visitor.out_time }}
-</div>
-<div>
-    <label>Employee to Visit :    </label>
-    {{ visitor.user.username }}
-</div>
-
 {% endblock content %}
