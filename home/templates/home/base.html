@@ -51,24 +51,17 @@
                         <div class="sb-sidenav-menu-heading">Core</div>
                         <a class="nav-link" href="{% url 'home' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                            <!-- </a>
-                        <a class="nav-link" href="add_admin.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Admin Registration
-                        </a> -->
-                        {% if request.user.admin %}
+                            Dashboard <br> {% if request.user.admin %}
                             <a class="nav-link" href="{% url 'user-signup' %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 User Registration
                             </a>
-                        {% endif %}
-                            <div class="sb-sidenav-menu-heading">Interface</div>
+                            {% endif %}
                             <a class="nav-link" href="{% url 'entry:new-visitor' %}">
                                 <div class="sb-nav-link-icon"><i class="fas fas fa-user fa-fw"></i></div>
                                 ADD new visitor
                             </a>
-                        {% if request.user.admin %}
+                            {% if request.user.admin %}
                             <div class="sb-sidenav-menu-heading">Addons</div>
                             <a class="nav-link" href="charts.html">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
@@ -78,7 +71,7 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tables
                             </a>
-                        {% endif %}
+                            {% endif %}
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
