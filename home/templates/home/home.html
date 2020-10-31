@@ -5,6 +5,7 @@
         <div class="container-fluid">
             <h1 class="mt-4">Dashboard</h1>
             <div class="row mt-5 ">
+                {% if request.user.admin %}
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-primary text-white">
                         <div class="card-body">Total User Card</div>
@@ -14,6 +15,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-primary  text-white">
                         <div class="card-body">Total Registraions</div>
@@ -85,7 +87,7 @@
                                     <td>
                                         <form action="{% url 'entry:scanQR' visitor.id %}" method="post">
                                             <input type="hidden" name="scan_id" value="">
-                                            <button type="submit" name="scan_btn" class="btn btn-danger"> Generate </button>
+                                            <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
                                         </form>
                                     </td>
                                 </tr>

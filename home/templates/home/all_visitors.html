@@ -22,7 +22,7 @@
                             <tbody>
                                 {% for visitor in visitor_list %}
                                 <tr>
-                                    <td>{{ visitor.first_name }} {{ visitor. last_name }}</td>
+                                    <td>{{ visitor.name }}</td>
                                     <td>{{ visitor.email }}</td>
                                     <td>{{ visitor.mobile }}</td>
                                     <td>{{ visitor.in_time.date }}</td>
@@ -30,10 +30,8 @@
                                     <td>{{ visitor.out_time.time }}</td>
                                     <td>{{ visitor.purpose}}</td>
                                     <td>
-                                        <form action="" method="post">
                                             <input type="hidden" name="delete_id" value="">
-                                            <button type="submit" name="delete_btn" class="btn btn-info"> DETAILS </button>
-                                        </form>
+                                            <button type="submit" name="delete_btn" class="btn btn-info" onclick="window.location.href='{% url 'visitor-detail' visitor.id %}'"> DETAILS </button>
                                     </td>
                                 </tr>
                                 {% endfor %}

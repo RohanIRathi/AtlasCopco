@@ -1,0 +1,46 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+
+<div>
+    <label>Name :    </label>
+    {{ visitor.name }}
+</div>
+<div>
+    <label>Email Id :    </label>
+    {{ visitor.email }}
+</div>
+<div>
+    <label>Mobile No. :    </label>
+    {{ visitor.mobile }}
+</div>
+<div>
+    <label>Purpose of Visit :    </label>
+    {{ visitor.purpose }}
+</div>
+<div>
+    <label>No of people :    </label>
+    {{ visitor.no_of_people }}
+</div>
+<div>
+    <label>Photo Id No. :    </label>
+    {{ visitor.photo_id_number }}
+</div>
+<div>
+    <label>Photo Id :    </label>
+    {{ visitor.photo_id }}
+</div>
+<div>
+    <label>In Time :    </label>
+    {{ visitor.in_time }}
+</div>
+<div>
+    <label>Out Time :    </label>
+    {{ visitor.out_time }}
+</div>
+<div>
+    <label>Employee to Visit :    </label>
+    {{ visitor.user.username }}
+</div>
+
+{% endblock content %}

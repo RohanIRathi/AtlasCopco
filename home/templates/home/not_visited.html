@@ -11,7 +11,6 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th> ID </th>
                                     <th> Username </th>
                                     <th> Email </th>
                                     <th> No.of Visitors </th>
@@ -25,7 +24,6 @@
                             <tbody>
                                 {% for visitor in visitor_list %}
                                     <tr>
-                                        <td>{{ visitor.id }}</td>
                                         <td>{{ visitor.name }}</td>
                                         <td>{{ visitor.email }}</td>
                                         <td>{{ visitor.no_of_people }}</td>

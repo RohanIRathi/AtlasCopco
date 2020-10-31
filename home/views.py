@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F
 from django.urls import reverse
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from .forms import CreateUserForm, CreateEmployeeForm
 from entry.models import *
@@ -75,7 +75,18 @@ class NotVisitedListView(LoginRequiredMixin, ListView):
     
 class AllVisitorsListView(LoginRequiredMixin, ListView):
     def get(self, request):
-        visitor_list = Visitor.objects.order_by('-in_time')
+        visitor_list = Visitor.objects.filter(out_time__isnull = False).order_by('-in_time')
         context = {'visitor_list': visitor_list}
         
         return render(request, 'home/all_visitors.html', context)
+    
+class VisitorDetailView(LoginRequiredMixin, DetailView):
+    model = Visitor
+    template_name = 'home/visitor_view.html'
+    
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['visitor'] = Visitor.objects.get(id = kwargs.get('pk'))
+    #     print("ab", context['visitor'])
+        
+    #     return context
