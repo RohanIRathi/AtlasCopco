@@ -1,154 +1,100 @@
-{% extends 'home/base.html' %}
-{% load static %}
-{{ form.errors }}
-{{ employee_form.errors }}
-<!-- <!DOCTYPE html>
-<head>
+{% extends 'home/base.html' %} {% load static %} {{ form.errors }} {{ employee_form.errors }} {% block content %}
+<div id="layoutSidenav_content">
 
-  <link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/css/bootstrap.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.2-dist/js/bootstrap.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
-	<title>Signup</title>
-</head>
+    <main style="margin-top: 30px;">
+        <div class="modal fade" id="addadminprofile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add User Data</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="POST">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label> First Name </label>
+                                <input type="text" name="first_name" class="form-control" placeholder="Enter Firstname">
+                            </div>
+                            <div class="form-group">
+                                <label> Last Name </label>
+                                <input type="text" name="last_name" class="form-control" placeholder="Enter Lastname">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="Enter Email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" name="password1" class="form-control" placeholder="Enter Password" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input type="password" name="password2" class="form-control" placeholder="Confirm Password" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-check-label">Admin</label>
+                                <input type="checkbox" name="admin" class="checkboxinput form-check-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_mobile" class=" requiredField">Mobile</label>
+                                <input type="text" name="mobile" maxlength="10" class="textinput textInput form-control">
 
-
-<body> -->
-{% block content %}
-<form action="{% url 'user-signup' %}" method="post" >
-    {% csrf_token %}
-
-    <div class="container">
-    <div class="row">
-    <div class="col-md-5">
-
-    <h2 class="text-center">Sign up</h2>
-      {% comment %} {{ form|crispy }}
-      {{ employee_form|crispy }} {% endcomment %}
-
-      <div id="div_id_username" class="form-group"> <label for="id_username" class=" requiredField">Username<span class="asteriskField">*</span> </label>
-        <div class=""> <input type="text" name="username" maxlength="150" autofocus class="textinput textInput form-control" required id="id_username">
-          <small id="hint_id_username" class="form-text text-muted">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
-        </div>
-      </div>
-      <div id="div_id_first_name" class="form-group"> <label for="id_first_name" class=" requiredField">First name<span class="asteriskField">*</span> </label>
-        <div class=""> <input type="text" name="first_name" maxlength="150" class="textinput textInput form-control" required id="id_first_name">
-        </div>
-      </div>
-      <div id="div_id_last_name" class="form-group"> <label for="id_last_name" class="">Last name</label>
-        <div class=""> <input type="text" name="last_name" maxlength="150" class="textinput textInput form-control" id="id_last_name">
-        </div>
-      </div>
-      <div id="div_id_email" class="form-group"> <label for="id_email" class="">Email address<span class="asteriskField">*</span> </label>
-        <div class=""> <input type="email" name="email" maxlength="254" class="emailinput form-control" required id="id_email">
-        </div>
-      </div>
-      <div id="div_id_password1" class="form-group"> <label for="id_password1" class=" requiredField">Password<span class="asteriskField">*</span> </label>
-        <div class=""> <input type="password" name="password1" autocomplete="new-password" class="textinput textInput form-control" required id="id_password1">
-          <small id="hint_id_password1" class="form-text text-muted">
-            <ul>
-              <li>Your password can’t be too similar to your other personal information.</li>
-              <li>Your password must contain at least 8 characters.</li>
-              <li>Your password can’t be a commonly used password.</li>
-              <li>Your password can’t be entirely numeric.</li>
-            </ul>
-          </small>
-        </div>
-      </div>
-      <div id="div_id_password2" class="form-group"> <label for="id_password2" class=" requiredField">Password confirmation<span class="asteriskField">*</span> </label>
-        <div class=""> <input type="password" name="password2" autocomplete="new-password" class="textinput textInput form-control" required id="id_password2">
-          <small id="hint_id_password2" class="form-text text-muted">Enter the same password as before, for verification.</small>
-        </div>
-      </div>
-
-      
-
-      <div class="form-group">
-        <div id="div_id_admin" class="form-check"> <input type="checkbox" name="admin" class="checkboxinput form-check-input" id="id_admin">
-          <label for="id_admin" class="form-check-label">Admin</label>
-        </div>
-      </div>
-      <div id="div_id_mobile" class="form-group"> <label for="id_mobile" class=" requiredField">Mobile<span class="asteriskField">*</span> </label>
-        <div class=""> <input type="text" name="mobile" maxlength="10" class="textinput textInput form-control" required id="id_mobile">
-        </div>
-      </div>
-
-
-      {% comment %} <label class="label-control-label">E-mail</label>
-      <div class="input-group">
-        <div class="input-group-text">
-                <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-envelope-fill" fill="black">
-              <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
-          </svg>
-          </div>
-          {{ form.email }}
-        <!--<input type="email" class="form-control" name="mail" placeholder="E-mail" id="email">-->
-      </div>
-
-      <label class="label-control-label">Username</label>
-      <div class="input-group">
-        <div class="input-group-text">
-                <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-envelope-fill" fill="black">
-              <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z"/>
-          </svg>
-          </div>
-            {{ form.username }}
-        <!--<input type="text" class="form-control" name="username" placeholder="Username" id="username">-->
-      </div>
-
-      <label class="label-control-label">Password</label>
-      <div class="input-group">
-        <div class="input-group-text">
-          <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns=   "http://www.w3.org/2000/svg">
-            <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
-            <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
-          </svg>
-        </div>
-        {{ form.password1 }}
-        <!--<input type="password" class="form-control" name="pass" placeholder="Password" id="pass">-->
-        <span id = "password" class="text-danger"></span>
-      </div>
-
-
-      <label class="label-control-label">Confirm Password</label>
-      <div class="input-group">
-        <div class="input-group-text">
-          <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns=   "http://www.w3.org/2000/svg">
-            <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
-            <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
-          </svg>
-        </div>
-        {{ form.password2 }}
-        <!--<input type="password" class="form-control" name="password" placeholder="Re-Type Password" id="conpass">-->
-        <span id = "cpassword" class="text-danger"></span>
-      </div>
-
-      <label class="label-control-label">Admin</label>
-      <div class="input-group">
-        <div class="input-group-text">
-          <svg width="1.8em" height="1.8em" viewBox="0 0 16 16" class="bi bi-lock-fill" fill="black" xmlns=   "http://www.w3.org/2000/svg">
-            <path d="M2.5 9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V9z"/>
-            <path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
-          </svg>
-        </div>
-        {{ employee_form.admin }}
-        <!--<input type="password" class="form-control" name="password" placeholder="Re-Type Password" id="conpass">-->
-        <span id = "admin" class="text-danger"></span>
-      </div>
-
-      <!-- <div class='center'>
-          <button  class="btn btn-primary btn-lg btn-block">Sign up</button>
-      </div> -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" name="registerbtn" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Admin Profile
+                            <button type="button" class="ml-3 btn btn-primary text-left" data-toggle="modal" data-target="#addadminprofile">Add</button>
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th> ID </th>
+                                        <th> Username </th>
+                                        <th> Email </th>
+                                        <th> Role </th>
+                                        <th> EDIT </th>
+                                        <th> DELETE </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <form action="register_edit.php" method="post">
+                                                <input type="hidden" name="edit_id" value="<?php echo $row['id'];?>">
+                                                <button type="submit" name="edit_btn" class="btn btn-success"> EDIT</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="code.php" method="post">
+                                                <input type="hidden" name="delete_id" value="<?php echo $row['id'];?>">
+                                                <button type="submit" name="delete_btn" class="btn btn-danger"> DELETE</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </main>
     </div>
-
-
-
-    </div>
-  </div> {% endcomment %}
-
-    <div class="text-center">
-      <input type="submit" value="Sign Up" class="btn btn-primary btn-lg px-5">
-    </div>
-</form>
-{% endblock content %}
-<!-- </body>
-</html> -->
+    {% endblock content %}

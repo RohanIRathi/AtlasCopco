@@ -8,10 +8,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="{% static 'home/bootstrap-4.5.3-dist/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.3-dist/css/bootstrap.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.3-dist/js/bootstrap.js' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'home/bootstrap-4.5.3-dist/js/scripts.js' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
     <title>AtlasCopco</title>
 </head>
@@ -50,68 +49,63 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Core</div>
-                        <a class="nav-link" href="home.html">
+                        <a class="nav-link" href="{% url 'home' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        <!-- </a>
-                        <a class="nav-link" href="add_admin.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Admin Registration
-                        </a> -->
-                        <a class="nav-link" href="{% url 'user-signup' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            User Registration
-                        </a>
-                        <div class="sb-sidenav-menu-heading">Interface</div>
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Registration
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{% url 'entry:new-visitor' %}">ADD new visitor</a>
-                                <a class="nav-link" href="filled_form.html">Filled Form</a>
-                            </nav>
-                        </div>
-                        <div class="sb-sidenav-menu-heading">Addons</div>
-                        <a class="nav-link" href="charts.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Charts
-                        </a>
-                        <a class="nav-link" href="tables.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Tables
-                        </a>
+                            Dashboard <br> {% if request.user.admin %}
+                            <a class="nav-link" href="{% url 'user-signup' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                User Registration
+                            </a>
+                            {% endif %}
+                            <a class="nav-link" href="{% url 'entry:new-visitor' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fas fa-user fa-fw"></i></div>
+                                ADD new visitor
+                            </a>
+                            {% if request.user.admin %}
+                            <div class="sb-sidenav-menu-heading">Addons</div>
+                            <a class="nav-link" href="charts.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                Charts
+                            </a>
+                            <a class="nav-link" href="tables.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Tables
+                            </a>
+                            {% endif %}
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="large">Logged in as: {{ request.user }}</div>
+                    <div class="large">Logged in as: {{ request.user.first_name }}</div>
                 </div>
             </nav>
         </div>
         <!--<div id="layoutSidenav_content">-->
         {% block content %} {% endblock content %}
+
     </div>
-    <div id="layoutSidenav_content">
-        <div class="footer">
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Atlas Copco 2020</div>
-                        <div>
-                            <a href="#">Privacy Policy</a> &middot;
-                            <a href="#">Terms &amp; Conditions</a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-        </div>
-    </div>
+
+    <script>
+        (function($) {
+            "use strict";
+
+            // Add active state to sidbar nav links
+            var path = window.location.href; // because the 'href' property of the DOM element is the absolute path
+            $("#layoutSidenav_nav .sb-sidenav a.nav-link").each(function() {
+                if (this.href === path) {
+                    $(this).addClass("active");
+                }
+            });
+
+            // Toggle the side navigation
+            $("#sidebarToggle").on("click", function(e) {
+                e.preventDefault();
+                $("body").toggleClass("sb-sidenav-toggled");
+            });
+        })(jQuery);
+    </script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="js/scripts.js"></script>
 </body>
 
 </html>
