@@ -20,7 +20,7 @@
                                                 <div class="col">
                                                     <div class="form-group pb-2">
                                                         <label>Name</label>
-                                                        <input type="text" class="form-control form-control-user" placeholder="Enter First Name" name="name" required>
+                                                        <input type="text" class="form-control form-control-user" placeholder="Enter First Name" name="name" value="{{ form.name.value }}" required>
                                                     </div>
                                                 </div>
                                                 {% comment %} <div class="col">
@@ -34,13 +34,13 @@
                                                 <div class="col">
                                                     <div class="form-group pb-2">
                                                         <label>Email</label>
-                                                        <input type="email" name="email" class="form-control form-control-user" placeholder="Enter Email" required>
+                                                        <input type="email" name="email" class="form-control form-control-user" placeholder="Enter Email" value="{{ form.email.value }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="col">
                                                     <div class="form-group pb-2">
                                                         <label>No.of Visitors</label>
-                                                        <input type="number" name="no_of_people" class="form-control form-control-user" placeholder="Enter No.of Visitors" required>
+                                                        <input type="number" name="no_of_people" class="form-control form-control-user" placeholder="Enter No.of Visitors" value="{{ form.no_of_people.value }}" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -49,13 +49,13 @@
                                                 <div class="col">
                                                     <div class="form-group pb-2">
                                                         <label>ID Proof No.</label>
-                                                        <input type="text" name="photo_id_number" class="form-control form-control-user" placeholder="Enter ID No.">
+                                                        <input type="text" name="photo_id_number" class="form-control form-control-user" placeholder="Enter ID No." value="{{ form.photo_id_number.value }}">
                                                     </div>
                                                 </div>
                                                 <div class="col">
                                                     <div class="form-group pb-2">
                                                         <label>Phone No.</label>
-                                                        <input type="text" name="mobile" class="form-control form-control-user" placeholder="Enter Phone No." required>
+                                                        <input type="text" name="mobile" class="form-control form-control-user" placeholder="Enter Phone No." value="{{ form.mobile.value }}" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -63,26 +63,13 @@
                                                 <div class="col">
                                                     <div class="form-group pb-2">
                                                         <label>Purpose Of Visit</label><br>
-                                                        <label class="radio-inline  mr-3">
-                                                        <input type="radio" class="form-control form-control-user" name="optradio">Personal
-                                                    </label>
-                                                        <label class="radio-inline  mr-3">
-                                                        <input type="radio"class="form-control form-control-user" name="optradio">Industrial
-                                                    </label>
+                                                        <input type="text" name="purpose" class="form-control form-control-user" value="{{ form.purpose.value }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="col">
                                                     <div class="form-group pb-2">
-                                                        <label>Hospitality</label><br>
-                                                        <label class="radio-inline mr-3">
-                                                        <input type="radio" class="form-control form-control-user" name="optradio1">Breakfast
-                                                    </label>
-                                                        <label class="radio-inline mr-3">
-                                                        <input type="radio" class="form-control form-control-user" name="optradio1">Lunch
-                                                    </label>
-                                                        <label class="radio-inline  mr-3">
-                                                        <input type="radio"class="form-control form-control-user" name="optradio1">Dinner
-                                                    </label>
+                                                        <label>Photo Id Number</label><br>
+                                                        <input type="text" name="photo_id_number" class="form-control form-control-user">
                                                     </div>
                                                 </div>
                                             </div>
@@ -100,10 +87,10 @@
                                                     <div id="div_id_user" class="form-group">
                                                         <label for="id_user" class=" requiredField">Employee to Visit</label>
                                                         <div class="">
-                                                            <select name="user" class="select form-control form-control-user" required id="id_user">
+                                                            <select name="user" class="select form-control" required id="id_user">
 																	<option value="" selected>---------</option>
 																	{% for employee in employees %}
-																		<option value="{{ employee.user.id }}">{{ employee.user.username }}</option>
+																		<option value="{{ employee.user.id }}" {% if form.user.value == employee.user.id %} selected {% endif %}>{{ employee.user.username }}</option>
 																	{% endfor %}
 																</select>
                                                         </div>
