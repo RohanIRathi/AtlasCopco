@@ -1,4 +1,3 @@
-from os.path import normpath
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -89,6 +88,6 @@ class VisitorDetailView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['photopath'] = normpath(os.path.join(settings.BASE_DIR, str(context['visitor'].photo_id)))
+        context['photopath'] = os.path.relpath(str(context['visitor'].photo_id))
         
         return context

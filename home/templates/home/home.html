@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <h1 class="mt-4">Dashboard</h1>
             <div class="row mt-5 ">
-                {% if request.user.admin %}
+                {% if request.user.employee.admin %}
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-primary text-white">
                         <div class="card-body">Total User Card</div>

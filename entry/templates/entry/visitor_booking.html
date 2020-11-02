@@ -13,14 +13,15 @@
                                         <div class="text-center">
                                             <h1 class="h4 text-gray-900 mb-4">Add Visitor</h1>
                                         </div>
+                                        <small class="form-text text-danger">Fields marked * are required.</small><br>
                                         <form class="user" method="post" enctype="multipart/form-data">
                                             {% csrf_token %} {% comment %} {{ form|crispy }} {% endcomment %}
 
                                             <div class="row">
                                                 <div class="col">
                                                     <div class="form-group pb-2">
-                                                        <label>Name</label>
-                                                        <input type="text" class="form-control form-control-user" placeholder="Enter First Name" name="name" value="{{ form.name.value }}" required>
+                                                        <label>Name<span class="asteriskField text-danger">*</span></label>
+                                                        <input type="text" class="form-control form-control-user" placeholder="Enter Name of the Visitor" name="name" {% if form.name.value %}value="{{ form.name.value }}"{% endif %} required>
                                                     </div>
                                                 </div>
                                                 {% comment %} <div class="col">
@@ -33,37 +34,37 @@
                                             <div class="row">
                                                 <div class="col">
                                                     <div class="form-group pb-2">
-                                                        <label>Email</label>
-                                                        <input type="email" name="email" class="form-control form-control-user" placeholder="Enter Email" value="{{ form.email.value }}" required>
+                                                        <label>Email<span class="asteriskField text-danger">*</span></label>
+                                                        <input type="email" name="email" class="form-control form-control-user" placeholder="Enter Email" {% if form.email.value %}value="{{ form.email.value }}"{% endif %} required>
                                                     </div>
                                                 </div>
                                                 <div class="col">
                                                     <div class="form-group pb-2">
-                                                        <label>No.of Visitors</label>
-                                                        <input type="number" name="no_of_people" class="form-control form-control-user" placeholder="Enter No.of Visitors" value="{{ form.no_of_people.value }}" required>
+                                                        <label>No.of Visitors<span class="asteriskField text-danger">*</span></label>
+                                                        <input type="number" name="no_of_people" class="form-control form-control-user" placeholder="Enter No.of Visitors" {% if form.no_of_people.value %}value="{{ form.no_of_people.value }}"{% endif %} required>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="row">
-                                                <div class="col">
+                                                {% comment %} <div class="col">
                                                     <div class="form-group pb-2">
                                                         <label>ID Proof No.</label>
-                                                        <input type="text" name="photo_id_number" class="form-control form-control-user" placeholder="Enter ID No." value="{{ form.photo_id_number.value }}">
+                                                        <input type="text" name="photo_id_number" class="form-control form-control-user" placeholder="Enter ID No." {% if form.photo_id_number.value %}value="{{ form.photo_id_number.value }}"{% endif %}>
                                                     </div>
-                                                </div>
+                                                </div> {% endcomment %}
                                                 <div class="col">
                                                     <div class="form-group pb-2">
-                                                        <label>Phone No.</label>
-                                                        <input type="text" name="mobile" class="form-control form-control-user" placeholder="Enter Phone No." value="{{ form.mobile.value }}" required>
+                                                        <label>Purpose Of Visit<span class="asteriskField text-danger">*</span></label><br>
+                                                        <input type="text" name="purpose" placeholder="Enter Purpose of Visit" class="form-control form-control-user" {% if form.purpose.value %}value="{{ form.purpose.value }}"{% endif %} required>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col">
                                                     <div class="form-group pb-2">
-                                                        <label>Purpose Of Visit</label><br>
-                                                        <input type="text" name="purpose" class="form-control form-control-user" value="{{ form.purpose.value }}" required>
+                                                        <label>Phone No.<span class="asteriskField text-danger">*</span></label>
+                                                        <input type="text" name="mobile" class="form-control form-control-user" placeholder="Enter Phone No." {% if form.mobile.value %}value="{{ form.mobile.value }}"{% endif %} required>
                                                     </div>
                                                 </div>
                                                 <div class="col">
@@ -85,7 +86,7 @@
                                                 </div>
                                                 <div class="col">
                                                     <div id="div_id_user" class="form-group">
-                                                        <label for="id_user" class=" requiredField">Employee to Visit</label>
+                                                        <label for="id_user" class=" requiredField">Employee to Visit<span class="asteriskField text-danger">*</span></label>
                                                         <div class="">
                                                             <select name="user" class="select form-control" required id="id_user">
 																	<option value="" selected>---------</option>
@@ -98,7 +99,7 @@
                                                 </div>
                                             </div>
                                             <hr>
-                                            <input type="submit" name="add_btn" value="Add" class="btn btn-primary btn-user btn-block" style="border-radius: 10rem;">
+                                            <input type="submit" name="add_btn" {% if form.email.value %}value="Update"{% else %}value="Add"{% endif %} class="btn btn-primary btn-user btn-block" style="border-radius: 10rem;">
                                             <hr>
                                         </form>
                                     </div>
