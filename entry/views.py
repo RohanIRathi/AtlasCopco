@@ -86,9 +86,11 @@ def scanQR(request, **kwargs):
                 messages.success(request, f'QR Code scanned successfully!')
                 cv2.destroyAllWindows()
                 return redirect(f'{reverse("home")}')
-
+        
+        cv2.imshow("Frame", frame)
         key = cv2.waitKey(1)
         if key == 27:
+            cv2.destroyAllWindows()
             break
         
         template_name = 'home/home.html'
