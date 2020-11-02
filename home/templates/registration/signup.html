@@ -14,33 +14,32 @@
                     <form method="POST">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label> First Name </label>
-                                <input type="text" name="first_name" class="form-control" placeholder="Enter Firstname">
+                                <label> First Name<span class="asteriskField text-danger">*</span> </label>
+                                <input type="text" name="first_name" class="form-control form-control-user" placeholder="Enter Firstname" required>
                             </div>
                             <div class="form-group">
-                                <label> Last Name </label>
-                                <input type="text" name="last_name" class="form-control" placeholder="Enter Lastname">
+                                <label> Last Name<span class="asteriskField text-danger">*</span> </label>
+                                <input type="text" name="last_name" class="form-control form-control-user" placeholder="Enter Lastname" required>
                             </div>
                             <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" name="email" class="form-control" placeholder="Enter Email" required>
+                                <label for="id_mobile" class=" requiredField">Mobile<span class="asteriskField text-danger">*</span></label>
+                                <input type="text" name="mobile" maxlength="10" class="textinput textInput form-control form-control-user">
                             </div>
                             <div class="form-group">
-                                <label>Password</label>
-                                <input type="password" name="password1" class="form-control" placeholder="Enter Password" required>
+                                <label>Email<span class="asteriskField text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control form-control-user" placeholder="Enter Email" required>
                             </div>
                             <div class="form-group">
-                                <label>Confirm Password</label>
-                                <input type="password" name="password2" class="form-control" placeholder="Confirm Password" required>
+                                <label>Password<span class="asteriskField text-danger">*</span></label>
+                                <input type="password" name="password1" class="form-control form-control-user" placeholder="Enter Password" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password<span class="asteriskField text-danger">*</span></label>
+                                <input type="password" name="password2" class="form-control form-control-user" placeholder="Confirm Password" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-check-label">Admin</label>
-                                <input type="checkbox" name="admin" class="checkboxinput form-check-input">
-                            </div>
-                            <div class="form-group">
-                                <label for="id_mobile" class=" requiredField">Mobile</label>
-                                <input type="text" name="mobile" maxlength="10" class="textinput textInput form-control">
-
+                                <input type="checkbox" name="admin" class="checkboxinput form-check-input form-check-user">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
