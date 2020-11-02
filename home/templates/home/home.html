@@ -67,7 +67,7 @@
                                     <th>Phone No.</th>
                                     <th> Time </th>
                                     <th> EDIT </th>
-                                    <th> QR Generation </th>
+                                    <th> QR Code </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,10 +85,14 @@
                                         <button type="submit" onclick="window.location.href='{% url 'entry:visitor-update' visitor.id %}'" name="edit_btn" class="btn btn-success"> EDIT</button>
                                     </td>
                                     <td>
+                                        {% if visitor.in_time %}
                                         <form action="{% url 'entry:scanQR' visitor.id %}" method="post">
                                             <input type="hidden" name="scan_id" value="">
                                             <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
                                         </form>
+                                        {% else %}
+                                        N/A
+                                        {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %} {% endif %}
