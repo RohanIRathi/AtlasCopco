@@ -43,6 +43,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </main>
@@ -60,20 +61,18 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th> ID </th>
                                     <th> Name </th>
                                     <th> Email </th>
                                     <th> No.of Visitors </th>
                                     <th>Phone No.</th>
                                     <th> Time </th>
-                                    <th> EDIT </th>
+                                    <th> Photo </th>
                                     <th> QR Code </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% if visitor_list %} {% for visitor in visitor_list %}
                                 <tr>
-                                    <td>{{ visitor.id }}</td>
                                     <td>{{ visitor.name }}</td>
                                     <td>{{ visitor.email }}</td>
                                     <td>{{ visitor.no_of_people }}</td>
@@ -82,7 +81,7 @@
 
                                     <td>
                                         <input type="hidden" name="edit_id" value="">
-                                        <button type="submit" onclick="window.location.href='{% url 'entry:visitor-update' visitor.id %}'" name="edit_btn" class="btn btn-success"> EDIT</button>
+                                        <a type="submit" href="{% url 'photoscan'%}" name="photo_btn" class="btn btn-success"> Scan </a>
                                     </td>
                                     <td>
                                         {% if visitor.in_time %}
@@ -90,9 +89,7 @@
                                             <input type="hidden" name="scan_id" value="">
                                             <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
                                         </form>
-                                        {% else %}
-                                        N/A
-                                        {% endif %}
+                                        {% else %} N/A {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %} {% endif %}

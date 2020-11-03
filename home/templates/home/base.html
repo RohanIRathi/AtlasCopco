@@ -18,8 +18,7 @@
 <body>
 
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
-        <a class="navbar-brand" href="dashboard.html">Atlas Copco</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <a class="navbar-brand" href="{% url 'home' %}">Atlas Copco</a> {% if request.user.employee.admin %}<button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button> {% endif %}
         <!-- Navbar Search-->
         <span class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0 navbar-brand"> Welcome, {{ request.user.first_name }} </span>
         <!-- Navbar-->
@@ -27,8 +26,6 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="#">Settings</a>
-                    <a class="dropdown-item" href="#">Activity Log</a>
                     <a class="dropdown-item" href="{% url 'reset_password' %}">Reset Password</a>
                     <div class="dropdown-divider"></div>
                     <form>
@@ -43,7 +40,9 @@
         {{ message }}
     </div>
     {% endfor %} {% endif %}
+
     <div id="layoutSidenav">
+        {% if request.user.employee.admin %}
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #173F5F;">
                 <div class="sb-sidenav-menu">
@@ -79,6 +78,7 @@
                 </div>
             </nav>
         </div>
+        {% endif %}
         <!--<div id="layoutSidenav_content">-->
         {% block content %} {% endblock content %}
 

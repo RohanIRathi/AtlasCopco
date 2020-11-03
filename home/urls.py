@@ -13,7 +13,7 @@ urlpatterns = [
     path('allvisitors/', views.AllVisitorsListView.as_view(), name='all-visitors'),
     path('edit/visitor/<int:pk>/', views.VisitorDetailView.as_view(), name='visitor-detail'),
     path('logout/', views.logout_user, name='logout'),
-
+    path('photoscan/',views.photoscan,name='photoscan'),
     # password reset urls
     path('reset_password/',
          auth_views.PasswordResetView.as_view(template_name='password/password_reset.html'),

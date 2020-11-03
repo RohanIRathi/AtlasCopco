@@ -72,22 +72,26 @@ class NotVisitedListView(LoginRequiredMixin, ListView):
     def get(self, request):
         visitor_list = Visitor.objects.filter(in_time__isnull=True)
         context = {'visitor_list': visitor_list}
-        
+
         return render(request, 'home/not_visited.html', context)
-    
+
 class AllVisitorsListView(LoginRequiredMixin, ListView):
     def get(self, request):
         visitor_list = Visitor.objects.filter(out_time__isnull = False).order_by('-in_time')
         context = {'visitor_list': visitor_list}
-        
+
         return render(request, 'home/all_visitors.html', context)
-    
+
 class VisitorDetailView(LoginRequiredMixin, DetailView):
     model = Visitor
     template_name = 'home/visitor_view.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['photopath'] = os.path.relpath(str(context['visitor'].photo_id))
-        
+
         return context
+
+@login_required
+def photoscan(request):
+    return  render(request, 'home/photoscan.html')
