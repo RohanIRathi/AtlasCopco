@@ -44,7 +44,7 @@
                                 </tr>
                                 <tr>
                                     <td>Employee to Visit</td>
-                                    <td>{{ visitor.user.username }}</td>
+                                    <td>{{ visitor.user.user.first_name }} {{ visitor.user.user.last_name }}</td>
                                 </tr>
                                 <tr>
                                     <td>Photo Id No. </td>
@@ -52,11 +52,10 @@
                                 </tr>
                                 <tr>
                                     <td>Photo Id</td>
-                                    <td>{{ visitor.photo_id }}</td>
+                                    <td><img src="{{ visitor.photo_id.url }}" alt="Photo Id" class="display-image"></td>
                                 </tr>
                             </tbody>
                         </table>
-                        <img src="{{ photopath }}" >
                     </div>
                 </div>
             </div>
