@@ -6,6 +6,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F
 from django.urls import reverse
 from django.views.generic import ListView, DetailView
+from django.conf import settings
+import os
 
 from .forms import CreateUserForm, CreateEmployeeForm
 from entry.models import *
@@ -84,9 +86,8 @@ class VisitorDetailView(LoginRequiredMixin, DetailView):
     model = Visitor
     template_name = 'home/visitor_view.html'
     
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['visitor'] = Visitor.objects.get(id = kwargs.get('pk'))
-    #     print("ab", context['visitor'])
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['photopath'] = os.path.relpath(str(context['visitor'].photo_id))
         
-    #     return context
+        return context

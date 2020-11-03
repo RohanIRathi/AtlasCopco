@@ -1,7 +1,10 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.urls.base import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import UpdateView
 from django.urls import reverse
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -83,9 +86,11 @@ def scanQR(request, **kwargs):
                 messages.success(request, f'QR Code scanned successfully!')
                 cv2.destroyAllWindows()
                 return redirect(f'{reverse("home")}')
-
+        
+        cv2.imshow("Frame", frame)
         key = cv2.waitKey(1)
         if key == 27:
+            cv2.destroyAllWindows()
             break
         
         template_name = 'home/home.html'
@@ -101,3 +106,15 @@ def send_qrcode_email(to_email, qrcodeimg):
         email.attach(os.path.join(settings.BASE_DIR, '') + qrcodeimg, file.read(), 'image/png')
     
     email.send(fail_silently=False)
+    
+class VisitorUpdateView(LoginRequiredMixin, UpdateView):
+    model = Visitor
+    fields = ['name', 'purpose', 'no_of_people', 'email', 'mobile', 'photo_id_number', 'photo_id', 'user']
+    success_url = reverse_lazy('home')
+    template_name = 'entry/visitor_booking.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['employees'] = Employee.objects.all()
+        
+        return context
