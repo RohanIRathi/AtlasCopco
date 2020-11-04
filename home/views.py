@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.urls.base import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.conf import settings
+from django.db.models.query import QuerySet
 import os
 
 from .forms import *
@@ -76,7 +77,7 @@ class NotVisitedListView(LoginRequiredMixin, ListView):
 
         return render(request, 'home/not_visited.html', context)
 
-class AllVisitorsListView(LoginRequiredMixin, ListView):
+class AllVisitedListView(LoginRequiredMixin, ListView):
     def get(self, request):
         visitor_list = Visitor.objects.filter(out_time__isnull = False).order_by('-in_time')
         context = {'visitor_list': visitor_list}
@@ -89,7 +90,8 @@ class VisitorDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['photopath'] = os.path.relpath(str(context['visitor'].photo_id))
+        if context['visitor'].photo_id:
+            context['photopath'] = os.path.relpath(str(context['visitor'].photo_id))
 
         return context
 
@@ -104,3 +106,39 @@ def photoscan(request, **kwargs):
             success_url = reverse('entry:scanQR', kwargs={'id': kwargs.get('id')})
             return redirect(success_url)
     return  render(request, 'home/photoscan.html', {'form':form})
+
+class AllVisitorsListView(LoginRequiredMixin, ListView):
+    def get(self, request):
+        visitor_list = Visitor.objects.order_by('-in_time')
+        context = {'visitor_list': visitor_list}
+
+        return render(request, 'home/all_visitors_booked.html', context)
+    
+class AllUsersListView(LoginRequiredMixin, ListView):
+    def get(self, request):
+        employee_list = Employee.objects.all()
+        context = {'employee_list': employee_list}
+        
+        return render(request, 'home/all_users_list.html', context)
+    
+@login_required()
+@user_passes_test(is_admin)
+def get_table_data(request):
+    visitor_list = Visitor.objects.order_by('-in_time')
+    search_query = ''
+    if request.method == 'POST':
+        search_query = request.POST['search']
+        try:
+            user = Employee.objects.get(user=User.objects.get(username=search_query))
+            visitor_list = Visitor.objects.filter(user=user)
+        except:
+            try:
+                visitor_list = Visitor.objects.filter(name=search_query)
+            except:
+                messages.error(request, f'Invalid search keywords!')
+        if search_query == '':
+            visitor_list = Visitor.objects.order_by('-in_time')
+
+    context = {'visitor_list': visitor_list, 'search_query': search_query}
+    
+    return render(request, 'home/table.html', context=context)
