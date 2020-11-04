@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -128,14 +129,24 @@ def get_table_data(request):
     search_query = ''
     if request.method == 'POST':
         search_query = request.POST['search']
-        try:
-            user = Employee.objects.get(user=User.objects.get(username=search_query))
-            visitor_list = Visitor.objects.filter(user=user)
-        except:
+        for i in [1]:
+            print(visitor_list[1].in_time.date(), search_query)
+            search_date = None
             try:
-                visitor_list = Visitor.objects.filter(name=search_query)
+                search_date = datetime.strptime(search_query, '%d-%m-%Y')
+                print(search_date)
             except:
-                messages.error(request, f'Invalid search keywords!')
+                pass
+            try:
+                user = Employee.objects.get(user=User.objects.get(username=search_query))
+                visitor_list = Visitor.objects.filter(user=user)
+                break
+            except:
+                pass
+            if search_date:
+                visitor_list = Visitor.objects.filter(in_time__date = search_date)
+            else:
+                visitor_list = Visitor.objects.filter(name=search_query)
         if search_query == '':
             visitor_list = Visitor.objects.order_by('-in_time')
 
