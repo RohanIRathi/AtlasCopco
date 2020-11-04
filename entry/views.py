@@ -70,7 +70,7 @@ def generateQR(id):
 @login_required()
 def scanQR(request, **kwargs):
     visitor = Visitor.objects.get(id=kwargs.get('id'))  # visitors id
-    print('id', visitor.id)
+    print('id', visitor.id, cv2.__file__)
     cam = cv2.VideoCapture(0)
     br = True
     while br:
@@ -91,6 +91,7 @@ def scanQR(request, **kwargs):
         key = cv2.waitKey(1)
         if key == 27:
             cv2.destroyAllWindows()
+            return redirect(f'{reverse("home")}')
             break
         
         template_name = 'home/home.html'
