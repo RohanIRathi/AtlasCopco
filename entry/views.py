@@ -83,6 +83,7 @@ def scanQR(request, **kwargs):
 				if readData == visitor.visit_token:
 					visitor.out_time = datetime.now()
 					visitor.save()
+					send_normal_email(visitor)
 					messages.success(request, f'QR Code scanned successfully!')
 					cv2.destroyAllWindows()
 					return redirect(f'{reverse("home")}')
@@ -90,6 +91,7 @@ def scanQR(request, **kwargs):
 				visitor.visit_token = readData
 				visitor.in_time = datetime.now()
 				visitor.save()
+				send_normal_email(visitor)
 				messages.success(request, f'QR Code scanned with value: { readData }')
 				cv2.destroyAllWindows()
 				return redirect(reverse('home'))
@@ -103,6 +105,19 @@ def scanQR(request, **kwargs):
 		
 		template_name = 'home/home.html'
 		
+def send_normal_email(Visitor):
+	to_email = Visitor.user.user.email
+	print(to_email)
+	if Visitor.out_time:
+		subject = Visitor.name + ' has left Atlas Copco Campus'
+		message = 'Hello!\n\n\t' + Visitor.name + ' has left the Atlas Copco campus at ' + str(Visitor.out_time.date()) + ' ' + Visitor.out_time.strftime("%X") + '.'
+	else:
+		subject = Visitor.name + ' is visiting Atlas Copco'
+		message = 'Hello!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + Visitor.in_time.strftime("%X") + '.'
+	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
+	email.content_subtype='html'
+	email.send(fail_silently=False)
+
 def send_qrcode_email(to_email, qrcodeimg):
 	subject = 'QR Code for entry in Atlas Copco'
 	message = '''Hello!\nYou have been granted the permission to visit Atlas Copco as a visitor!\n 
