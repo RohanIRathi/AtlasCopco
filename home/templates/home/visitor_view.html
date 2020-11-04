@@ -52,7 +52,11 @@
                                 </tr>
                                 <tr>
                                     <td>Photo Id</td>
-                                    <td><img src="{{ visitor.photo_id.url }}" alt="Photo Id" class="display-image"></td>
+                                    {% if visitor.photo_id %}
+                                    <td><img src="{{ visitor.photo_id.url }}" width="200" height="200" alt="Photo Id" class="display-image"></td>
+                                    {% else %}
+                                    <td>N/A</td>
+                                    {% endif %}
                                 </tr>
                             </tbody>
                         </table>

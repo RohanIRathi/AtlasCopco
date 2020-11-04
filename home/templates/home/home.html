@@ -10,7 +10,7 @@
                     <div class="card bg-primary text-white">
                         <div class="card-body">Total User Card</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="#">View Details</a>
+                            <a class="small text-white stretched-link" href="{% url 'all-users' %}">View Details</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
@@ -20,7 +20,7 @@
                     <div class="card bg-primary  text-white">
                         <div class="card-body">Total Registraions</div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="#">View Details</a>
+                            <a class="small text-white stretched-link" href="{% url 'all-booked-visitors' %}">View Details</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
@@ -43,6 +43,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </main>
@@ -60,39 +61,40 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th> ID </th>
                                     <th> Name </th>
                                     <th> Email </th>
                                     <th> No.of Visitors </th>
                                     <th>Phone No.</th>
                                     <th> Time </th>
-                                    <th> EDIT </th>
+                                    <th> Photo </th>
                                     <th> QR Code </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% if visitor_list %} {% for visitor in visitor_list %}
                                 <tr>
-                                    <td>{{ visitor.id }}</td>
                                     <td>{{ visitor.name }}</td>
                                     <td>{{ visitor.email }}</td>
                                     <td>{{ visitor.no_of_people }}</td>
                                     <td>{{ visitor.mobile }}</td>
                                     <td>{{ visitor.in_time }}</td>
-
+                                    {% if not visitor.photo %}
                                     <td>
                                         <input type="hidden" name="edit_id" value="">
-                                        <button type="submit" onclick="window.location.href='{% url 'entry:visitor-update' visitor.id %}'" name="edit_btn" class="btn btn-success"> EDIT</button>
+                                        <a type="submit" href="{% url 'photoscan' visitor.id %}" name="photo_btn" class="btn btn-success"> Scan </a>
                                     </td>
+                                    {% else %}
                                     <td>
-                                        {% if visitor.in_time %}
+                                        Photo Id Scanned
+                                    </td>
+                                    {% endif %}
+                                    <td>
+                                        {% if visitor.visit_token %}
                                         <form action="{% url 'entry:scanQR' visitor.id %}" method="post">
                                             <input type="hidden" name="scan_id" value="">
                                             <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
                                         </form>
-                                        {% else %}
-                                        N/A
-                                        {% endif %}
+                                        {% else %} Visiting Token<br>Not Assigned {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %} {% endif %}

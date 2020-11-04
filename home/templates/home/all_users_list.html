@@ -1,0 +1,56 @@
+{% extends 'home/base.html' %} 
+
+{% load tz %}
+
+{% block content %}
+<div id="layoutSidenav_content">
+    <main style="margin-top: 30px;">
+        <div class="container-fluid">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th> Name </th>
+                                    <th> Email </th>
+                                    <th> Phone no. </th>
+                                    <th> Status </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for employee in employee_list %}
+                                <tr>
+                                    <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
+                                    <td>{{ employee.user.email }}</td>
+                                    <td>{{ employee.mobile }}</td>
+                                    {% if employee.admin %}
+                                        <td> Admin </td>
+                                    {% else %}
+                                        <td> Employee </td>
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div class="footer">
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Atlas Copco 2020</div>
+                    <div>
+                        <a href="#">Privacy Policy</a> &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+{% endblock content %}
