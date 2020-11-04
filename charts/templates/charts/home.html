@@ -1,0 +1,48 @@
+{% block content %}
+<div id="layoutSidenav_content">
+
+  <div id="container" style="width: 75%;">
+    <canvas id="visitor-chart" data-url="{% url 'charts:visitor-chart' %}"></canvas>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script>
+
+    $(function () {
+
+      var $visitorChart = $("#visitor-chart");
+      $.ajax({
+        url: $visitorChart.data("url"),
+        success: function (data) {
+
+          var ctx = $visitorChart[0].getContext("2d");
+
+          new Chart(ctx,
+			{"type":"line",
+			"data":{
+			"labels":data.labels,
+			"datasets":[{"label":"Visitors","data":data.data,
+			"fill":false,
+			"borderColor":"rgb(75, 192, 192)",
+			"lineTension":0.1}]
+			}
+			,"options":{
+				responsive: true,
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: true,
+                text: 'Visitor Bar Chart'
+              }
+			}});
+
+        }
+      });
+
+    });
+
+  </script>
+</div>
+{% endblock %}

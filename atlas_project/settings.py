@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 local_apps = [
     'entry.apps.EntryConfig',
     'home.apps.HomeConfig',
+    'charts.apps.ChartsConfig'
 ]
 
 default_apps = [
