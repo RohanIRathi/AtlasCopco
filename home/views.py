@@ -1,15 +1,16 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F
 from django.urls import reverse
+from django.urls.base import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.conf import settings
 import os
 
-from .forms import CreateUserForm, CreateEmployeeForm
+from .forms import *
 from entry.models import *
 
 def is_admin(user):
@@ -72,22 +73,34 @@ class NotVisitedListView(LoginRequiredMixin, ListView):
     def get(self, request):
         visitor_list = Visitor.objects.filter(in_time__isnull=True)
         context = {'visitor_list': visitor_list}
-        
+
         return render(request, 'home/not_visited.html', context)
-    
+
 class AllVisitorsListView(LoginRequiredMixin, ListView):
     def get(self, request):
         visitor_list = Visitor.objects.filter(out_time__isnull = False).order_by('-in_time')
         context = {'visitor_list': visitor_list}
-        
+
         return render(request, 'home/all_visitors.html', context)
-    
+
 class VisitorDetailView(LoginRequiredMixin, DetailView):
     model = Visitor
     template_name = 'home/visitor_view.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['photopath'] = os.path.relpath(str(context['visitor'].photo_id))
-        
+
         return context
+
+@login_required
+def photoscan(request, **kwargs):
+    instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
+    form = PhotoForm()
+    if request.method == 'POST':
+        form = PhotoForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            form.save()
+            success_url = reverse('entry:scanQR', kwargs={'id': kwargs.get('id')})
+            return redirect(success_url)
+    return  render(request, 'home/photoscan.html', {'form':form})
