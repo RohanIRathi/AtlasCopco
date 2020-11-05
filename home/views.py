@@ -132,21 +132,26 @@ def get_table_data(request):
 		for i in [1]:
 			print(visitor_list[1].in_time.date(), search_query)
 			search_date = None
+			sort = False
 			try:
 				search_date = datetime.strptime(search_query, '%d-%m-%Y')
 				print(search_date)
 			except:
 				pass
 			try:
-				user = Employee.objects.get(user=User.objects.get(username=search_query))
+				user = Employee.objects.get(user=User.objects.get(username__icontains=search_query))
 				visitor_list = Visitor.objects.filter(user=user)
-				break
+				if visitor_list:
+					sort = True
 			except:
 				pass
 			if search_date:
 				visitor_list = Visitor.objects.filter(in_time__date = search_date)
+			elif not sort:
+				visitor_list = Visitor.objects.filter(name__icontains=search_query)
+				print(visitor_list)
 			else:
-				visitor_list = Visitor.objects.filter(name=search_query)
+				break
 		if search_query == '':
 			visitor_list = Visitor.objects.order_by('-in_time')
 

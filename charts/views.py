@@ -13,10 +13,9 @@ def visitor_chart(request):
     labels = []
     data = []
     for i in range(7):
-        c = datetime.today() - timedelta(days=i + 1)
         d = datetime.today() - timedelta(days=i)
         labels.append(d.strftime("%d-%m-%Y"))
-        data.append(Visitor.objects.filter(in_time__range=[c, d]).count())
+        data.append(Visitor.objects.filter(in_time__date=d.date()).count())
     print(labels)
     print(data)
     return JsonResponse(data={
