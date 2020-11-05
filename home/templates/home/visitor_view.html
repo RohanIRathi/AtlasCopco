@@ -1,69 +1,69 @@
 {% extends 'home/base.html' %} {% block content %}
 
 <div id="layoutSidenav_content">
-    <main style="margin-top: 30px;">
-        <div class="container-fluid">
-            <!-- DataTales Example -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h5 class="m-0 font-weight-bold text-primary">DETAILS
-                    </h5>
-                </div>
-                <div class="card-body mt-3">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+	<main style="margin-top: 30px;">
+		<div class="container-fluid">
+			<!-- DataTales Example -->
+			<div class="card shadow mb-4">
+				<div class="card-header py-3">
+					<h5 class="m-0 font-weight-bold text-primary">DETAILS
+					</h5>
+				</div>
+				<div class="card-body mt-3">
+					<div class="table-responsive">
+						<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 
-                            <tbody>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>{{ visitor.name }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Email</td>
-                                    <td>{{ visitor.email }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Phone No</td>
-                                    <td>{{ visitor.mobile }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Purpose</td>
-                                    <td>{{ visitor.purpose }}</td>
-                                </tr>
-                                <tr>
-                                    <td>No. of Visitors</td>
-                                    <td>{{ visitor.no_of_people }}</td>
-                                </tr>
-                                <tr>
-                                    <td>In Time</td>
-                                    <td>{{ visitor.in_time }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Out Time</td>
-                                    <td>{{ visitor.out_time }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Employee to Visit</td>
-                                    <td>{{ visitor.user.user.first_name }} {{ visitor.user.user.last_name }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Photo Id No. </td>
-                                    <td>{{ visitor.photo_id_number }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Photo Id</td>
-                                    {% if visitor.photo_id %}
-                                    <td><img src="{{ visitor.photo_id.url }}" width="200" height="200" alt="Photo Id" class="display-image"></td>
-                                    {% else %}
-                                    <td>N/A</td>
-                                    {% endif %}
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+							<tbody>
+								<tr>
+									<td>Name</td>
+									<td>{{ visitor.name }}</td>
+								</tr>
+								<tr>
+									<td>Email</td>
+									<td>{{ visitor.email }}</td>
+								</tr>
+								<tr>
+									<td>Phone No</td>
+									<td>{{ visitor.mobile }}</td>
+								</tr>
+								<tr>
+									<td>Purpose</td>
+									<td>{{ visitor.purpose }}</td>
+								</tr>
+								<tr>
+									<td>No. of Visitors</td>
+									<td>{{ visitor.no_of_people }}</td>
+								</tr>
+								<tr>
+									<td>In Time</td>
+									<td>{{ visitor.in_time }}</td>
+								</tr>
+								<tr>
+									<td>Out Time</td>
+									<td>{{ visitor.out_time }}</td>
+								</tr>
+								<tr>
+									<td>Employee to Visit</td>
+									<td>{{ visitor.user.user.first_name }} {{ visitor.user.user.last_name }}</td>
+								</tr>
+								<tr>
+									<td>Photo Id No. </td>
+									<td>{{ visitor.photo_id_number }}</td>
+								</tr>
+								<tr>
+									<td>Photo Id</td>
+									{% if visitor.photo_id %}
+									<td><img src="{{ visitor.photo_id.url }}" width="200" height="200" alt="Photo Id" class="display-image"></td>
+									{% else %}
+									<td>N/A</td>
+									{% endif %}
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
 </div>
 {% endblock content %}
