@@ -1,0 +1,63 @@
+{% extends 'home/base.html' %} 
+
+{% load tz %}
+
+{% block content %}
+<div id="layoutSidenav_content">
+	<main style="margin-top: 30px;">
+		<div class="container-fluid">
+			<!-- DataTales Example -->
+			<div class="card shadow mb-4">
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th> Name </th>
+									<th> Email </th>
+									<th> Phone no. </th>
+									{% comment %} <th> Date </th> {% endcomment %}
+									<th> In Time </th>
+									<th> Out Time </th>
+									<th> Purpose </th>
+									<th> Details </th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for visitor in visitor_list %}
+								<tr>
+									<td>{{ visitor.name }}</td>
+									<td>{{ visitor.email }}</td>
+									<td>{{ visitor.mobile }}</td>
+									{% comment %} <td>{{ visitor.in_time.date }}</td> {% endcomment %}
+									<td>{{ visitor.in_time }}</td>
+									<td>{{ visitor.out_time }}</td>
+									<td>{{ visitor.purpose}}</td>
+									<td>
+											<input type="hidden" name="delete_id" value="">
+											<button type="submit" name="delete_btn" class="btn btn-info" onclick="window.location.href='{% url 'visitor-detail' visitor.id %}'"> DETAILS </button>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<div class="footer">
+		<footer class="py-4 bg-light mt-auto">
+			<div class="container-fluid">
+				<div class="d-flex align-items-center justify-content-between small">
+					<div class="text-muted">Copyright &copy; Atlas Copco 2020</div>
+					<div>
+						<a href="#">Privacy Policy</a> &middot;
+						<a href="#">Terms &amp; Conditions</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+{% endblock content %}

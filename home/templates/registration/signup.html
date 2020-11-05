@@ -1,93 +1,93 @@
 {% extends 'home/base.html' %} {% load crispy_forms_tags %} {% load static %} {{ form.errors }} {{ employee_form.errors }} {% block content %}
 <div id="layoutSidenav_content">
-    <main>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xl-10 col-lg-10 col-md-10">
-                    <div class="card o-hidden border-0 shadow-lg my-5">
-                        <div class="card-body p-0">
-                            {% if form.errors %} {{ form.errors }} {% endif %}
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="p-5">
-                                        <div class="text-center">
-                                            <h1 class="h4 text-gray-900 mb-4">Add User</h1>
-                                        </div>
-                                        <small class="form-text text-danger">Fields marked * are required.</small><br>
-                                        {{ form.errors }}
-                                        <hr>
-                                        {{ employee_form.errors }}
-                                        <hr>
-                                        <form class="user" method="post" enctype="multipart/form-data">
-                                            {% csrf_token %}
-                                            {{ form.errors|crispy }}
-                                            {{ employee_form.errors|crispy }}
+	<main>
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-xl-10 col-lg-10 col-md-10">
+					<div class="card o-hidden border-0 shadow-lg my-5">
+						<div class="card-body p-0">
+							{% if form.errors %} {{ form.errors }} {% endif %}
+							<div class="row">
+								<div class="col-lg-12">
+									<div class="p-5">
+										<div class="text-center">
+											<h1 class="h4 text-gray-900 mb-4">Add User</h1>
+										</div>
+										<small class="form-text text-danger">Fields marked * are required.</small><br>
+										{{ form.errors }}
+										<hr>
+										{{ employee_form.errors }}
+										<hr>
+										<form class="user" method="post" enctype="multipart/form-data">
+											{% csrf_token %}
+											{{ form.errors|crispy }}
+											{{ employee_form.errors|crispy }}
 
-                                            <div id="div_id_username" class="form-group">
-                                                <label for="id_username" class=" requiredField">Username<span class="asteriskField text-danger">*</span> </label>
-                                                <div class=""> <input type="text" name="username" maxlength="150" {% if form.username.value %}value="{{ form.username.value }}"{% else %}placeholder="Enter Username"{% endif %} autofocus class="textinput textInput form-control form-control-user" required id="id_username">
-                                                </div>
-                                            </div>
+											<div id="div_id_username" class="form-group">
+												<label for="id_username" class=" requiredField">Username<span class="asteriskField text-danger">*</span> </label>
+												<div class=""> <input type="text" name="username" maxlength="150" {% if form.username.value %}value="{{ form.username.value }}"{% else %}placeholder="Enter Username"{% endif %} autofocus class="textinput textInput form-control form-control-user" required id="id_username">
+												</div>
+											</div>
 
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group pb-2">
-                                                        <label>First Name<span class="asteriskField text-danger">*</span></label>
-                                                        <input type="text" name="first_name" {% if form.first_name.value %}value="{{ form.first_name.value }}"{% else %}placeholder="Enter First Name"{% endif %} class="form-control form-control-user" placeholder="Enter First Name">
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="form-group pb-2">
-                                                        <label>Last Name</label>
-                                                        <input type="text" name="last_name" {% if form.last_name.value %}value="{{ form.last_name.value }}"{% else %}placeholder="Enter Last Name"{% endif %} class="form-control form-control-user" placeholder="Enter Last Name">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group pb-2">
-                                                        <label>Email<span class="asteriskField text-danger">*</span></label>
-                                                        <input type="email" name="email" {% if form.email.value %}value="{{ form.email.value }}"{% else %}placeholder="Enter Email"{% endif %} class="form-control form-control-user" placeholder="Enter Email">
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="form-group pb-2">
-                                                        <label>Phone No.<span class="asteriskField text-danger">*</span></label>
-                                                        <input type="number" name="mobile" {% if form.mobile.value %}value="{{ form.mobile.value }}"{% else %}placeholder="Enter Mobile"{% endif %} class="form-control form-control-user" placeholder="Enter Phone No.">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group pb-2">
-                                                        <label>Password<span class="asteriskField text-danger">*</span></label>
-                                                        <input type="password" name="password1" class="form-control form-control-user" placeholder="Enter Password">
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="form-group pb-2">
-                                                        <label>Confirm Password<span class="asteriskField text-danger">*</span></label>
-                                                        <input type="password" name="password2" class="form-control form-control-user" placeholder="Re-enter password">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <medium>Check If new user is admin</medium>
-                                            <div class="form-group ml-4 mt-4">
-                                                <input type="checkbox" name="admin" class="checkboxinput form-check-input">Admin
-                                            </div>
-                                            <hr>
-                                            <input type="submit" name="add_btn" class="btn btn-primary btn-user btn-block" style="border-radius: 10rem;">
-                                            <hr>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+											<div class="row">
+												<div class="col">
+													<div class="form-group pb-2">
+														<label>First Name<span class="asteriskField text-danger">*</span></label>
+														<input type="text" name="first_name" {% if form.first_name.value %}value="{{ form.first_name.value }}"{% else %}placeholder="Enter First Name"{% endif %} class="form-control form-control-user" placeholder="Enter First Name">
+													</div>
+												</div>
+												<div class="col">
+													<div class="form-group pb-2">
+														<label>Last Name</label>
+														<input type="text" name="last_name" {% if form.last_name.value %}value="{{ form.last_name.value }}"{% else %}placeholder="Enter Last Name"{% endif %} class="form-control form-control-user" placeholder="Enter Last Name">
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col">
+													<div class="form-group pb-2">
+														<label>Email<span class="asteriskField text-danger">*</span></label>
+														<input type="email" name="email" {% if form.email.value %}value="{{ form.email.value }}"{% else %}placeholder="Enter Email"{% endif %} class="form-control form-control-user" placeholder="Enter Email">
+													</div>
+												</div>
+												<div class="col">
+													<div class="form-group pb-2">
+														<label>Phone No.<span class="asteriskField text-danger">*</span></label>
+														<input type="number" name="mobile" {% if form.mobile.value %}value="{{ form.mobile.value }}"{% else %}placeholder="Enter Mobile"{% endif %} class="form-control form-control-user" placeholder="Enter Phone No.">
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col">
+													<div class="form-group pb-2">
+														<label>Password<span class="asteriskField text-danger">*</span></label>
+														<input type="password" name="password1" class="form-control form-control-user" placeholder="Enter Password">
+													</div>
+												</div>
+												<div class="col">
+													<div class="form-group pb-2">
+														<label>Confirm Password<span class="asteriskField text-danger">*</span></label>
+														<input type="password" name="password2" class="form-control form-control-user" placeholder="Re-enter password">
+													</div>
+												</div>
+											</div>
+											<medium>Check If new user is admin</medium>
+											<div class="form-group ml-4 mt-4">
+												<input type="checkbox" name="admin" class="checkboxinput form-check-input">Admin
+											</div>
+											<hr>
+											<input type="submit" name="add_btn" class="btn btn-primary btn-user btn-block" style="border-radius: 10rem;">
+											<hr>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
 </div>
 {% endblock content %}
 
@@ -118,37 +118,37 @@
 <!--
 <form method="POST">
 
-    <div class="form-group">
-        <label> First Name<span class="asteriskField text-danger">*</span> </label>
-        <input type="text" name="first_name" class="form-control form-control-user" placeholder="Enter Firstname" required>
-    </div>
-    <div class="form-group">
-        <label> Last Name<span class="asteriskField text-danger">*</span> </label>
-        <input type="text" name="last_name" class="form-control form-control-user" placeholder="Enter Lastname" required>
-    </div>
-    <div class="form-group">
-        <label for="id_mobile" class=" requiredField">Phone No.<span class="asteriskField text-danger">*</span></label>
-        <input type="text" name="mobile" maxlength="10" class="form-control form-control-user" placeholder="Enter Phone Number">
-    </div>
-    <div class="form-group">
-        <label>Email<span class="asteriskField text-danger">*</span></label>
-        <input type="email" name="email" class="form-control form-control-user" placeholder="Enter Email" required>
-    </div>
-    <div class="form-group">
-        <label>Password<span class="asteriskField text-danger">*</span></label>
-        <input type="password" name="password1" class="form-control form-control-user" placeholder="Enter Password" required>
-    </div>
-    <div class="form-group">
-        <label>Confirm Password<span class="asteriskField text-danger">*</span></label>
-        <input type="password" name="password2" class="form-control form-control-user" placeholder="Confirm Password" required>
-    </div>
-    <div class="form-group">
-        <label class="form-check-label">Admin</label>
-        <input type="checkbox" name="admin" class="checkboxinput form-check-input form-check-user">
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" name="registerbtn" class="btn btn-primary">Save</button>
-    </div>
+	<div class="form-group">
+		<label> First Name<span class="asteriskField text-danger">*</span> </label>
+		<input type="text" name="first_name" class="form-control form-control-user" placeholder="Enter Firstname" required>
+	</div>
+	<div class="form-group">
+		<label> Last Name<span class="asteriskField text-danger">*</span> </label>
+		<input type="text" name="last_name" class="form-control form-control-user" placeholder="Enter Lastname" required>
+	</div>
+	<div class="form-group">
+		<label for="id_mobile" class=" requiredField">Phone No.<span class="asteriskField text-danger">*</span></label>
+		<input type="text" name="mobile" maxlength="10" class="form-control form-control-user" placeholder="Enter Phone Number">
+	</div>
+	<div class="form-group">
+		<label>Email<span class="asteriskField text-danger">*</span></label>
+		<input type="email" name="email" class="form-control form-control-user" placeholder="Enter Email" required>
+	</div>
+	<div class="form-group">
+		<label>Password<span class="asteriskField text-danger">*</span></label>
+		<input type="password" name="password1" class="form-control form-control-user" placeholder="Enter Password" required>
+	</div>
+	<div class="form-group">
+		<label>Confirm Password<span class="asteriskField text-danger">*</span></label>
+		<input type="password" name="password2" class="form-control form-control-user" placeholder="Confirm Password" required>
+	</div>
+	<div class="form-group">
+		<label class="form-check-label">Admin</label>
+		<input type="checkbox" name="admin" class="checkboxinput form-check-input form-check-user">
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		<button type="submit" name="registerbtn" class="btn btn-primary">Save</button>
+	</div>
 
 </form>-->

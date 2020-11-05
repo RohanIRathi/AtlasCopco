@@ -1,121 +1,127 @@
-{% extends 'home/base.html' %}{% block content %}
+{% extends 'home/base.html' %}
+{% block content %}
 
 <div id="layoutSidenav_content">
-    <main>
-        <div class="container-fluid">
-            <h1 class="mt-4">Dashboard</h1>
-            <div class="row mt-5 ">
-                {% if request.user.employee.admin %}
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">Total User Card</div>
-                        <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="#">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-primary  text-white">
-                        <div class="card-body">Total Registraions</div>
-                        <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="#">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-success text-white">
-                        <div class="card-body">Total Visitors</div>
-                        <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{% url 'all-visitors' %}">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-danger text-white">
-                        <div class="card-body">Booked but not Visited</div>
-                        <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{% url 'not-visited' %}">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
+	<main>
+		<div class="container-fluid">
+			<h1 class="mt-4">Dashboard</h1>
+			<div class="row mt-5 ">
+				{% if request.user.employee.admin %}
+				<div class="col-xl-3 col-md-6">
+					<div class="card bg-primary text-white">
+						<div class="card-body">Total User Card</div>
+						<div class="card-footer d-flex align-items-center justify-content-between">
+							<a class="small text-white stretched-link" href="{% url 'all-users' %}">View Details</a>
+							<div class="small text-white"><i class="fas fa-angle-right"></i></div>
+						</div>
+					</div>
+				</div>
+				{% endif %}
+				<div class="col-xl-3 col-md-6">
+					<div class="card bg-primary  text-white">
+						<div class="card-body">Total Registraions</div>
+						<div class="card-footer d-flex align-items-center justify-content-between">
+							<a class="small text-white stretched-link" href="{% url 'all-booked-visitors' %}">View Details</a>
+							<div class="small text-white"><i class="fas fa-angle-right"></i></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-3 col-md-6">
+					<div class="card bg-success text-white">
+						<div class="card-body">Total Visitors</div>
+						<div class="card-footer d-flex align-items-center justify-content-between">
+							<a class="small text-white stretched-link" href="{% url 'all-visitors' %}">View Details</a>
+							<div class="small text-white"><i class="fas fa-angle-right"></i></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xl-3 col-md-6">
+					<div class="card bg-danger text-white">
+						<div class="card-body">Booked but not Visited</div>
+						<div class="card-footer d-flex align-items-center justify-content-between">
+							<a class="small text-white stretched-link" href="{% url 'not-visited' %}">View Details</a>
+							<div class="small text-white"><i class="fas fa-angle-right"></i></div>
+						</div>
+					</div>
+				</div>
 
-            </div>
-        </div>
-    </main>
-    <main>
-        <div class="container-fluid">
-            <!-- DataTales Example -->
-            <div class="card shadow mb-4 mt-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">New Visitor
-                        <a href="{% url 'entry:new-visitor' %}" class="ml-3 btn btn-primary text-left">Add</a>
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th> Name </th>
-                                    <th> Email </th>
-                                    <th> No.of Visitors </th>
-                                    <th>Phone No.</th>
-                                    <th> Time </th>
-                                    <th> Photo </th>
-                                    <th> QR Code </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if visitor_list %} {% for visitor in visitor_list %}
-                                <tr>
-                                    <td>{{ visitor.name }}</td>
-                                    <td>{{ visitor.email }}</td>
-                                    <td>{{ visitor.no_of_people }}</td>
-                                    <td>{{ visitor.mobile }}</td>
-                                    <td>{{ visitor.in_time }}</td>
+			</div>
+		</div>
+	</main>
+	<main>
+		<div class="container-fluid">
+			<!-- DataTales Example -->
+			<div class="card shadow mb-4 mt-4">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">New Visitor
+						<a href="{% url 'entry:new-visitor' %}" class="ml-3 btn btn-primary text-left">Add</a>
+					</h6>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th> Name </th>
+									<th> Email </th>
+									<th> No.of Visitors </th>
+									<th>Phone No.</th>
+									<th> Time </th>
+									<th> Photo </th>
+									<th> QR Code </th>
+								</tr>
+							</thead>
+							<tbody>
+								{% if visitor_list %} {% for visitor in visitor_list %}
+								<tr>
+									<td>{{ visitor.name }}</td>
+									<td>{{ visitor.email }}</td>
+									<td>{{ visitor.no_of_people }}</td>
+									<td>{{ visitor.mobile }}</td>
+									<td>{{ visitor.in_time }}</td>
+									{% if not visitor.photo %}
+									<td>
+										<input type="hidden" name="edit_id" value="">
+										<a type="submit" href="{% url 'photoscan' visitor.id %}" name="photo_btn" class="btn btn-success"> Scan </a>
+									</td>
+									{% else %}
+									<td>
+										Photo Id Scanned
+									</td>
+									{% endif %}
+									<td>
+										{% if visitor.visit_token %}
+										<form action="{% url 'entry:scanQR' visitor.id %}" method="post">
+											<input type="hidden" name="scan_id" value="">
+											<button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
+										</form>
+										{% else %} Visiting Token<br>Not Assigned {% endif %}
+									</td>
+								</tr>
+								{% endfor %} {% endif %}
+							</tbody>
+						</table>
 
-                                    <td>
-                                        <input type="hidden" name="edit_id" value="">
-                                        <a type="submit" href="{% url 'photoscan'%}" name="photo_btn" class="btn btn-success"> Scan </a>
-                                    </td>
-                                    <td>
-                                        {% if visitor.in_time %}
-                                        <form action="{% url 'entry:scanQR' visitor.id %}" method="post">
-                                            <input type="hidden" name="scan_id" value="">
-                                            <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
-                                        </form>
-                                        {% else %} N/A {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %} {% endif %}
-                            </tbody>
-                        </table>
+					</div>
+				</div>
+			</div>
 
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <!-- /.container-fluid -->
-    </main>
-    <div class="footer">
-        <footer class="py-4 bg-light mt-auto">
-            <div class="container-fluid">
-                <div class="d-flex align-items-center justify-content-between small">
-                    <div class="text-muted">Copyright &copy; Atlas Copco 2020</div>
-                    <div>
-                        <a href="#">Privacy Policy</a> &middot;
-                        <a href="#">Terms &amp; Conditions</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </div>
+		</div>
+		<!-- /.container-fluid -->
+	</main>
+	<div class="footer">
+		<footer class="py-4 bg-light mt-auto">
+			<div class="container-fluid">
+				<div class="d-flex align-items-center justify-content-between small">
+					<div class="text-muted">Copyright &copy; Atlas Copco 2020</div>
+					<div>
+						<a href="#">Privacy Policy</a> &middot;
+						<a href="#">Terms &amp; Conditions</a>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
 </div>
 
 {% endblock content %}

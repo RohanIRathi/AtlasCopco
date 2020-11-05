@@ -4,42 +4,42 @@
 <html lang=en>
 
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
-    <title>AtlasCopco</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
+	<title>AtlasCopco</title>
 </head>
 
 <body>
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
-        <a class="navbar-brand" href="{% url 'home' %}">Atlas Copco</a> {% if request.user.employee.admin %}<button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button> {% endif %}
-        <!-- Navbar Search-->
-        <span class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0 navbar-brand"> Welcome, {{ request.user.first_name }} </span>
-        <!-- Navbar-->
-        <ul class="navbar-nav ml-auto ">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="{% url 'reset_password' %}">Reset Password</a>
-                    <div class="dropdown-divider"></div>
-                    <form>
-                        <a class="dropdown-item" type="button" name="logout-btn" href="{% url 'logout' %}">Logout</a>
-                    </form>
-                </div>
-            </li>
-        </ul>
-    </nav>
-    {% if messages %} {% for message in messages %}
-    <div class="alert {% if message.tags == 'error' %} alert-danger{% else %} alert-{{ message.tags }}{% endif %}">
-        {{ message }}
-    </div>
-    {% endfor %} {% endif %}
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
+		<a class="navbar-brand" href="{% url 'home' %}">Atlas Copco</a> {% if request.user.employee.admin %}<button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button> {% endif %}
+		<!-- Navbar Search-->
+		<span class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0 navbar-brand"> Welcome, {{ request.user.first_name }}</span>
+		<!-- Navbar-->
+		<ul class="navbar-nav ml-auto ">
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% if request.user.employee.pic %}<img src="{{ request.user.employee.pic.url }}" style="width: 40px; height: 40px; border-radius: 100%;">{% else %}<img class="fas fa-user fa-fw"></img>{% endif %}</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+					<a class="dropdown-item" href="{% url 'reset_password' %}">Reset Password</a>
+					<div class="dropdown-divider"></div>
+					<form>
+						<a class="dropdown-item" type="button" name="logout-btn" href="{% url 'logout' %}">Logout</a>
+					</form>
+				</div>
+			</li>
+		</ul>
+	</nav>
+	{% if messages %} {% for message in messages %}
+	<div class="alert {% if message.tags == 'error' %} alert-danger{% else %} alert-{{ message.tags }}{% endif %}">
+		{{ message }}
+	</div>
+	{% endfor %} {% endif %}
 
     <div id="layoutSidenav">
         {% if request.user.employee.admin %}
@@ -62,11 +62,11 @@
                             </a>
                             {% if request.user.employee.admin %}
                             <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{% url 'charts:show-charts'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Charts
                             </a>
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{% url 'tables' %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tables
                             </a>
@@ -79,33 +79,35 @@
             </nav>
         </div>
         {% endif %}
-        <!--<div id="layoutSidenav_content">-->
-        {% block content %} {% endblock content %}
+        <!-- <div id="layoutSidenav_content"> -->
 
-    </div>
+{% block content %} {% endblock content %}
+								
 
-    <script>
-        (function($) {
-            "use strict";
+	</div>
 
-            // Add active state to sidbar nav links
-            var path = window.location.href; // because the 'href' property of the DOM element is the absolute path
-            $("#layoutSidenav_nav .sb-sidenav a.nav-link").each(function() {
-                if (this.href === path) {
-                    $(this).addClass("active");
-                }
-            });
+	<script>
+		(function($) {
+			"use strict";
 
-            // Toggle the side navigation
-            $("#sidebarToggle").on("click", function(e) {
-                e.preventDefault();
-                $("body").toggleClass("sb-sidenav-toggled");
-            });
-        })(jQuery);
-    </script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+			// Add active state to sidbar nav links
+			var path = window.location.href; // because the 'href' property of the DOM element is the absolute path
+			$("#layoutSidenav_nav .sb-sidenav a.nav-link").each(function() {
+				if (this.href === path) {
+					$(this).addClass("active");
+				}
+			});
+
+			// Toggle the side navigation
+			$("#sidebarToggle").on("click", function(e) {
+				e.preventDefault();
+				$("body").toggleClass("sb-sidenav-toggled");
+			});
+		})(jQuery);
+	</script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 
 </html>
