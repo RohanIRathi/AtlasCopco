@@ -41,46 +41,48 @@
 	</div>
 	{% endfor %} {% endif %}
 
-	<div id="layoutSidenav">
-		{% if request.user.employee.admin %}
-		<div id="layoutSidenav_nav">
-			<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #173F5F;">
-				<div class="sb-sidenav-menu">
-					<div class="nav">
-						<div class="sb-sidenav-menu-heading">Core</div>
-						<a class="nav-link" href="{% url 'home' %}">
-							<div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-							Dashboard <br> {% if request.user.employee.admin %}
-							<a class="nav-link" href="{% url 'user-signup' %}">
-								<div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
-								User Registration
-							</a>
-							{% endif %}
-							<a class="nav-link" href="{% url 'entry:new-visitor' %}">
-								<div class="sb-nav-link-icon"><i class="fa fa-user-plus fa-fw"></i></div>
-								ADD new visitor
-							</a>
-							{% if request.user.employee.admin %}
-							<div class="sb-sidenav-menu-heading">Addons</div>
-							<a class="nav-link" href="#">
-								<div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-								Charts
-							</a>
-							<a class="nav-link" href="{% url 'tables' %}">
-								<div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-								Tables
-							</a>
-							{% endif %}
-					</div>
-				</div>
-				<div class="sb-sidenav-footer">
-					<div class="large">Logged in as: {{ request.user.first_name }}</div>
-				</div>
-			</nav>
-		</div>
-		{% endif %}
-		<!--<div id="layoutSidenav_content">-->
-		{% block content %} {% endblock content %}
+    <div id="layoutSidenav">
+        {% if request.user.employee.admin %}
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #173F5F;">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="{% url 'home' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Dashboard <br> {% if request.user.employee.admin %}
+                            <a class="nav-link" href="{% url 'user-signup' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
+                                User Registration
+                            </a>
+                            {% endif %}
+                            <a class="nav-link" href="{% url 'entry:new-visitor' %}">
+                                <div class="sb-nav-link-icon"><i class="fa fa-user-plus fa-fw"></i></div>
+                                ADD new visitor
+                            </a>
+                            {% if request.user.employee.admin %}
+                            <div class="sb-sidenav-menu-heading">Addons</div>
+                            <a class="nav-link" href="{% url 'charts:show-charts'%}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                Charts
+                            </a>
+                            <a class="nav-link" href="{% url 'tables' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Tables
+                            </a>
+                            {% endif %}
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="large">Logged in as: {{ request.user.first_name }}</div>
+                </div>
+            </nav>
+        </div>
+        {% endif %}
+        <!--<div id="layoutSidenav_content">--
+
+{% block content %} {% endblock content %}
+								
 
 	</div>
 

@@ -19,9 +19,12 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-	path('admin/', admin.site.urls),
-	path('', include('home.urls')),
-	path('entry/',include('entry.urls')),
+
+    path('admin/', admin.site.urls),
+    path('', include('home.urls')),
+    path('entry/',include('entry.urls')),
+    path('charts/', include('charts.urls')),
+
 ]
 
 if settings.DEBUG:

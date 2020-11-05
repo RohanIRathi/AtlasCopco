@@ -30,8 +30,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 local_apps = [
-	'entry.apps.EntryConfig',
-	'home.apps.HomeConfig',
+
+    'entry.apps.EntryConfig',
+    'home.apps.HomeConfig',
+    'charts.apps.ChartsConfig',
 ]
 
 default_apps = [
