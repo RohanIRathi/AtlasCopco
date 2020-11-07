@@ -16,21 +16,21 @@
 							<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 								<tbody>
 									<tr>
-										<td>Scan Photo </td>
-										<td><input type="file" class="form-control" name="photo">Take Photo</td>
+										<td>Scan Photo<span class="text-danger">*</span></td>
+										<td><input type="file" class="form-control" name="photo" required>Take Photo</td>
 									</tr>
 									<tr>
-										<td>Photo Id Number</td>
-										<td><input type="text" class="form-control form-control-user" name="photo_id_number" placeholder="Enter Photo Id Number"></td>
+										<td>Photo Id Number<span class="text-danger">*</span></td>
+										<td><input type="text" class="form-control form-control-user" name="photo_id_number" placeholder="Enter Photo Id Number" required></td>
 									</tr>
 									<tr>
-										<td> Scan Id</td>
-										<td><input type="file" class="form-control" name="photo_id">Take ID</td>
+										<td> Scan Id<span class="text-danger">*</span></td>
+										<td><input type="file" class="form-control" name="photo_id" required>Take ID</td>
 									</tr>
 								</tbody>
 							</table>
 							<div class="text-right">
-								<input class="text-right btn btn-success" type="submit" value="Save">
+								<input class="text-right btn btn-success" type="submit" value="Save" >
 							</div>
 						</form>
 						<!-- <div class="text-right">
