@@ -27,20 +27,15 @@ def new_visitor(request):
 		form = NewVisitorForm(request.POST, request.FILES)
 		print(form)
 		if form.is_valid():
-			if form.cleaned_data.get('photo_id'):
-				visitor = form.save(commit=False)
-				visitor.in_time = datetime.now()
-				visitor.save()
-				qrcodeimg = generateQR(visitor.id)
-				visitor.qrcode = qrcodeimg
-				send_qrcode_email(visitor.email, qrcodeimg) # email to send the qr code to the visitor
-				visitor.save()
-				messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
-				return redirect('/')
-			else:
-				form.save()
-				messages.success(request, f'The Visitor has been booked for entry')
-				return redirect(reverse('home'))
+			visitor = form.save(commit=False)
+			visitor.save()
+			qrcodeimg = generateQR(visitor.id)
+			visitor.qrcode = qrcodeimg
+			send_qrcode_email(visitor.email, qrcodeimg) # email to send the qr code to the visitor
+			visitor.save()
+			messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
+			messages.success(request, f'The Visitor has been booked for entry')
+			return redirect('/')
 		else:
 			messages.error(request, 'Error!')
 	context = {'form': form, 'employees': employees}
@@ -56,10 +51,12 @@ def generateQR(id):
 		border=4
 	)
 	visitor = Visitor.objects.get(id=id)  # visitors id
-	qr.add_data(id)  # visitors id
+	visitor.token = str(visitor.id) + str(visitor.name).upper()[:5] + str(visitor.email)[:5]
+	qr.add_data(visitor.token)  # visitors id
+	visitor.save()
 	qr.make(fit=True)
 	img = qr.make_image(fill_color="black", back_color="white")
-	qrname = visitor.name + "_" + str(visitor.in_time.date())
+	qrname = visitor.name + "_" + str(hash(visitor.name))
 	img.save("./media/qrcodes/" + qrname + ".png")
 	
 	return "/media/qrcodes/" + qrname + ".png"
@@ -69,8 +66,9 @@ def generateQR(id):
 @csrf_exempt
 @login_required()
 def scanQR(request, **kwargs):
-	visitor = Visitor.objects.get(id=kwargs.get('id'))  # visitors id
-	print('id', visitor.id, cv2.__file__)
+	if kwargs.get('id'):
+		visitor = Visitor.objects.get(id=kwargs.get('id'))
+		print('id', visitor.id, cv2.__file__)
 	cam = cv2.VideoCapture(0)
 	while True:
 		_, frame = cam.read()
@@ -78,7 +76,13 @@ def scanQR(request, **kwargs):
 		for ob in Read:
 			readData = str(ob.data.rstrip().decode('utf-8'))
 			print('readData',readData)
-			if visitor.visit_token:
+			if kwargs.get('qr') == 'userQR':
+				visitor = Visitor.objects.filter(token=readData).order_by('-id').first()
+				if visitor:
+					print('/updatevisitor/'+str(visitor.id)+'/')
+					cv2.destroyAllWindows()
+					return redirect('/photoscan/'+str(visitor.id)+"/")
+			elif visitor.visit_token:
 				print(visitor.visit_token)
 				if readData == visitor.visit_token:
 					visitor.out_time = datetime.now()

@@ -53,9 +53,18 @@
 			<!-- DataTales Example -->
 			<div class="card shadow mb-4 mt-4">
 				<div class="card-header py-3">
-					<h6 class="m-0 font-weight-bold text-primary">New Visitor
-						<a href="{% url 'entry:new-visitor' %}" class="ml-3 btn btn-primary text-left">Add</a>
-					</h6>
+					<div class="row">
+						<div class="col-md-auto">
+							<h6 class="m-0 font-weight-bold text-primary">New Visitor
+								<a href="{% url 'entry:new-visitor' %}" class="ml-3 btn btn-primary text-left">Add</a>
+							</h6>
+						</div>
+						<div class="col-md-auto">
+							<h6 class="m-0 font-weight-bold text-primary">Scan Visitor's QR Code
+								<a href="{% url 'entry:scanqr-visitor' %}" class="ml-3 btn btn-primary text-left">Scan</a>
+							</h6>
+						</div>
+					</div>
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">
