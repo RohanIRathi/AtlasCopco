@@ -1,0 +1,32 @@
+{% extends 'home/base.html' %}{% block content %}
+<div id="layoutSidenav_content">
+    <main style="margin-top: 30px;">
+        <div class="container-fluid">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h5 class="m-0 font-weight-bold text-primary">Charts
+                    </h5>
+                </div>
+                <div class="card-body mt-3">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>Date Vs No.of Visitor Graph</td>
+                                    <td><a href="{% url 'charts:show-charts'%}" class="btn btn-info">Check</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Employee Vs No.of Visitor Graph</td>
+                                    <td> <a href="{% url 'charts:chart-page1'%}" class="btn btn-info">Check</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+{% endblock %}
