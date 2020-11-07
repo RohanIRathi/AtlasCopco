@@ -29,7 +29,7 @@ def new_visitor(request):
 		if form.is_valid():
 			visitor = form.save(commit=False)
 			visitor.save()
-			qrcodeimg = generateQR(visitor.id)
+			qrcodeimg, visitor.token = generateQR(visitor.id)
 			visitor.qrcode = qrcodeimg
 			send_qrcode_email(visitor.email, qrcodeimg) # email to send the qr code to the visitor
 			visitor.save()
@@ -51,15 +51,14 @@ def generateQR(id):
 		border=4
 	)
 	visitor = Visitor.objects.get(id=id)  # visitors id
-	visitor.token = str(visitor.id) + str(visitor.name).upper()[:5] + str(visitor.email)[:5]
-	qr.add_data(visitor.token)  # visitors id
-	visitor.save()
+	token = str(visitor.id) + str(visitor.name).upper()[:5] + str(visitor.email)[:5]
+	qr.add_data(token)
 	qr.make(fit=True)
 	img = qr.make_image(fill_color="black", back_color="white")
 	qrname = visitor.name + "_" + str(hash(visitor.name))
 	img.save("./media/qrcodes/" + qrname + ".png")
 	
-	return "/media/qrcodes/" + qrname + ".png"
+	return "/media/qrcodes/" + qrname + ".png", token
 	
 	# visitor.qrcode = "/media/qrcodes/" + qrname + ".png"
 	# visitor.save()
