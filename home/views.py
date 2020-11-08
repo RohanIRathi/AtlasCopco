@@ -100,13 +100,14 @@ class VisitorDetailView(LoginRequiredMixin, DetailView):
 def photoscan(request, **kwargs):
 	instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
 	form = PhotoForm()
+	context = {'form':form, 'visitor': instance}
 	if request.method == 'POST':
 		form = PhotoForm(request.POST, request.FILES, instance=instance)
 		if form.is_valid():
 			form.save()
 			success_url = reverse('entry:scanQR', kwargs={'id': kwargs.get('id')})
 			return redirect(success_url)
-	return  render(request, 'home/photoscan.html', {'form':form})
+	return  render(request, 'home/photoscan.html', context)
 
 class AllVisitorsListView(LoginRequiredMixin, ListView):
 	def get(self, request):

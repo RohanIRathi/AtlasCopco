@@ -35,6 +35,8 @@ def new_visitor(request):
 			visitor.save()
 			messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
 			messages.success(request, f'The Visitor has been booked for entry')
+			if visitor.photo_id:
+				return redirect('/photoscan/'+str(visitor.id)+"/")
 			return redirect('/')
 		else:
 			messages.error(request, 'Error!')
