@@ -70,7 +70,7 @@
 												<div class="col">
 													<div class="form-group pb-2">
 														<label>Photo Id Number</label><br>
-														<input type="text" name="photo_id_number" class="form-control form-control-user">
+														<input type="text" name="photo_id_number" {% if form.photo_id_number.value %}value="{{ form.photo_id_number.value }}"{% endif %} class="form-control form-control-user">
 													</div>
 												</div>
 											</div>
