@@ -109,20 +109,21 @@ def photoscan(request, **kwargs):
 			return redirect(success_url)
 	return  render(request, 'home/photoscan.html', context)
 
+
 class AllVisitorsListView(LoginRequiredMixin, ListView):
 	def get(self, request):
 		visitor_list = Visitor.objects.order_by('-in_time')
 		context = {'visitor_list': visitor_list}
 
 		return render(request, 'home/all_visitors_booked.html', context)
-	
+
 class AllUsersListView(LoginRequiredMixin, ListView):
 	def get(self, request):
 		employee_list = Employee.objects.all()
 		context = {'employee_list': employee_list}
-		
+
 		return render(request, 'home/all_users_list.html', context)
-	
+
 @login_required()
 @user_passes_test(is_admin)
 def get_table_data(request):
@@ -157,5 +158,13 @@ def get_table_data(request):
 			visitor_list = Visitor.objects.order_by('-in_time')
 
 	context = {'visitor_list': visitor_list, 'search_query': search_query}
-	
+
 	return render(request, 'home/table.html', context=context)
+
+
+
+@login_required()
+def visitor_in(request):
+	visitor_list =Visitor.objects.filter(out_time__isnull=True)
+	context = {'visitor_list': visitor_list}
+	return render(request, 'home/visitor_in.html',context)

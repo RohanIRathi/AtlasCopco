@@ -17,6 +17,7 @@ urlpatterns = [
 	path('logout/', views.logout_user, name='logout'),
 	path('photoscan/<int:id>/', views.photoscan, name='photoscan'),
 	path('tables/', views.get_table_data, name='tables'),
+	path('visitor_in/', views.visitor_in, name='visitor_in'),
 	# password reset urls
 	path('reset_password/',
 		auth_views.PasswordResetView.as_view(template_name='password/password_reset.html'),
