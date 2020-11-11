@@ -1,55 +1,57 @@
 {% extends 'home/base.html' %} {% block content %}
 
 <div id="layoutSidenav_content">
-	<main style="margin-top: 30px;">
-		<div class="container-fluid">
-			<!-- DataTales Example -->
-			<div class="card shadow mb-4">
-				<div class="card-header py-3">
-					<h5 class="m-0 font-weight-bold text-primary">Scan Photo & ID
-					</h5>
-				</div>
-				<div class="card-body mt-3">
-					<div class="table-responsive">
-						<form action="" method="post" enctype="multipart/form-data">
-							{% csrf_token %}
-							<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-								<tbody>
-									<tr>
-										<td>Name</td>
-										<td>{{ visitor.name }}</td>
-										<td>E-mail</td>
-										<td>{{ visitor.email }}</td>
-									</tr>
-									<tr>
-										<td>Purpose of Visit</td>
-										<td>{{ visitor.purpose }}</td>
-									</tr>
-									<tr>
-										<td>Scan Photo<span class="text-danger">*</span></td>
-										<td><input type="file" class="form-control" name="photo" required>Take Photo</td>
-									</tr>
-									<tr>
-										<td>Photo Id Number<span class="text-danger">*</span></td>
-										<td><input type="text" class="form-control form-control-user" name="photo_id_number" placeholder="Enter Photo Id Number" required></td>
-									</tr>
-									<tr>
-										<td> Scan Id<span class="text-danger">*</span></td>
-										<td><input type="file" class="form-control" name="photo_id" required>Take ID</td>
-									</tr>
-								</tbody>
-							</table>
-							<div class="text-right">
-								<input class="text-right btn btn-success" type="submit" value="Save" >
-							</div>
-						</form>
-						<!-- <div class="text-right">
+    <main style="margin-top: 30px;">
+        <div class="container-fluid">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h5 class="m-0 font-weight-bold text-primary">Scan Photo & ID
+                    </h5>
+                </div>
+                <div class="card-body mt-3">
+                    <div class="table-responsive">
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <tbody>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>{{ visitor.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>E-mail</td>
+                                        <td>{{ visitor.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Purpose of Visit</td>
+                                        <td>{{ visitor.purpose }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Scan Photo<span class="text-danger">*</span></td>
+                                        <td><input type="file" class="form-control" name="photo" required>Take Photo</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Photo Id Number<span class="text-danger">*</span></td>
+                                        <td><input type="text" class="form-control form-control-user" name="photo_id_number" placeholder="Enter Photo Id Number" required></td>
+                                    </tr>
+                                    <tr>
+                                        <td> Scan Id<span class="text-danger">*</span></td>
+                                        <td><input type="file" class="form-control" name="photo_id" required>Take ID</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="text-right">
+                                <input class="text-right btn btn-success" type="submit" value="Save">
+                            </div>
+                        </form>
+                        <!-- <div class="text-right">
 							<a class="btn btn-success" href="{% url 'home'%}">Save & Go to Home</a>
 						</div> -->
-					</div>
-				</div>
-			</div>
-		</div>
-	</main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
 {% endblock content %}
