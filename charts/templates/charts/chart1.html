@@ -19,7 +19,7 @@
                         var ctx = $visitorChart[0].getContext("2d");
 
                         new Chart(ctx, {
-                            "type": "line",
+                            "type": "bar",
                             "data": {
                                 "labels": data.labels,
                                 "datasets": [{
@@ -27,6 +27,7 @@
                                     "data": data.data,
                                     "fill": false,
                                     "borderColor": "rgb(75, 192, 192)",
+                                    "backgroundColor": "rgba(176,216,230,2)",
                                     "lineTension": 0.1
                                 }]
                             },
