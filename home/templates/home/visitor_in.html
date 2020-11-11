@@ -1,0 +1,46 @@
+{% extends 'home/base.html' %} {% block content %}
+<div id="layoutSidenav_content">
+    <main style="margin-top: 30px;">
+        <div class="container-fluid">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th> Name </th>
+                                    <th> Email </th>
+                                    <th> No.of Visitors </th>
+                                    <th> Purpose </th>
+                                    <th> Time </th>
+                                    <th> Qr Code </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for visitor in visitor_list %}
+                                <tr>
+                                    <td>{{ visitor.name }}</td>
+                                    <td>{{ visitor.email }}</td>
+                                    <td>{{ visitor.no_of_people }}</td>
+                                    <td>{{ visitor.purpose }}</td>
+                                    <td>{{ visitor.in_time }}</td>
+                                    <td>
+                                        {% if visitor.visit_token %}
+                                        <form action="{% url 'entry:scanQR' visitor.id %}" method="post">
+                                            <input type="hidden" name="scan_id" value="">
+                                            <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
+                                        </form>
+                                        {% else %} Visiting Token<br>Not Assigned {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock content %}

@@ -7,10 +7,11 @@
             <div class="row mt-5 ">
                 {% if request.user.employee.admin %}
                 <div class="col-xl-3 col-md-6">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body">Total User Card</div>
+                    <div class="card bg-info text-white">
+                        <div class="card-body">Visitor in Primises: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
+                        </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{% url 'all-users' %}">View Details</a>
+                            <a class="small text-white stretched-link" href="{% url 'visitor_in' %}">View Details</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
                     </div>
@@ -18,7 +19,8 @@
                 {% endif %}
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-primary  text-white">
-                        <div class="card-body">Total Registraions</div>
+                        <div class="card-body">Total Registraions: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
+                        </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'all-booked-visitors' %}">View Details</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -27,7 +29,8 @@
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-success text-white">
-                        <div class="card-body">Total Visitors</div>
+                        <div class="card-body">Total Visitors: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
+                        </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'all-visitors' %}">View Details</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -36,7 +39,8 @@
                 </div>
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-danger text-white">
-                        <div class="card-body">Booked but not Visited</div>
+                        <div class="card-body">Booked but not Visited: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
+                        </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'not-visited' %}">View Details</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
