@@ -29,7 +29,7 @@
                                         {% if visitor.visit_token %}
                                         <form action="{% url 'entry:scanQR' visitor.id %}" method="post">
                                             <input type="hidden" name="scan_id" value="">
-                                            <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
+                                            <button type="submit" name="scan_btn" class="btn btn-danger">Scan</button>
                                         </form>
                                         {% else %} Visiting Token<br>Not Assigned {% endif %}
                                     </td>

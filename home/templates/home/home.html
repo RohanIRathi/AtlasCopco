@@ -4,22 +4,11 @@
     <main>
         <div class="container-fluid">
             <h1 class="mt-4">Dashboard</h1>
-            <div class="row mt-5 ">
+            <div class="row mt-3">
                 {% if request.user.employee.admin %}
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-info text-white">
-                        <div class="card-body">Visitor in Primises: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{% url 'visitor_in' %}">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-primary  text-white">
-                        <div class="card-body">Total Registraions: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
+                <div class="col-xl-3 col-md-6 mb-3 mt-2">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">Total Registrations <span class="badge badge-pill badge-light">{{ visitor_count }}</span>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'all-booked-visitors' %}">View Details</a>
@@ -27,9 +16,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 mb-3 mt-2">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">Visitor in Primises <span class="badge badge-pill badge-light">{{ visiting_count }}</span> 
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <a class="small text-white stretched-link" href="{% url 'visitor_in' %}">View Details</a>
+                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3 mt-2">
                     <div class="card bg-success text-white">
-                        <div class="card-body">Total Visitors: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
+                        <div class="card-body">Total Visitors <span class="badge badge-pill badge-light">{{ visited_count }}</span>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'all-visitors' %}">View Details</a>
@@ -37,9 +36,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 mb-3 mt-2">
                     <div class="card bg-danger text-white">
-                        <div class="card-body">Booked but not Visited: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
+                        <div class="card-body">Booked but not Visited <span class="badge badge-pill badge-light">{{ not_visited_count }}</span>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'not-visited' %}">View Details</a>
@@ -47,6 +46,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
 
             </div>
         </div>
@@ -54,7 +54,7 @@
     <main>
         <div class="container-fluid">
             <!-- DataTales Example -->
-            <div class="card shadow mb-4 mt-4">
+            <div class="card shadow mb-4 mt-2">
                 <div class="card-header py-3">
                     <div class="row">
                         <div class="col-md-auto">

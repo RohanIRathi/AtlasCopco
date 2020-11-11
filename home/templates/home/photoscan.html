@@ -37,7 +37,7 @@
                                     </tr>
                                     <tr>
                                         <td>Photo Id Number<span class="text-danger">*</span></td>
-                                        <td><input type="text" class="form-control form-control-user" name="photo_id_number" placeholder="Enter Photo Id Number" required></td>
+                                        <td><input type="text" class="form-control form-control-user" {% if form.photo_id_number.value %}value="{{ form.photo_id_number.value }}"{% endif %} name="photo_id_number" placeholder="Enter Photo Id Number" required></td>
                                     </tr>
                                     <tr>
                                         <td> Scan Id<span class="text-danger">*</span></td>
@@ -47,7 +47,7 @@
                             </table>
                             <div class="text-right">
                                 <input class="text-right btn btn-success" type="submit" value="Scan QR">
-                                <input class="text-right btn btn-success" type="submit" data-toggle="modal" data-target="#myModal" value="Take Id">
+                                <input class="text-right btn btn-success" type="button" data-toggle="modal" data-target="#myModal" value="Take Id">
                             </div>
                             <div id="myModal" class="modal fade" role="dialog">
                                 <div class="modal-dialog">
@@ -57,14 +57,14 @@
                                             <h4>Security Badge ID</h4>
                                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                         </div>
-                                        <div class="modal-body">
-                                            <p>Enter Security badge ID</p>
-                                            <p><input type="number" name="id"></p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
-                                        </div>
+                                            <div class="modal-body">
+                                                <p>Enter Security badge ID</p>
+                                                <p><input type="number" class="form-control" name="visit_token"></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <input type="submit" class="btn btn-default" value="Done">
+                                            </div>
                                     </div>
                                 </div>
                             </div>

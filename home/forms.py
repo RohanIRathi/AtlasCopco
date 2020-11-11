@@ -20,3 +20,9 @@ class PhotoForm(ModelForm):
 	class Meta:
 		model = Visitor
 		fields = ['photo', 'photo_id', 'photo_id_number']
+
+class VisitorTokenForm(ModelForm):
+    
+    class Meta:
+        model = Visitor
+        fields = ['visit_token']

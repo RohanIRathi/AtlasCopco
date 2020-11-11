@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.http import request
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -67,7 +68,12 @@ class VisitorListView(LoginRequiredMixin, ListView):
 	def get(self, request):
 		visitor_list = Visitor.objects.filter(out_time__isnull=True)
 		print(visitor_list)
-		context = {'visitor_list': visitor_list}
+		users = Employee.objects.all().count()
+		visitors = Visitor.objects.all().count()
+		visited = Visitor.objects.filter(out_time__isnull=False).count()
+		to_visit = Visitor.objects.filter(in_time__isnull=True).count()
+		visiting = Visitor.objects.filter(in_time__isnull=False).filter(out_time__isnull=True).count()
+		context = {'visitor_list': visitor_list, 'user_count': users, 'visitor_count': visitors, 'visited_count': visited, 'not_visited_count': to_visit, 'visiting_count': visiting}
 
 		return render(request, 'home/home.html', context)
 
@@ -104,10 +110,27 @@ def photoscan(request, **kwargs):
 	if request.method == 'POST':
 		form = PhotoForm(request.POST, request.FILES, instance=instance)
 		if form.is_valid():
+			if request.POST['visit_token']:
+				instance.visit_token = request.POST['visit_token']
+				instance.save()
+				messages.success(request, f'Visitor assigned token: { instance.visit_token }')
+				success_url = '/'
+			else:
+				success_url = reverse('entry:scanQR', kwargs={'id': kwargs.get('id')})
 			form.save()
-			success_url = reverse('entry:scanQR', kwargs={'id': kwargs.get('id')})
 			return redirect(success_url)
 	return  render(request, 'home/photoscan.html', context)
+
+@login_required
+def take_visitor_token(request, **kwargs):
+    instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
+    if request.method == 'POST':
+        form = VisitorTokenForm(request.POST, instance=instance)
+        if form.is_valid:
+            token = request.POST['visit_token']
+            form.save()
+            messages.success(request, f'Visitor provided with token: { token }')
+            return redirect('/')
 
 
 class AllVisitorsListView(LoginRequiredMixin, ListView):
@@ -165,6 +188,6 @@ def get_table_data(request):
 
 @login_required()
 def visitor_in(request):
-	visitor_list =Visitor.objects.filter(out_time__isnull=True)
+	visitor_list =Visitor.objects.filter(in_time__isnull=False).filter(out_time__isnull=True)
 	context = {'visitor_list': visitor_list}
 	return render(request, 'home/visitor_in.html',context)

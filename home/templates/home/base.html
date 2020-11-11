@@ -57,7 +57,7 @@
                             </a>
                             <a class="nav-link" href="{% url 'all-users' %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
-                                Total User
+                                Total Users <span class="ml-1 badge badge-pill badge-light">{{ user_count }}</span>
                             </a>
                             {% endif %}
                             <a class="nav-link" href="{% url 'entry:new-visitor' %}">
