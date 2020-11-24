@@ -25,12 +25,12 @@ SECRET_KEY = '1244ztx296$iq9s3peaw3y8ab@h9i-3q$sher8or68_#7^)x=c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 local_apps = [
-
+	'stream',
     'entry.apps.EntryConfig',
     'home.apps.HomeConfig',
     'charts.apps.ChartsConfig',
@@ -45,7 +45,10 @@ default_apps = [
 	'django.contrib.staticfiles',
 ]
 
-third_party_apps = ['crispy_forms', ]
+third_party_apps = [
+    'crispy_forms',
+    'channels',
+    ]
 
 INSTALLED_APPS = local_apps + default_apps + third_party_apps
 
@@ -78,6 +81,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'atlas_project.wsgi.application'
+ASGI_APPLICATION = 'atlas_project.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('peaceful-dusk-14195.herokuapp.com', 6379), ('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

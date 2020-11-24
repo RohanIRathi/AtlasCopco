@@ -1,0 +1,54 @@
+{% extends 'home/base.html' %}
+{{% block content %}
+<html>
+	<head>
+		<title>Streamer</title>
+	</head>
+	<body>
+		<h1>{{ pk }}</h1>
+		<video crossorigin="anonymous" autoplay></video>
+		<script>
+		// get video dom element
+		const video = document.querySelector("video");
+
+		// request access to webcam
+		navigator.mediaDevices
+			.getUserMedia({
+			video: { width: 426, height: 240, facingMode: "environment" },
+			})
+			.then((stream) => (video.srcObject = stream));
+
+		// returns a frame encoded in base64
+		const getFrame = () => {
+			const canvas = document.createElement("canvas");
+			canvas.width = video.videoWidth;
+			canvas.height = video.videoHeight;
+			canvas.getContext("2d").drawImage(video, 0, 0);
+			const data = canvas.toDataURL("image/png");
+			return data;
+		};
+		const WS_URL = (window.location.protocol === "https:" ? "wss" : "ws") + "://" + window.location.host + "/scan/";
+		const FPS = 3;
+		const ws = new WebSocket(WS_URL);
+		console.log(WS_URL);
+
+		ws.onmessage = function (e) {
+			const data = JSON.parse(e.data);
+			if (data.code == 0) {
+			window.location.replace("{% url 'home' %}");
+			}
+		};
+
+		ws.onopen = () => {
+			console.log(`Connected to ${WS_URL}`);
+			setInterval(() => {
+			var data_im = getFrame();
+			if (data_im.split(",")[1]) {
+				ws.send(JSON.stringify({ data: data_im, code: "{{ pk }}" }));
+			}
+			}, 1000 / FPS);
+		};
+		</script>
+	</body>
+</html>
+{% endblock content %}}

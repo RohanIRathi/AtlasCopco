@@ -64,7 +64,7 @@
                         </div>
                         <div class="col-md-auto">
                             <h6 class="m-0 font-weight-bold text-primary">Scan Visitor's QR Code
-                                <a href="{% url 'entry:scanqr-visitor' %}" class="ml-3 btn btn-primary text-left">Scan</a>
+                                <a href="{% url 'stream:scanner' %}" class="ml-3 btn btn-primary text-left">Scan</a>
                             </h6>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
                                     {% endif %}
                                     <td>
                                         {% if visitor.visit_token %}
-                                        <form action="{% url 'entry:scanQR' visitor.id %}" method="post">
+                                        <form action="{% url 'stream:index' visitor.id %}" method="post">
                                             <input type="hidden" name="scan_id" value="">
                                             <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
                                         </form>

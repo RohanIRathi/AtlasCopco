@@ -64,51 +64,51 @@ def generateQR(id):
 	
 	# visitor.qrcode = "/media/qrcodes/" + qrname + ".png"
 	# visitor.save()
-@csrf_exempt
-@login_required()
-def scanQR(request, **kwargs):
-	if kwargs.get('id'):
-		visitor = Visitor.objects.get(id=kwargs.get('id'))
-		print('id', visitor.id, cv2.__file__)
-	cam = cv2.VideoCapture(0)
-	while True:
-		_, frame = cam.read()
-		Read = pb.decode(frame)
-		for ob in Read:
-			readData = str(ob.data.rstrip().decode('utf-8'))
-			print('readData',readData)
-			if kwargs.get('qr') == 'userQR':
-				visitor = Visitor.objects.filter(token=readData).order_by('-id').first()
-				if visitor:
-					print('/updatevisitor/'+str(visitor.id)+'/')
-					cv2.destroyAllWindows()
-					return redirect('/photoscan/'+str(visitor.id)+"/")
-			elif visitor.visit_token:
-				print(visitor.visit_token)
-				if readData == visitor.visit_token:
-					visitor.out_time = datetime.now()
-					visitor.save()
-					send_normal_email(visitor)
-					messages.success(request, f'QR Code scanned successfully!')
-					cv2.destroyAllWindows()
-					return redirect(f'{reverse("home")}')
-			else:
-				visitor.visit_token = readData
-				visitor.in_time = datetime.now()
-				visitor.save()
-				send_normal_email(visitor)
-				messages.success(request, f'QR Code scanned with value: { readData }')
-				cv2.destroyAllWindows()
-				return redirect(reverse('home'))
+# @csrf_exempt
+# @login_required()
+# def scanQR(request, **kwargs):
+# 	if kwargs.get('id'):
+# 		visitor = Visitor.objects.get(id=kwargs.get('id'))
+# 		print('id', visitor.id, cv2.__file__)
+# 	cam = cv2.VideoCapture(0)
+# 	while True:
+# 		_, frame = cam.read()
+# 		Read = pb.decode(frame)
+# 		for ob in Read:
+# 			readData = str(ob.data.rstrip().decode('utf-8'))
+# 			print('readData',readData)
+# 			if kwargs.get('qr') == 'userQR':
+# 				visitor = Visitor.objects.filter(token=readData).order_by('-id').first()
+# 				if visitor:
+# 					print('/updatevisitor/'+str(visitor.id)+'/')
+# 					cv2.destroyAllWindows()
+# 					return redirect('/photoscan/'+str(visitor.id)+"/")
+# 			elif visitor.visit_token:
+# 				print(visitor.visit_token)
+# 				if readData == visitor.visit_token:
+# 					visitor.out_time = datetime.now()
+# 					visitor.save()
+# 					send_normal_email(visitor)
+# 					messages.success(request, f'QR Code scanned successfully!')
+# 					cv2.destroyAllWindows()
+# 					return redirect(f'{reverse("home")}')
+# 			else:
+# 				visitor.visit_token = readData
+# 				visitor.in_time = datetime.now()
+# 				visitor.save()
+# 				send_normal_email(visitor)
+# 				messages.success(request, f'QR Code scanned with value: { readData }')
+# 				cv2.destroyAllWindows()
+# 				return redirect(reverse('home'))
 		
-		cv2.imshow("Frame", frame)
-		key = cv2.waitKey(1)
-		if key == 27:
-			cv2.destroyAllWindows()
-			return redirect(f'{reverse("home")}')
-			break
+# 		cv2.imshow("Frame", frame)
+# 		key = cv2.waitKey(1)
+# 		if key == 27:
+# 			cv2.destroyAllWindows()
+# 			return redirect(f'{reverse("home")}')
+# 			break
 		
-		template_name = 'home/home.html'
+# 		template_name = 'home/home.html'
 		
 def send_normal_email(Visitor):
 	to_email = Visitor.user.user.email
