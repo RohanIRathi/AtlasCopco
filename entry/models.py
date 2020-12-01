@@ -1,3 +1,4 @@
+from atlas_project.settings import TIME_ZONE
 from django.db import models
 from django.core.validators import EmailValidator, MaxValueValidator, MinLengthValidator, MinValueValidator
 from django.contrib.auth.models import User

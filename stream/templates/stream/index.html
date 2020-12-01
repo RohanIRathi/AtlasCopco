@@ -30,15 +30,8 @@
 		const WS_URL = (window.location.protocol === "https:" ? "wss" : "ws") + "://" + window.location.host + "/scan/";
 		const FPS = 3;
 		const ws = new WebSocket(WS_URL);
-		console.log(WS_URL);
 
-		ws.onmessage = function (e) {
-			const data = JSON.parse(e.data);
-			if (data.code == 0) {
-			window.location.replace("{% url 'home' %}");
-			}
-		};
-
+		
 		ws.onopen = () => {
 			console.log(`Connected to ${WS_URL}`);
 			setInterval(() => {
@@ -48,6 +41,18 @@
 			}
 			}, 1000 / FPS);
 		};
+
+		ws.onmessage = function (e) {
+			const data = JSON.parse(e.data);
+			if (data.code == 0) {
+			window.location.replace("{% url 'home' %}");
+			}
+			if("{{ pk }}" == "scan" && data.code > 0)
+			{
+				window.location.replace("/photoscan/" + data.code);
+			}
+		};
+
 		</script>
 	</body>
 </html>

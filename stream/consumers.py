@@ -4,6 +4,7 @@ import base64
 from pyzbar import pyzbar as pb
 from io import BytesIO
 from PIL import Image
+from django.shortcuts import redirect
 
 from datetime import datetime
 
@@ -38,9 +39,13 @@ class Streamer(WebsocketConsumer):
 			if value == 'scan':
 				visitor = Visitor.objects.filter(token=readData).order_by('-id').first()
 				if visitor:
-					value = 0
+					value = visitor.id
 			elif visitor.visit_token:
 				if readData == visitor.visit_token:
+					visit_time = (datetime.combine(datetime.utcnow().date(), datetime.utcnow().time()) - datetime.combine(visitor.in_time.date(), visitor.in_time.time())).total_seconds()
+					print(visit_time)
+					if visit_time < 60:
+						break
 					visitor.out_time = datetime.now()
 					visitor.save()
 					views.send_normal_email(visitor)

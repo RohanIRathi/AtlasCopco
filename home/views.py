@@ -116,7 +116,7 @@ def photoscan(request, **kwargs):
 				messages.success(request, f'Visitor assigned token: { instance.visit_token }')
 				success_url = '/'
 			else:
-				success_url = reverse('entry:scanQR', kwargs={'id': kwargs.get('id')})
+				success_url = reverse('stream:index', kwargs={'pk': kwargs.get('id')})
 			form.save()
 			return redirect(success_url)
 	return  render(request, 'home/photoscan.html', context)
