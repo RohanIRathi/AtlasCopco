@@ -13,10 +13,6 @@ def page(request):
     return render(request, 'charts/chart.html')
 
 @login_required
-def page1(request):
-    return render(request, 'charts/chart1.html')
-
-@login_required
 def visitor_chart(request):
     labels = []
     data = []

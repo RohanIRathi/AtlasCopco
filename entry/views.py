@@ -21,7 +21,7 @@ import pyzbar.pyzbar as pb
 # Create your views here.
 @login_required
 def new_visitor(request):
-	employees = Employee.objects.all()
+	employees = User.objects.all()
 	form = NewVisitorForm()
 	if request.method == 'POST':
 		form = NewVisitorForm(request.POST, request.FILES)
@@ -143,6 +143,6 @@ class VisitorUpdateView(LoginRequiredMixin, UpdateView):
 	
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data()
-		context['employees'] = Employee.objects.all()
+		context['employees'] = User.objects.all()
 		
 		return context

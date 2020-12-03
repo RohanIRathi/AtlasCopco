@@ -1,4 +1,4 @@
-from home.views import AllUsersListView, get_table_data, take_visitor_token
+from home.views import  get_table_data, take_visitor_token
 from django.urls import path
 from . import views
 from django.views.generic import TemplateView
@@ -13,7 +13,6 @@ urlpatterns = [
 	path('allvisitors/', views.AllVisitedListView.as_view(), name='all-visitors'),
 	path('edit/visitor/<int:pk>/', views.VisitorDetailView.as_view(), name='visitor-detail'),
 	path('allbookedvisitors/', views.AllVisitorsListView.as_view(), name='all-booked-visitors'),
-	path('allusers/', views.AllUsersListView.as_view(), name="all-users"),
 	path('logout/', views.logout_user, name='logout'),
 	path('photoscan/<int:id>/', views.photoscan, name='photoscan'),
 	path('tables/', views.get_table_data, name='tables'),
