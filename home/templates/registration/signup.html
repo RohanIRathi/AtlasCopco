@@ -1,4 +1,4 @@
-{% extends 'home/base.html' %} {% load crispy_forms_tags %} {% load static %} {{ form.errors }} {{ employee_form.errors }} {% block content %}
+{% extends 'home/base.html' %} {% load crispy_forms_tags %} {% load static %} {{ form.errors }}  {% block content %}
 <div id="layoutSidenav_content">
     <main>
         <div class="container">
@@ -13,9 +13,9 @@
                                         <div class="text-center">
                                             <h1 class="h4 text-gray-900 mb-4">Add User</h1>
                                         </div>
-                                        <small class="form-text text-danger">Fields marked * are required.</small><br> {{ form.errors }} {{ employee_form.errors }}
+                                        <small class="form-text text-danger">Fields marked * are required.</small><br> {{ form.errors }}
                                         <form class="user" method="post" enctype="multipart/form-data">
-                                            {% csrf_token %} {{ form.errors|crispy }} {{ employee_form.errors|crispy }}
+                                            {% csrf_token %} {{ form.errors|crispy }}
 
                                             <div id="div_id_username" class="form-group">
                                                 <label for="id_username" class=" requiredField">Username<span class="asteriskField text-danger">*</span> </label>
@@ -51,6 +51,7 @@
                                                         <input type="number" name="mobile" {% if form.mobile.value %}value="{{ form.mobile.value }}" {% else %}placeholder="Enter Mobile" {% endif %} class="form-control form-control-user" placeholder="Enter Phone No.">
                                                     </div>
                                                 </div>
+
                                             </div>
                                             <div class="row">
                                                 <div class="col">
@@ -66,10 +67,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!--<medium>Check If new user is admin</medium>
 											<div class="form-group ml-4 mt-4">
-												<input type="checkbox" name="admin" class="checkboxinput form-check-input">Admin
-											</div>-->
+                                                <label>Check If new user is admin</label>
+                                                {{ form.is_superuser  }}
+                                            </div>
+
+
                                             <hr>
                                             <input type="submit" name="add_btn" class="btn btn-primary btn-user btn-block" style="border-radius: 10rem;">
                                             <hr>

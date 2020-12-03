@@ -18,7 +18,7 @@ from entry.models import *
 
 def is_admin(user):
 	try:
-		admin = Employee.objects.get(user=user.id).admin
+		admin = User.objects.get(username=user).is_superuser
 		return admin
 	except:
 		return False
@@ -28,18 +28,18 @@ def is_admin(user):
 def signup(request):
 	if request.method == "POST":
 		form = CreateUserForm(request.POST)
-		employee_form = CreateEmployeeForm(request.POST)
-		if form.is_valid() and employee_form.is_valid():
+		# employee_form = CreateEmployeeForm(request.POST)
+		if form.is_valid() :  # and employee_form.is_valid():
 			user = form.save()
-			employee = employee_form.save(commit=False)
+			"""employee = employee_form.save(commit=False)
 			employee.user = user
-			employee.save()
+			employee.save()"""
 			user = form.cleaned_data.get('username')
 			messages.success(request, 'Account was created ')
 			return redirect('/login/')
 	form = CreateUserForm()
-	employee_form = CreateEmployeeForm()
-	context = {'form': form, 'employee_form': employee_form}
+	# employee_form = CreateEmployeeForm()
+	context = {'form': form,} # 'employee_form': employee_form}
 	return render(request, 'registration/signup.html', context)
 
 
@@ -68,12 +68,11 @@ class VisitorListView(LoginRequiredMixin, ListView):
 	def get(self, request):
 		visitor_list = Visitor.objects.filter(out_time__isnull=True)
 		print(visitor_list)
-		users = Employee.objects.all().count()
 		visitors = Visitor.objects.all().count()
 		visited = Visitor.objects.filter(out_time__isnull=False).count()
 		to_visit = Visitor.objects.filter(in_time__isnull=True).count()
 		visiting = Visitor.objects.filter(in_time__isnull=False).filter(out_time__isnull=True).count()
-		context = {'visitor_list': visitor_list, 'user_count': users, 'visitor_count': visitors, 'visited_count': visited, 'not_visited_count': to_visit, 'visiting_count': visiting}
+		context = {'visitor_list': visitor_list,  'visitor_count': visitors, 'visited_count': visited, 'not_visited_count': to_visit, 'visiting_count': visiting}
 
 		return render(request, 'home/home.html', context)
 
@@ -140,12 +139,7 @@ class AllVisitorsListView(LoginRequiredMixin, ListView):
 
 		return render(request, 'home/all_visitors_booked.html', context)
 
-class AllUsersListView(LoginRequiredMixin, ListView):
-	def get(self, request):
-		employee_list = Employee.objects.all()
-		context = {'employee_list': employee_list}
 
-		return render(request, 'home/all_users_list.html', context)
 
 @login_required()
 @user_passes_test(is_admin)
