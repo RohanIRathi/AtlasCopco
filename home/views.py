@@ -10,8 +10,8 @@ from django.urls import reverse
 from django.urls.base import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.conf import settings
-from django.db.models.query import QuerySet
 import os
+from django.contrib.auth.models import User
 
 from .forms import *
 from entry.models import *
@@ -158,7 +158,7 @@ def get_table_data(request):
 			except:
 				pass
 			try:
-				user = Employee.objects.get(user=User.objects.get(username__icontains=search_query))
+				user = User.objects.get(username__icontains=search_query)
 				visitor_list = Visitor.objects.filter(user=user)
 				if visitor_list:
 					sort = True

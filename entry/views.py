@@ -53,11 +53,11 @@ def generateQR(id):
 		border=4
 	)
 	visitor = Visitor.objects.get(id=id)  # visitors id
-	token = str(visitor.id) + str(visitor.name).upper()[:5] + str(visitor.email)[:5]
+	token = str(visitor.name).upper() + ' ' + str(visitor.id) + ' (V)'
 	qr.add_data(token)
 	qr.make(fit=True)
 	img = qr.make_image(fill_color="black", back_color="white")
-	qrname = visitor.name + "_" + str(hash(visitor.name))
+	qrname = visitor.id + "_" + str(hash(visitor.name))
 	img.save("./media/qrcodes/" + qrname + ".png")
 	
 	return "/media/qrcodes/" + qrname + ".png", token
@@ -111,7 +111,7 @@ def generateQR(id):
 # 		template_name = 'home/home.html'
 		
 def send_normal_email(Visitor):
-	to_email = Visitor.user.user.email
+	to_email = Visitor.user.email
 	print(to_email)
 	if Visitor.out_time:
 		subject = Visitor.name + ' has left Atlas Copco Campus'

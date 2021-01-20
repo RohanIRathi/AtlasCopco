@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+# import django_python3_ldap
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 local_apps = [
-	'stream',
+	# 'stream',
     'entry.apps.EntryConfig',
     'home.apps.HomeConfig',
     'charts.apps.ChartsConfig',
@@ -47,7 +48,7 @@ default_apps = [
 
 third_party_apps = [
     'crispy_forms',
-    'channels',
+    # 'channels',
     ]
 
 INSTALLED_APPS = local_apps + default_apps + third_party_apps
@@ -58,8 +59,15 @@ MIDDLEWARE = [
 	'django.middleware.common.CommonMiddleware',
 	'django.middleware.csrf.CsrfViewMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	# 'atlas_project.authentication_middleware.AutomaticUserLoginMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+AUTHENTICATION_BACKENDS = [
+	'django.contrib.auth.backends.ModelBackend',
+	# 'django_python3_ldap.auth.LDAPBackend',
+	# 'atlas_project.authentication_backend.AuthenticationBackend',
 ]
 
 ROOT_URLCONF = 'atlas_project.urls'
@@ -89,8 +97,49 @@ CHANNEL_LAYERS = {
         'CONFIG': {
             "hosts": [('peaceful-dusk-14195.herokuapp.com', 6379), ('127.0.0.1', 6379)],
         },
+        
     },
 }
+
+# # For simple usernames (e.g. "username"):
+# LDAP_AUTH_FORMAT_USERNAME = "django_python3_ldap.utils.format_username_active_directory"
+
+# # For down-level login name formats (e.g. "DOMAIN\username"):
+# # LDAP_AUTH_FORMAT_USERNAME = "django_python3_ldap.utils.format_username_active_directory"
+# # LDAP_AUTH_ACTIVE_DIRECTORY_DOMAIN = "DOMAIN"
+
+# # For user-principal-name formats (e.g. "user@domain.com"):
+# # LDAP_AUTH_FORMAT_USERNAME = "django_python3_ldap.utils.format_username_active_directory_principal"
+# # LDAP_AUTH_ACTIVE_DIRECTORY_DOMAIN = "domain.com"
+
+# LDAP_AUTH_USER_FIELDS = {
+#     "username": "username",
+#     "first_name": "personfirstname",
+#     "last_name": "personlastname",
+#     "email": "email",
+# }
+
+# LDAP_AUTH_OBJECT_CLASS = "user"
+
+# # For debugging purposes, remove this part once application is ready for production
+
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "console": {
+#             "class": "logging.StreamHandler",
+#         },
+#     },
+#     "loggers": {
+#         "django_python3_ldap": {
+#             "handlers": ["console"],
+#             "level": "INFO",
+#         },
+#     },
+# }
+
+
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
