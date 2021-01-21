@@ -27,8 +27,8 @@
 										<td>{{ visitor.email }}</td>
 										<td>{{ visitor.no_of_people }}</td>
 										<td>{{ visitor.photo_id_number }}</td>
-										<td>{{ visitor.in_time.date }}</td>
-										<td>{{ visitor.in_time.time }}</td>
+										<td>{{ visitor.expected_in_time.date }}</td>
+										<td>{{ visitor.expected_in_time.time }}</td>
 										<td>
 												<input type="hidden" name="edit_id" value="">
 												<button type="submit" name="edit_btn" onclick="window.location.href='{% url 'entry:visitor-update' visitor.id %}'" class="btn btn-success"> EDIT</button>

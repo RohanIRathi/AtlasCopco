@@ -11,6 +11,7 @@ from django.conf import settings
 
 import os
 from datetime import datetime
+from dateutil.parser import parse
 from PIL import Image
 from .forms import *
 import cv2
@@ -25,7 +26,6 @@ def new_visitor(request):
 	form = NewVisitorForm()
 	if request.method == 'POST':
 		form = NewVisitorForm(request.POST, request.FILES)
-		print(form)
 		if form.is_valid():
 			visitor = form.save(commit=False)
 			visitor.save()
@@ -39,6 +39,7 @@ def new_visitor(request):
 				return redirect('/photoscan/'+str(visitor.id)+"/")
 			return redirect('/')
 		else:
+			print(form.errors)
 			messages.error(request, 'Error!')
 	context = {'form': form, 'employees': employees}
 	return render(request, 'entry/visitor_booking.html', context)
@@ -46,18 +47,19 @@ def new_visitor(request):
 
 def generateQR(id):
 	import qrcode
+	display_visitors = Visitor.objects.filter(session_expired=True)
 	qr = qrcode.QRCode(
 		version=1,
 		error_correction=qrcode.constants.ERROR_CORRECT_L,
 		box_size=5,
 		border=4
 	)
-	visitor = Visitor.objects.get(id=id)  # visitors id
+	visitor = display_visitors.get(id=id)  # visitors id
 	token = str(visitor.name).upper() + ' ' + str(visitor.id) + ' (V)'
 	qr.add_data(token)
 	qr.make(fit=True)
 	img = qr.make_image(fill_color="black", back_color="white")
-	qrname = visitor.id + "_" + str(hash(visitor.name))
+	qrname = str(visitor.id) + "_" + str(hash(visitor.name))
 	img.save("./media/qrcodes/" + qrname + ".png")
 	
 	return "/media/qrcodes/" + qrname + ".png", token
@@ -67,47 +69,37 @@ def generateQR(id):
 # @csrf_exempt
 # @login_required()
 # def scanQR(request, **kwargs):
+#	display_visitors = Visitor.objects.filter(session_expired=False)
 # 	if kwargs.get('id'):
-# 		visitor = Visitor.objects.get(id=kwargs.get('id'))
-# 		print('id', visitor.id, cv2.__file__)
-# 	cam = cv2.VideoCapture(0)
-# 	while True:
-# 		_, frame = cam.read()
-# 		Read = pb.decode(frame)
-# 		for ob in Read:
-# 			readData = str(ob.data.rstrip().decode('utf-8'))
-# 			print('readData',readData)
-# 			if kwargs.get('qr') == 'userQR':
-# 				visitor = Visitor.objects.filter(token=readData).order_by('-id').first()
-# 				if visitor:
-# 					print('/updatevisitor/'+str(visitor.id)+'/')
-# 					cv2.destroyAllWindows()
-# 					return redirect('/photoscan/'+str(visitor.id)+"/")
-# 			elif visitor.visit_token:
-# 				print(visitor.visit_token)
-# 				if readData == visitor.visit_token:
-# 					visitor.out_time = datetime.now()
-# 					visitor.save()
-# 					send_normal_email(visitor)
-# 					messages.success(request, f'QR Code scanned successfully!')
-# 					cv2.destroyAllWindows()
-# 					return redirect(f'{reverse("home")}')
-# 			else:
-# 				visitor.visit_token = readData
-# 				visitor.in_time = datetime.now()
+# 		visitor = display_visitors.get(id=kwargs.get('id'))
+# 	Read = pb.decode(frame)
+# 	for ob in Read:
+# 		readData = str(ob.data.rstrip().decode('utf-8'))
+# 		print('readData',readData)
+# 		if kwargs.get('qr') == 'userQR':
+# 			visitor = display_visitors.filter(token=readData).order_by('-id').first()
+# 			if visitor:
+# 				print('/updatevisitor/'+str(visitor.id)+'/')
+# 				cv2.destroyAllWindows()
+# 				return redirect('/photoscan/'+str(visitor.id)+"/")
+# 		elif visitor.visit_token:
+# 			print(visitor.visit_token)
+# 			if readData == visitor.visit_token:
+# 				visitor.out_time = datetime.now()
 # 				visitor.save()
 # 				send_normal_email(visitor)
-# 				messages.success(request, f'QR Code scanned with value: { readData }')
+# 				messages.success(request, f'QR Code scanned successfully!')
 # 				cv2.destroyAllWindows()
-# 				return redirect(reverse('home'))
-		
-# 		cv2.imshow("Frame", frame)
-# 		key = cv2.waitKey(1)
-# 		if key == 27:
+# 				return redirect(f'{reverse("home")}')
+#	 	else:
+#	 		visitor.visit_token = readData
+#	 		visitor.in_time = datetime.now()
+#	 		visitor.save()
+#	 		send_normal_email(visitor)
+#	 		messages.success(request, f'QR Code scanned with value: { readData }')
 # 			cv2.destroyAllWindows()
-# 			return redirect(f'{reverse("home")}')
-# 			break
-		
+#	 		return redirect(reverse('home'))
+	
 # 		template_name = 'home/home.html'
 		
 def send_normal_email(Visitor):

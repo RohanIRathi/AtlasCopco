@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.http import request
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
@@ -66,26 +66,42 @@ def logout_user(request):
 
 class VisitorListView(LoginRequiredMixin, ListView):
 	def get(self, request):
-		visitor_list = Visitor.objects.filter(out_time__isnull=True)
-		print(visitor_list)
-		visitors = Visitor.objects.all().count()
-		visited = Visitor.objects.filter(out_time__isnull=False).count()
-		to_visit = Visitor.objects.filter(in_time__isnull=True).count()
-		visiting = Visitor.objects.filter(in_time__isnull=False).filter(out_time__isnull=True).count()
+		all = Visitor.objects.all()
+		for visitor in all:
+			if visitor.expected_in_time:
+				if visitor.expected_in_time.date() < datetime.now().date() and not visitor.in_time:
+					print(visitor.name)
+					visitor.session_expired = True
+					visitor.save()
+		display_visitors = Visitor.objects.filter(session_expired=False)
+		visitor_list = display_visitors.filter(expected_in_time__date=datetime.now().date()).filter(out_time__isnull=True)
+		visitors = display_visitors.count()
+		visited = display_visitors.filter(out_time__isnull=False).count()
+		to_visit = display_visitors.filter(in_time__isnull=True).count()
+		visiting = display_visitors.filter(in_time__isnull=False).filter(out_time__isnull=True).count()
 		context = {'visitor_list': visitor_list,  'visitor_count': visitors, 'visited_count': visited, 'not_visited_count': to_visit, 'visiting_count': visiting}
 
 		return render(request, 'home/home.html', context)
 
 class NotVisitedListView(LoginRequiredMixin, ListView):
 	def get(self, request):
-		visitor_list = Visitor.objects.filter(in_time__isnull=True)
+		display_visitors = Visitor.objects.filter(session_expired=False)
+		visitor_list = display_visitors.filter(in_time__isnull=True)
 		context = {'visitor_list': visitor_list}
 
 		return render(request, 'home/not_visited.html', context)
 
+class VisitExpiredListView(LoginRequiredMixin, ListView):
+	def get(self, request):
+		expired = Visitor.objects.filter(session_expired=True)
+		context = {'visitor_list': expired}
+
+		return render(request, 'home/expired_booking.html', context)
+
 class AllVisitedListView(LoginRequiredMixin, ListView):
 	def get(self, request):
-		visitor_list = Visitor.objects.filter(out_time__isnull = False).order_by('-in_time')
+		display_visitors = Visitor.objects.filter(session_expired=False)
+		visitor_list = display_visitors.filter(out_time__isnull = False).order_by('-in_time')
 		context = {'visitor_list': visitor_list}
 
 		return render(request, 'home/all_visitors.html', context)
@@ -96,6 +112,7 @@ class VisitorDetailView(LoginRequiredMixin, DetailView):
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
+		print(context['visitor'].in_time)
 		if context['visitor'].photo_id:
 			context['photopath'] = os.path.relpath(str(context['visitor'].photo_id))
 
@@ -134,7 +151,8 @@ def take_visitor_token(request, **kwargs):
 
 class AllVisitorsListView(LoginRequiredMixin, ListView):
 	def get(self, request):
-		visitor_list = Visitor.objects.order_by('-in_time')
+		display_visitors = Visitor.objects.filter(session_expired=False)
+		visitor_list = display_visitors.order_by('-in_time')
 		context = {'visitor_list': visitor_list}
 
 		return render(request, 'home/all_visitors_booked.html', context)
@@ -144,7 +162,8 @@ class AllVisitorsListView(LoginRequiredMixin, ListView):
 @login_required()
 @user_passes_test(is_admin)
 def get_table_data(request):
-	visitor_list = Visitor.objects.order_by('-in_time')
+	display_visitors = Visitor.objects.filter(session_expired=False)
+	visitor_list = display_visitors.order_by('-in_time')
 	search_query = ''
 	if request.method == 'POST':
 		search_query = request.POST['search']
@@ -159,20 +178,20 @@ def get_table_data(request):
 				pass
 			try:
 				user = User.objects.get(username__icontains=search_query)
-				visitor_list = Visitor.objects.filter(user=user)
+				visitor_list = display_visitors.filter(user=user)
 				if visitor_list:
 					sort = True
 			except:
 				pass
 			if search_date:
-				visitor_list = Visitor.objects.filter(in_time__date = search_date)
+				visitor_list = display_visitors.filter(in_time__date = search_date)
 			elif not sort:
-				visitor_list = Visitor.objects.filter(name__icontains=search_query)
+				visitor_list = display_visitors.filter(name__icontains=search_query)
 				print(visitor_list)
 			else:
 				break
 		if search_query == '':
-			visitor_list = Visitor.objects.order_by('-in_time')
+			visitor_list = display_visitors.order_by('-in_time')
 
 	context = {'visitor_list': visitor_list, 'search_query': search_query}
 
@@ -182,6 +201,7 @@ def get_table_data(request):
 
 @login_required()
 def visitor_in(request):
-	visitor_list =Visitor.objects.filter(in_time__isnull=False).filter(out_time__isnull=True)
+	display_visitors = Visitor.objects.filter(session_expired=False)
+	visitor_list = display_visitors.filter(in_time__isnull=False).filter(out_time__isnull=True)
 	context = {'visitor_list': visitor_list}
 	return render(request, 'home/visitor_in.html',context)

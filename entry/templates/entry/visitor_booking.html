@@ -1,12 +1,29 @@
-{% extends 'home/base.html' %} {% load crispy_forms_tags %} {% block content %}
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+<script crossorigin="anonymous" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" type="text/css" media="all" rel="stylesheet">
+<link href="/static/bootstrap_datepicker_plus/css/datepicker-widget.css" type="text/css" media="all" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/static/bootstrap_datepicker_plus/js/datepicker-widget.js"></script>
 <div id="layoutSidenav_content">
 	<main>
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-xl-10 col-lg-10 col-md-10">
 					<div class="card o-hidden border-0 shadow-lg my-5">
-						<div class="card-body p-0">
-							{% if form.errors %} {{ form.errors }} {% endif %}
+						<div class="card-body p-0" style="margin: 5px 20px">
+							{% if form.errors %}
+							<div class="alert alert-danger text-form text-dark">
+							{% for field, error in form.errors.items %}
+								{{ error }}
+							{% endfor %}
+							</div>
+							{% endif %}
 							<div class="row">
 								<div class="col-lg-12">
 									<div class="p-5">
@@ -15,7 +32,8 @@
 										</div>
 										<small class="form-text text-danger">Fields marked * are required.</small><br>
 										<form class="user" method="post" enctype="multipart/form-data">
-											{% csrf_token %} {% comment %} {{ form|crispy }} {% endcomment %}
+											{% csrf_token %}
+											{% comment %} {{ form|crispy }} {% endcomment %}
 
 											<div class="row">
 												<div class="col">
@@ -62,6 +80,21 @@
 											</div>
 											<div class="row">
 												<div class="col">
+													<div id="div_id_expected_in_time" class="form-group">
+														<label for="id_expected_in_time" class=" requiredField">Visit In-Time<span class="asteriskField form-text text-danger">*</span> </label>
+														<div class="">
+															<div class="input-group date">
+																<input type="text" name="expected_in_time" class="form-control datepickerinput form-control-user" {% if form.expected_in_time.value %} value="{{ form.expected_in_time.value }}" {% endif %} id="id_expected_in_time" dp_config="{&quot;id&quot;: &quot;dp_1&quot;, &quot;picker_type&quot;: &quot;DATE&quot;, &quot;linked_to&quot;: null, &quot;options&quot;: {&quot;showClose&quot;: true, &quot;showClear&quot;: true, &quot;showTodayButton&quot;: true, &quot;format&quot;: &quot;DD/MM/YYYY hh:mm A&quot;}}" required>
+																<div class="input-group-addon input-group-append" data-target="#datetimepicker1" data-toggle="datetimepickerv">
+																	<div class="input-group-text"><i class="glyphicon glyphicon-calendar"></i></div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col">
 													<div class="form-group pb-2">
 														<label>Phone No.<span class="asteriskField text-danger">*</span></label>
 														<input type="text" name="mobile" class="form-control form-control-user" placeholder="Enter Phone No." {% if form.mobile.value %}value="{{ form.mobile.value }}"{% endif %} required>
@@ -91,7 +124,7 @@
 															<select name="user" class="select form-control" required id="id_user">
 																	<option value="" selected>---------</option>
 																	{% for employee in employees %}
-																		<option value="{{ employee.id }}"  {% if form.user.value == employee.id %} selected {% endif %}>{{ employee.first_name }} {{ employee.last_name }}</option>
+																		<option value="{{ employee.id }}"  {% if form.user.value == employee.id %} selected {% elif request.user.id == employee.id %} selected {% endif %}>{{ employee.first_name }} {{ employee.last_name }}</option>
 																	{% endfor %}
 																</select>
 														</div>

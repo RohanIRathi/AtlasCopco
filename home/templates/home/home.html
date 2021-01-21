@@ -62,11 +62,13 @@
                                 <a href="{% url 'entry:new-visitor' %}" class="ml-3 btn btn-primary text-left">Add</a>
                             </h6>
                         </div>
-                        <div class="col-md-auto">
-                            <h6 class="m-0 font-weight-bold text-primary">Scan Visitor's QR Code
-                                <a href="#" class="ml-3 btn btn-primary text-left">Scan</a>
-                            </h6>
-                        </div>
+                        {% if request.user.is_staff and not request.user.is_superuser %}
+                            <div class="col-md-auto">
+                                <h6 class="m-0 font-weight-bold text-primary">Scan Visitor's QR Code
+                                    <a href="#" class="ml-3 btn btn-primary text-left">Scan</a>
+                                </h6>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="card-body">
@@ -77,10 +79,12 @@
                                     <th> Name </th>
                                     <th> Email </th>
                                     <th> No.of Visitors </th>
-                                    <th>Phone No.</th>
+                                    <th> Phone No. </th>
                                     <th> Time </th>
-                                    <th> Photo </th>
-                                    <th> QR Code </th>
+                                    {% if request.user.is_staff and not request.user.is_superuser %}
+                                        <th> Photo </th>
+                                        <th> QR Code </th>
+                                    {% endif %}
                                 </tr>
                             </thead>
                             <tbody>
@@ -90,25 +94,27 @@
                                     <td>{{ visitor.email }}</td>
                                     <td>{{ visitor.no_of_people }}</td>
                                     <td>{{ visitor.mobile }}</td>
-                                    <td>{{ visitor.in_time }}</td>
-                                    {% if not visitor.photo %}
-                                    <td>
-                                        <input type="hidden" name="edit_id" value="">
-                                        <a type="submit" href="{% url 'photoscan' visitor.id %}" name="photo_btn" class="btn btn-success"> Scan </a>
-                                    </td>
-                                    {% else %}
-                                    <td>
-                                        Photo Id Scanned
-                                    </td>
+                                    <td>{{ visitor.expected_in_time }}</td>
+                                    {% if request.user.is_staff and not request.user.is_superuser %}
+                                        {% if not visitor.photo %}
+                                        <td>
+                                            <input type="hidden" name="edit_id" value="">
+                                            <a type="submit" href="{% url 'photoscan' visitor.id %}" name="photo_btn" class="btn btn-success"> Scan </a>
+                                        </td>
+                                        {% else %}
+                                        <td>
+                                            Photo Id Scanned
+                                        </td>
+                                        {% endif %}
+                                        <td>
+                                            {% if visitor.visit_token %}
+                                            <form action="#" method="post">
+                                                <input type="hidden" name="scan_id" value="">
+                                                <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
+                                            </form>
+                                            {% else %} Visiting Token<br>Not Assigned {% endif %}
+                                        </td>
                                     {% endif %}
-                                    <td>
-                                        {% if visitor.visit_token %}
-                                        <form action="#" method="post">
-                                            <input type="hidden" name="scan_id" value="">
-                                            <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
-                                        </form>
-                                        {% else %} Visiting Token<br>Not Assigned {% endif %}
-                                    </td>
                                 </tr>
                                 {% endfor %} {% endif %}
                             </tbody>

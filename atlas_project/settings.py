@@ -48,6 +48,8 @@ default_apps = [
 
 third_party_apps = [
     'crispy_forms',
+    'bootstrap4',
+    'bootstrap_datepicker_plus',
     # 'channels',
     ]
 
@@ -176,9 +178,11 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Kolkata'
 
+DATETIME_INPUT_FORMATS = ['%d/%m/%Y %I:%M %p',]
+
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
