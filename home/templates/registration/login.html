@@ -23,6 +23,10 @@
 						<div class="row">
 							<div class="col-lg-12">
 								<div class="p-5">
+									{% for message in messages %}
+										<div class="alert alert-danger text-center col-sm-9" style="margin: auto;" id="messages">{{ message }}</div>
+										<hr>
+									{% endfor %}
 									<div class="text-center">
 										<h1 class="h4 text-gray-900 mb-4">Atlas Copco</h1>
 									</div>

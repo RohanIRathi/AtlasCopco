@@ -54,7 +54,7 @@ def login_validate(request):
 			return redirect(request.GET.get('next', 'home'))
 		else:
 			print('Not a User')
-			messages.info(request, "Email or Password incorrect !")
+			messages.error(request, "Username or Password incorrect !")
 
 	return render(request, 'registration/login.html')
 
