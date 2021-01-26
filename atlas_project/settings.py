@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+
 # import django_python3_ldap
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,19 +32,19 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 local_apps = [
-	# 'stream',
+    # 'stream',
     'entry.apps.EntryConfig',
     'home.apps.HomeConfig',
     'charts.apps.ChartsConfig',
 ]
 
 default_apps = [
-	'django.contrib.admin',
-	'django.contrib.auth',
-	'django.contrib.contenttypes',
-	'django.contrib.sessions',
-	'django.contrib.messages',
-	'django.contrib.staticfiles',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 ]
 
 third_party_apps = [
@@ -51,43 +52,43 @@ third_party_apps = [
     'bootstrap4',
     'bootstrap_datepicker_plus',
     # 'channels',
-    ]
+]
 
 INSTALLED_APPS = local_apps + default_apps + third_party_apps
 
 MIDDLEWARE = [
-	'django.middleware.security.SecurityMiddleware',
-	'django.contrib.sessions.middleware.SessionMiddleware',
-	'django.middleware.common.CommonMiddleware',
-	'django.middleware.csrf.CsrfViewMiddleware',
-	'django.contrib.auth.middleware.AuthenticationMiddleware',
-	# 'atlas_project.authentication_middleware.AutomaticUserLoginMiddleware',
-	'django.contrib.messages.middleware.MessageMiddleware',
-	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'atlas_project.authentication_middleware.AutomaticUserLoginMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 AUTHENTICATION_BACKENDS = [
-	'django.contrib.auth.backends.ModelBackend',
-	# 'django_python3_ldap.auth.LDAPBackend',
-	# 'atlas_project.authentication_backend.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    # 'django_python3_ldap.auth.LDAPBackend',
+    # 'atlas_project.authentication_backend.AuthenticationBackend',
 ]
 
 ROOT_URLCONF = 'atlas_project.urls'
 
 TEMPLATES = [
-	{
-		'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [],
-		'APP_DIRS': True,
-		'OPTIONS': {
-			'context_processors': [
-				'django.template.context_processors.debug',
-				'django.template.context_processors.request',
-				'django.contrib.auth.context_processors.auth',
-				'django.contrib.messages.context_processors.messages',
-			],
-		},
-	},
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
 ]
 
 WSGI_APPLICATION = 'atlas_project.wsgi.application'
@@ -99,7 +100,7 @@ CHANNEL_LAYERS = {
         'CONFIG': {
             "hosts": [('peaceful-dusk-14195.herokuapp.com', 6379), ('127.0.0.1', 6379)],
         },
-        
+
     },
 }
 
@@ -142,33 +143,32 @@ CHANNEL_LAYERS = {
 # }
 
 
-
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.sqlite3',
-		'NAME': BASE_DIR / 'db.sqlite3',
-	}
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-	{
-		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-	},
-	{
-		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-	},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 # Internationalization
@@ -178,7 +178,7 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Kolkata'
 
-DATETIME_INPUT_FORMATS = ['%d/%m/%Y %I:%M %p',]
+DATETIME_INPUT_FORMATS = ['%d/%m/%Y %I:%M %p', ]
 
 USE_I18N = True
 
