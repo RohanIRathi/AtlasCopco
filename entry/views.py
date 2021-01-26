@@ -11,7 +11,6 @@ from django.conf import settings
 
 import os
 from datetime import datetime
-from dateutil.parser import parse
 from PIL import Image
 from .forms import *
 import cv2
@@ -80,7 +79,6 @@ def generateQR(id):
 # 			visitor = display_visitors.filter(token=readData).order_by('-id').first()
 # 			if visitor:
 # 				print('/updatevisitor/'+str(visitor.id)+'/')
-# 				cv2.destroyAllWindows()
 # 				return redirect('/photoscan/'+str(visitor.id)+"/")
 # 		elif visitor.visit_token:
 # 			print(visitor.visit_token)
@@ -89,7 +87,6 @@ def generateQR(id):
 # 				visitor.save()
 # 				send_normal_email(visitor)
 # 				messages.success(request, f'QR Code scanned successfully!')
-# 				cv2.destroyAllWindows()
 # 				return redirect(f'{reverse("home")}')
 #	 	else:
 #	 		visitor.visit_token = readData
@@ -97,7 +94,6 @@ def generateQR(id):
 #	 		visitor.save()
 #	 		send_normal_email(visitor)
 #	 		messages.success(request, f'QR Code scanned with value: { readData }')
-# 			cv2.destroyAllWindows()
 #	 		return redirect(reverse('home'))
 	
 # 		template_name = 'home/home.html'

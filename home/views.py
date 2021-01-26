@@ -51,7 +51,10 @@ def login_validate(request):
 		if user is not None:
 			print('User')
 			login(request, user)
-			return redirect(request.GET.get('next', 'home'))
+			if user.is_superuser or user.is_staff:
+				return redirect(request.GET.get('next', 'home'))
+			else:
+				return redirect(reverse('entry:new-visitor'))
 		else:
 			print('Not a User')
 			messages.error(request, "Username or Password incorrect !")
