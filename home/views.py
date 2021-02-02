@@ -73,7 +73,6 @@ class VisitorListView(LoginRequiredMixin, ListView):
 		for visitor in all:
 			if visitor.expected_in_time:
 				if visitor.expected_in_time.date() < datetime.now().date() and not visitor.in_time:
-					print(visitor.name)
 					visitor.session_expired = True
 					visitor.save()
 		display_visitors = Visitor.objects.filter(session_expired=False)
@@ -116,41 +115,41 @@ class VisitorDetailView(LoginRequiredMixin, DetailView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		print(context['visitor'].in_time)
-		if context['visitor'].photo_id:
-			context['photopath'] = os.path.relpath(str(context['visitor'].photo_id))
 
 		return context
 
 @login_required
 def photoscan(request, **kwargs):
-	instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
-	form = PhotoForm()
-	context = {'form':form, 'visitor': instance}
-	if request.method == 'POST':
-		form = PhotoForm(request.POST, request.FILES, instance=instance)
-		if form.is_valid():
-			if request.POST['visit_token']:
-				instance.visit_token = request.POST['visit_token']
+	if request.user.is_staff and not request.user.is_superuser:
+		instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
+		form = PhotoForm()
+		visitorcount = VisitorsDetail.objects.filter(visitor=instance).count()
+		if instance.actual_visitors:
+			if instance.actual_visitors <= visitorcount:
+				instance.in_time = datetime.now()
+				return redirect('/')
+		context = {'form':form, 'visitor': instance, 'current_visitor': (visitorcount+1)}
+		if request.method == 'POST':
+			form = PhotoForm(request.POST, request.FILES)
+			if not instance.actual_visitors:
+				if int(request.POST['actual_visitors']) > instance.no_of_people:
+					messages.error(request, "Too many visitors")
+					return  render(request, 'home/photoscan.html', context)
+				instance.actual_visitors = int(request.POST['actual_visitors'])
 				instance.save()
-				messages.success(request, f'Visitor assigned token: { instance.visit_token }')
-				success_url = '/'
-			else:
-				success_url = reverse('stream:index', kwargs={'pk': kwargs.get('id')})
-			form.save()
-			return redirect(success_url)
-	return  render(request, 'home/photoscan.html', context)
-
-@login_required
-def take_visitor_token(request, **kwargs):
-    instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
-    if request.method == 'POST':
-        form = VisitorTokenForm(request.POST, instance=instance)
-        if form.is_valid:
-            token = request.POST['visit_token']
-            form.save()
-            messages.success(request, f'Visitor provided with token: { token }')
-            return redirect('/')
-
+			if form.is_valid():
+				visitorsdetail = form.save(commit=False)
+				visitorsdetail.safety_training = True
+				visitorsdetail.visitor = instance
+				if int(instance.actual_visitors) < visitorcount:
+					success_url = '/'
+				else:
+					success_url = reverse('photoscan', kwargs={'id': kwargs.get('id')})
+				visitorsdetail.save()
+				return redirect(success_url, context)
+		return  render(request, 'home/photoscan.html', context)
+	else:
+		return redirect('/')
 
 class AllVisitorsListView(LoginRequiredMixin, ListView):
 	def get(self, request):

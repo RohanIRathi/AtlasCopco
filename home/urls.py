@@ -1,4 +1,3 @@
-from home.views import  get_table_data, take_visitor_token
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
@@ -17,7 +16,6 @@ urlpatterns = [
 	path('photoscan/<int:id>/', views.photoscan, name='photoscan'),
 	path('tables/', views.get_table_data, name='tables'),
 	path('visitor_in/', views.visitor_in, name='visitor_in'),
-	path('tokeninput/<int:id>/', views.take_visitor_token, name='visitor_token'),
 	# password reset urls
 	path('reset_password/',
 		auth_views.PasswordResetView.as_view(template_name='password/password_reset.html'),

@@ -34,8 +34,6 @@ def new_visitor(request):
 			visitor.save()
 			messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
 			messages.success(request, f'The Visitor has been booked for entry')
-			if visitor.photo_id:
-				return redirect('/photoscan/'+str(visitor.id)+"/")
 			return redirect('/')
 		else:
 			print(form.errors)
@@ -46,7 +44,7 @@ def new_visitor(request):
 
 def generateQR(id):
 	import qrcode
-	display_visitors = Visitor.objects.filter(session_expired=True)
+	display_visitors = Visitor.objects.filter(session_expired=False)
 	qr = qrcode.QRCode(
 		version=1,
 		error_correction=qrcode.constants.ERROR_CORRECT_L,

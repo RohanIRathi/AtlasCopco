@@ -1,6 +1,7 @@
 {% extends 'home/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
+{% load static %}
 <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
 <script crossorigin="anonymous" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script crossorigin="anonymous" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -10,7 +11,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/static/bootstrap_datepicker_plus/js/datepicker-widget.js"></script>
-<div id="layoutSidenav_content">
 	<main>
 		<div class="container">
 			<div class="row justify-content-center">
@@ -31,7 +31,7 @@
 											<h1 class="h4 text-gray-900 mb-4">Add Visitor</h1>
 										</div>
 										<small class="form-text text-danger">Fields marked * are required.</small><br>
-										<form class="user" method="post" enctype="multipart/form-data">
+										<form class="user" method="post" enctype="multipart/form-data" action="">
 											{% csrf_token %}
 											{% comment %} {{ form|crispy }} {% endcomment %}
 
@@ -81,10 +81,10 @@
 											<div class="row">
 												<div class="col">
 													<div id="div_id_expected_in_time" class="form-group">
-														<label for="id_expected_in_time" class=" requiredField">Visit In-Time<span class="asteriskField form-text text-danger">*</span> </label>
+														<label for="id_expected_in_time" class=" requiredField">Visit In-Time<span class="asteriskField text-danger">*</span></label>
 														<div class="">
 															<div class="input-group date">
-																<input type="text" name="expected_in_time" class="form-control datepickerinput form-control-user" {% if form.expected_in_time.value %} value="{{ form.expected_in_time.value }}" {% endif %} id="id_expected_in_time" dp_config="{&quot;id&quot;: &quot;dp_1&quot;, &quot;picker_type&quot;: &quot;DATE&quot;, &quot;linked_to&quot;: null, &quot;options&quot;: {&quot;showClose&quot;: true, &quot;showClear&quot;: true, &quot;showTodayButton&quot;: true, &quot;format&quot;: &quot;DD/MM/YYYY hh:mm A&quot;}}" required>
+																<input type="text" name="expected_in_time" class="form-control datepickerinput" {% if form.expected_in_time.value %} value="{{ form.expected_in_time.value }}" {% endif %} id="id_expected_in_time" dp_config="{&quot;id&quot;: &quot;dp_1&quot;, &quot;picker_type&quot;: &quot;DATE&quot;, &quot;linked_to&quot;: null, &quot;options&quot;: {&quot;showClose&quot;: true, &quot;showClear&quot;: true, &quot;showTodayButton&quot;: true, &quot;format&quot;: &quot;DD/MM/YYYY hh:mm A&quot;}}" required>
 																<div class="input-group-addon input-group-append" data-target="#datetimepicker1" data-toggle="datetimepickerv">
 																	<div class="input-group-text"><i class="glyphicon glyphicon-calendar"></i></div>
 																</div>
@@ -98,23 +98,6 @@
 													<div class="form-group pb-2">
 														<label>Phone No.<span class="asteriskField text-danger">*</span></label>
 														<input type="text" name="mobile" class="form-control form-control-user" placeholder="Enter Phone No." {% if form.mobile.value %}value="{{ form.mobile.value }}"{% endif %} required>
-													</div>
-												</div>
-												<div class="col">
-													<div class="form-group pb-2">
-														<label>Photo Id Number</label><br>
-														<input type="text" name="photo_id_number" {% if form.photo_id_number.value %}value="{{ form.photo_id_number.value }}"{% endif %} class="form-control form-control-user">
-													</div>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col">
-													<div id="div_id_photo_id" class="form-group">
-														<label for="id_photo_id" class=" requiredField">Photo id</label>
-														<div class=""> <input type="file" name="photo_id" accept="image/*" class="clearablefileinput form-control-file is-invalid form-control-user" id="id_photo_id">
-															<p id="error_1_id_photo_id" class="invalid-feedback">
-															</p>
-														</div>
 													</div>
 												</div>
 												<div class="col">
@@ -144,5 +127,4 @@
 			</div>
 		</div>
 	</main>
-</div>
 {% endblock content %}
