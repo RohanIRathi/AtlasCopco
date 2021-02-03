@@ -3,7 +3,6 @@
 {% load tz %}
 
 {% block content %}
-<div id="layoutSidenav_content">
 	<main style="margin-top: 30px;">
 		<div class="container-fluid">
 			<!-- DataTales Example -->
@@ -31,8 +30,8 @@
 									<td>{{ visitor.mobile }}</td>
 									{% comment %} <td>{{ visitor.in_time.date }}</td> {% endcomment %}
 									{% timezone "Asia/Kolkata" %}
-										<td>{{ visitor.in_time }}</td>
-										<td>{{ visitor.out_time }}</td>
+										<td>{% if visitor.in_time %}{{ visitor.in_time }}{% else %} NA {% endif %}</td>
+										<td>{% if visitor.out_time %}{{ visitor.out_time }}{% else %} NA {% endif %}</td>
 									{% endtimezone %}
 									<td>{{ visitor.purpose}}</td>
 									<td>
@@ -61,5 +60,4 @@
 			</div>
 		</footer>
 	</div>
-</div>
 {% endblock content %}

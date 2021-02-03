@@ -1,7 +1,5 @@
-from home.views import AllUsersListView, get_table_data
 from django.urls import path
 from . import views
-from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 
 
@@ -9,11 +7,11 @@ urlpatterns = [
 	path('login/', views.login_validate, name='login'),
 	path('signup/', views.signup, name='user-signup'),
 	path('', views.VisitorListView.as_view(), name='home'),
+	path('expired/', views.VisitExpiredListView.as_view(), name='disabled'),
 	path('notvisited/', views.NotVisitedListView.as_view(), name='not-visited'),
 	path('allvisitors/', views.AllVisitedListView.as_view(), name='all-visitors'),
 	path('edit/visitor/<int:pk>/', views.VisitorDetailView.as_view(), name='visitor-detail'),
 	path('allbookedvisitors/', views.AllVisitorsListView.as_view(), name='all-booked-visitors'),
-	path('allusers/', views.AllUsersListView.as_view(), name="all-users"),
 	path('logout/', views.logout_user, name='logout'),
 	path('photoscan/<int:id>/', views.photoscan, name='photoscan'),
 	path('tables/', views.get_table_data, name='tables'),

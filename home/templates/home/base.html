@@ -18,7 +18,7 @@
 <body>
 
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
-        <a class="navbar-brand" href="{% url 'home' %}">Atlas Copco</a> {% if request.user.employee.admin %}<button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button> {% endif %}
+        <a class="navbar-brand" href="{% url 'home' %}">Atlas Copco</a> {% if request.user.is_superuser %}<button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button> {% endif %}
         <!-- Navbar Search-->
         <span class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0 navbar-brand"> Welcome, {{ request.user.first_name }}</span>
         <!-- Navbar-->
@@ -35,14 +35,10 @@
             </li>
         </ul>
     </nav>
-    {% if messages %} {% for message in messages %}
-    <div class="alert {% if message.tags == 'error' %} alert-danger{% else %} alert-{{ message.tags }}{% endif %}">
-        {{ message }}
-    </div>
-    {% endfor %} {% endif %}
 
     <div id="layoutSidenav">
-        {% if request.user.employee.admin %}
+        
+        {% if request.user.is_superuser %}
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #173F5F;">
                 <div class="sb-sidenav-menu">
@@ -50,23 +46,19 @@
                         <div class="sb-sidenav-menu-heading">Core</div>
                         <a class="nav-link" href="{% url 'home' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard <br> {% if request.user.employee.admin %}
+                            Dashboard <br>
                             <a class="nav-link" href="{% url 'user-signup' %}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
                                 User Registration
                             </a>
-                            <a class="nav-link" href="{% url 'all-users' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
-                                Total User
-                            </a>
-                            {% endif %}
+
                             <a class="nav-link" href="{% url 'entry:new-visitor' %}">
                                 <div class="sb-nav-link-icon"><i class="fa fa-user-plus fa-fw"></i></div>
                                 ADD new visitor
                             </a>
-                            {% if request.user.employee.admin %}
+
                             <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" href="{% url 'charts:chart-page'%}">
+                            <a class="nav-link" href="{% url 'charts:show-charts1'%}">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Charts
                             </a>
@@ -74,7 +66,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 Tables
                             </a>
-                            {% endif %}
+                            <a class="nav-link" href="{% url 'disabled' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user-slash"></i></div>
+                                Expired Bookings
+                            </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
@@ -84,8 +79,14 @@
         </div>
         {% endif %}
         <!-- <div id="layoutSidenav_content"> -->
-
+        <div id="layoutSidenav_content">
+        {% if messages %} {% for message in messages %}
+        <div class="row alert {% if message.tags == 'error' %} alert-danger{% else %} alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %} {% endif %}
         {% block content %} {% endblock content %}
+        </div>
 
 
     </div>
@@ -109,9 +110,72 @@
             });
         })(jQuery);
     </script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script>
+        $(function() {
+
+            var $visitorChart = $("#visitor-chart");
+            $.ajax({
+                url: $visitorChart.data("url"),
+                success: function(data) {
+
+                    var ctx = $visitorChart[0].getContext("2d");
+
+                    new Chart(ctx, {
+                        "type": "line",
+                        "data": {
+                            "labels": data.labels,
+                            "datasets": [{
+                                "label": "Visitors",
+                                "borderColor": "rgb(75,192,192)",
+                                "data": data.data,
+                                "fill": false,
+                                "lineTension": 0,
+
+                            }]
+                        },
+                        "options": {
+                            scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: data.scaletype
+
+                        },
+
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'No Of Visitors'
+                        },
+
+                        }]
+                    },
+                    title: {
+                        display: true,
+                        text: 'Charts'
+                        },
+                    tooltips : {
+                            position: 'nearest',
+                            mode: 'index',
+                            intersect: false,
+                            yPadding: 10,
+                            xPadding: 10,
+                            caretSize: 8,
+                        }
+                    }
+                    });
+                }
+            });
+
+        });
+    </script>
 </body>
 
 </html>

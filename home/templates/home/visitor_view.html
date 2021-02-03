@@ -1,6 +1,5 @@
 {% extends 'home/base.html' %} {% block content %}
 
-<div id="layoutSidenav_content">
 	<main style="margin-top: 30px;">
 		<div class="container-fluid">
 			<!-- DataTales Example -->
@@ -44,9 +43,9 @@
 								</tr>
 								<tr>
 									<td>Employee to Visit</td>
-									<td>{{ visitor.user.user.first_name }} {{ visitor.user.user.last_name }}</td>
+									<td>{{ visitor.user.first_name }} {{ visitor.user.last_name }}</td>
 								</tr>
-								<tr>
+								<!-- <tr>
 									<td>Photo Id No. </td>
 									<td>{{ visitor.photo_id_number }}</td>
 								</tr>
@@ -57,7 +56,7 @@
 									{% else %}
 									<td>N/A</td>
 									{% endif %}
-								</tr>
+								</tr> -->
 							</tbody>
 						</table>
 					</div>
@@ -65,5 +64,4 @@
 			</div>
 		</div>
 	</main>
-</div>
 {% endblock content %}

@@ -2,8 +2,10 @@ from django.urls import path
 from . import views
 app_name = 'charts'
 urlpatterns = [
-    path('show_charts/', views.home, name='show-charts'),
-    path('charts_page1/', views.page1, name='chart-page1'),
-    path('charts_page/', views.page, name='chart-page'),
-    path('visitor_chart/', views.visitor_chart, name='visitor-chart'),
+    path('show_charts-weekly/', views.home1, name='show-charts1'),
+    path('show_charts-monthly/', views.home2, name='show-charts2'),
+    path('show_charts-yearly/', views.home3, name='show-charts3'),
+    path('visitor_chart1/', views.visitor_chart1, name='visitor-chart1'),
+    path('visitor_chart2/', views.visitor_chart2, name='visitor-chart2'),
+    path('visitor_chart3/', views.visitor_chart3, name='visitor-chart3'),
 ]

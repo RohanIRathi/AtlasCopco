@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('home.urls')),
     path('entry/',include('entry.urls')),
     path('charts/', include('charts.urls')),
+    path('scan/', include('stream.urls')),
 
 ]
 

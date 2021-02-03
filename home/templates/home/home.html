@@ -1,25 +1,13 @@
 {% extends 'home/base.html' %} {% block content %}
 
-<div id="layoutSidenav_content">
     <main>
         <div class="container-fluid">
             <h1 class="mt-4">Dashboard</h1>
-            <div class="row mt-5 ">
-                {% if request.user.employee.admin %}
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-info text-white">
-                        <div class="card-body">Visitor in Primises: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
-                        </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{% url 'visitor_in' %}">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="col-xl-3 col-md-6">
-                    <div class="card bg-primary  text-white">
-                        <div class="card-body">Total Registraions: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
+            <div class="row mt-3">
+                {% if request.user.is_superuser %}
+                <div class="col-xl-3 col-md-6 mb-3 mt-2">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">Total Registrations <span class="badge badge-pill badge-light">{{ visitor_count }}</span>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'all-booked-visitors' %}">View Details</a>
@@ -27,9 +15,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 mb-3 mt-2">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">Visitor in Primises <span class="badge badge-pill badge-light">{{ visiting_count }}</span> 
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <a class="small text-white stretched-link" href="{% url 'visitor_in' %}">View Details</a>
+                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-3 mt-2">
                     <div class="card bg-success text-white">
-                        <div class="card-body">Total Visitors: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
+                        <div class="card-body">Total Visitors <span class="badge badge-pill badge-light">{{ visited_count }}</span>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'all-visitors' %}">View Details</a>
@@ -37,9 +35,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-6 mb-3 mt-2">
                     <div class="card bg-danger text-white">
-                        <div class="card-body">Booked but not Visited: {% if visitor_list %} {% for visitor in visitor_list %} {{ visitor.id }} {% endfor %} {% endif %}
+                        <div class="card-body">Booked but not Visited <span class="badge badge-pill badge-light">{{ not_visited_count }}</span>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'not-visited' %}">View Details</a>
@@ -47,6 +45,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
 
             </div>
         </div>
@@ -54,7 +53,7 @@
     <main>
         <div class="container-fluid">
             <!-- DataTales Example -->
-            <div class="card shadow mb-4 mt-4">
+            <div class="card shadow mb-4 mt-2">
                 <div class="card-header py-3">
                     <div class="row">
                         <div class="col-md-auto">
@@ -62,11 +61,13 @@
                                 <a href="{% url 'entry:new-visitor' %}" class="ml-3 btn btn-primary text-left">Add</a>
                             </h6>
                         </div>
-                        <div class="col-md-auto ml-auto">
-                            <h6 class="m-0 font-weight-bold text-primary">Scan Visitor's QR Code
-                                <a href="{% url 'entry:scanqr-visitor' %}" class="ml-3 btn btn-primary text-left">Scan</a>
-                            </h6>
-                        </div>
+                        {% if request.user.is_staff and not request.user.is_superuser %}
+                            <div class="col-md-auto">
+                                <h6 class="m-0 font-weight-bold text-primary">Scan Visitor's QR Code
+                                    <a href="#" class="ml-3 btn btn-primary text-left">Scan</a>
+                                </h6>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="card-body">
@@ -77,10 +78,12 @@
                                     <th> Name </th>
                                     <th> Email </th>
                                     <th> No.of Visitors </th>
-                                    <th>Phone No.</th>
+                                    <th> Phone No. </th>
                                     <th> Time </th>
-                                    <th> Photo </th>
-                                    <th> QR Code </th>
+                                    {% if request.user.is_staff and not request.user.is_superuser %}
+                                        <th> Photo </th>
+                                        <th> QR Code </th>
+                                    {% endif %}
                                 </tr>
                             </thead>
                             <tbody>
@@ -90,25 +93,27 @@
                                     <td>{{ visitor.email }}</td>
                                     <td>{{ visitor.no_of_people }}</td>
                                     <td>{{ visitor.mobile }}</td>
-                                    <td>{{ visitor.in_time }}</td>
-                                    {% if not visitor.photo %}
-                                    <td>
-                                        <input type="hidden" name="edit_id" value="">
-                                        <a type="submit" href="{% url 'photoscan' visitor.id %}" name="photo_btn" class="btn btn-success"> Scan </a>
-                                    </td>
-                                    {% else %}
-                                    <td>
-                                        Photo Id Scanned
-                                    </td>
+                                    <td>{{ visitor.expected_in_time }}</td>
+                                    {% if request.user.is_staff and not request.user.is_superuser %}
+                                        {% if not visitor.photo %}
+                                        <td>
+                                            <input type="hidden" name="edit_id" value="">
+                                            <a type="submit" href="{% url 'photoscan' visitor.id %}" name="photo_btn" class="btn btn-success"> Scan </a>
+                                        </td>
+                                        {% else %}
+                                        <td>
+                                            Photo Id Scanned
+                                        </td>
+                                        {% endif %}
+                                        <td>
+                                            {% if visitor.visit_token %}
+                                            <form action="#" method="post">
+                                                <input type="hidden" name="scan_id" value="">
+                                                <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
+                                            </form>
+                                            {% else %} Visiting Token<br>Not Assigned {% endif %}
+                                        </td>
                                     {% endif %}
-                                    <td>
-                                        {% if visitor.visit_token %}
-                                        <form action="{% url 'entry:scanQR' visitor.id %}" method="post">
-                                            <input type="hidden" name="scan_id" value="">
-                                            <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
-                                        </form>
-                                        {% else %} Visiting Token<br>Not Assigned {% endif %}
-                                    </td>
                                 </tr>
                                 {% endfor %} {% endif %}
                             </tbody>
@@ -134,6 +139,5 @@
             </div>
         </footer>
     </div>
-</div>
 
 {% endblock content %}
