@@ -35,6 +35,23 @@ def signup(request):
 			"""employee = employee_form.save(commit=False)
 			employee.user = user
 			employee.save()"""
+			if request.POST['role'] == 'admin':
+				user.is_active = True
+				user.is_staff = True
+				user.is_superuser = True
+			elif request.POST['role'] == 'security':
+				user.is_active = True
+				user.is_staff = True
+				user.is_superuser = False
+			elif request.POST['role'] == 'employee':
+				user.is_active = True
+				user.is_staff = False
+				user.is_superuser = False
+			else:
+				messages.error(request, f'Error')
+				context = {'form': form}
+				return render(request, 'registration/signup.html', context)
+			user.save()
 			user = form.cleaned_data.get('username')
 			messages.success(request, 'Account was created ')
 			return redirect('/login/')

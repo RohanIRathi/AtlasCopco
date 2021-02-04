@@ -70,8 +70,7 @@ def generateQR(id, qrtype):
 		qrpath = "./media/qrcodes/" + str(visitor.visitor.id) + "-" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png"
 		img.save(qrpath)
 		return qrpath
-	# visitor.qrcode = "/media/qrcodes/" + qrname + ".png"
-	# visitor.save()
+
 @csrf_exempt
 @login_required()
 def scanQR(request, **kwargs):
@@ -129,7 +128,7 @@ def send_qrcode_email(to_email, qrcodeimg):
 	
 class VisitorUpdateView(LoginRequiredMixin, UpdateView):
 	model = Visitor
-	fields = ['name', 'purpose', 'no_of_people', 'email', 'mobile', 'photo_id_number', 'photo_id', 'user']
+	fields = ['name', 'purpose', 'no_of_people', 'email', 'mobile', 'user']
 	success_url = reverse_lazy('home')
 	template_name = 'entry/visitor_booking.html'
 	

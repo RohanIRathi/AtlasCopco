@@ -67,9 +67,15 @@
                                                     </div>
                                                 </div>
                                             </div>
-											<div class="form-group ml-4 mt-4">
-                                                <label>Check If new user is admin</label>
-                                                {{ form.is_superuser  }}
+											<div id="div_id_user" class="form-group">
+                                                <label for="id_role" class=" requiredField">Employee to Visit<span class="asteriskField text-danger">*</span></label>
+                                                <div class="">
+                                                    <select name="role" class="select form-control" required id="id_role">
+                                                            <option value="employee" selected>Employee</option>
+                                                            <option value="security">Security</option>
+                                                            <option value="admin">Admin</option>
+                                                    </select>
+                                                </div>
                                             </div>
 
 
