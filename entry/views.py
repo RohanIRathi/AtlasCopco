@@ -28,9 +28,9 @@ def new_visitor(request):
 		if form.is_valid():
 			visitor = form.save(commit=False)
 			visitor.save()
-			qrcodeimg, visitor.token = generateQR(visitor.id)
-			visitor.qrcode = qrcodeimg
+			qrcodeimg, visitor.token = generateQR(visitor.id, 'booking')
 			send_qrcode_email(visitor.email, qrcodeimg) # email to send the qr code to the visitor
+			os.remove(qrcodeimg)
 			visitor.save()
 			messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
 			messages.success(request, f'The Visitor has been booked for entry')
@@ -42,7 +42,7 @@ def new_visitor(request):
 	return render(request, 'entry/visitor_booking.html', context)
 
 
-def generateQR(id):
+def generateQR(id, qrtype):
 	import qrcode
 	display_visitors = Visitor.objects.filter(session_expired=False)
 	qr = qrcode.QRCode(
@@ -51,16 +51,25 @@ def generateQR(id):
 		box_size=5,
 		border=4
 	)
-	visitor = display_visitors.get(id=id)  # visitors id
-	token = str(visitor.name).upper() + ' ' + str(visitor.id) + ' (V)'
-	qr.add_data(token)
-	qr.make(fit=True)
-	img = qr.make_image(fill_color="black", back_color="white")
-	qrname = str(visitor.id) + "_" + str(hash(visitor.name))
-	img.save("./media/qrcodes/" + qrname + ".png")
-	
-	return "/media/qrcodes/" + qrname + ".png", token
-	
+	if qrtype == 'booking':
+		visitor = display_visitors.get(id=id)  # visitors id
+		token = str(visitor.name).upper() + ' ' + str(visitor.id) + ' (V)'
+		qr.add_data(token)
+		qr.make(fit=True)
+		img = qr.make_image(fill_color="black", back_color="white")
+		qrpath = "./media/qrcodes/" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png"
+		img.save(qrpath)
+		
+		return qrpath, token
+	elif qrtype == 'details':
+		visitor = VisitorsDetail.objects.get(id=id)
+		token = str(visitor.name).upper() + ' ' + str(visitor.visitor.id) + '-' + str(visitor.id) + ' (V)'
+		qr.add_data(token)
+		qr.make(fit=True)
+		img = qr.make_image(fill_color="black", back_color="white")
+		qrpath = "./media/qrcodes/" + str(visitor.visitor.id) + "-" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png"
+		img.save(qrpath)
+		return qrpath
 	# visitor.qrcode = "/media/qrcodes/" + qrname + ".png"
 	# visitor.save()
 # @csrf_exempt
@@ -115,7 +124,7 @@ def send_qrcode_email(to_email, qrcodeimg):
 			PFA an attached QR Code which you will have to show when you leave our premises!'''
 	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
 	email.content_subtype='html'
-	
+	print(to_email)
 	with open(os.path.join(settings.BASE_DIR, '') + qrcodeimg, mode='rb') as file:
 		email.attach(os.path.join(settings.BASE_DIR, '') + qrcodeimg, file.read(), 'image/png')
 	

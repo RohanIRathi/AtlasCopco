@@ -15,6 +15,7 @@ from django.contrib.auth.models import User
 
 from .forms import *
 from entry.models import *
+from entry import views
 
 def is_admin(user):
 	try:
@@ -69,6 +70,8 @@ def logout_user(request):
 
 class VisitorListView(LoginRequiredMixin, ListView):
 	def get(self, request):
+		if not request.user.is_staff and not request.user.is_superuser:
+			return redirect('/entry/newvisitor')
 		all = Visitor.objects.all()
 		for visitor in all:
 			if visitor.expected_in_time:
@@ -127,6 +130,7 @@ def photoscan(request, **kwargs):
 		if instance.actual_visitors:
 			if instance.actual_visitors <= visitorcount:
 				instance.in_time = datetime.now()
+				instance.save()
 				return redirect('/')
 		context = {'form':form, 'visitor': instance, 'current_visitor': (visitorcount+1)}
 		if request.method == 'POST':
@@ -141,11 +145,14 @@ def photoscan(request, **kwargs):
 				visitorsdetail = form.save(commit=False)
 				visitorsdetail.safety_training = True
 				visitorsdetail.visitor = instance
+				visitorsdetail.save()
+				qrcodeimg = views.generateQR(visitorsdetail.id, 'details')
+				views.send_qrcode_email(visitorsdetail.email, qrcodeimg)
+				os.remove(qrcodeimg)
 				if int(instance.actual_visitors) < visitorcount:
 					success_url = '/'
 				else:
 					success_url = reverse('photoscan', kwargs={'id': kwargs.get('id')})
-				visitorsdetail.save()
 				return redirect(success_url, context)
 		return  render(request, 'home/photoscan.html', context)
 	else:
