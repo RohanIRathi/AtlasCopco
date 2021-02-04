@@ -72,38 +72,35 @@ def generateQR(id, qrtype):
 		return qrpath
 	# visitor.qrcode = "/media/qrcodes/" + qrname + ".png"
 	# visitor.save()
-# @csrf_exempt
-# @login_required()
-# def scanQR(request, **kwargs):
-#	display_visitors = Visitor.objects.filter(session_expired=False)
-# 	if kwargs.get('id'):
-# 		visitor = display_visitors.get(id=kwargs.get('id'))
-# 	Read = pb.decode(frame)
-# 	for ob in Read:
-# 		readData = str(ob.data.rstrip().decode('utf-8'))
-# 		print('readData',readData)
-# 		if kwargs.get('qr') == 'userQR':
-# 			visitor = display_visitors.filter(token=readData).order_by('-id').first()
-# 			if visitor:
-# 				print('/updatevisitor/'+str(visitor.id)+'/')
-# 				return redirect('/photoscan/'+str(visitor.id)+"/")
-# 		elif visitor.visit_token:
-# 			print(visitor.visit_token)
-# 			if readData == visitor.visit_token:
-# 				visitor.out_time = datetime.now()
-# 				visitor.save()
-# 				send_normal_email(visitor)
-# 				messages.success(request, f'QR Code scanned successfully!')
-# 				return redirect(f'{reverse("home")}')
-#	 	else:
-#	 		visitor.visit_token = readData
-#	 		visitor.in_time = datetime.now()
-#	 		visitor.save()
-#	 		send_normal_email(visitor)
-#	 		messages.success(request, f'QR Code scanned with value: { readData }')
-#	 		return redirect(reverse('home'))
-	
-# 		template_name = 'home/home.html'
+@csrf_exempt
+@login_required()
+def scanQR(request, **kwargs):
+	display_visitors = Visitor.objects.filter(session_expired=False)
+	visitor = display_visitors.get(id=kwargs.get('id'))
+	frame = request.POST["qrimgdata"]
+	Read = pb.decode(frame)
+	for ob in Read:
+		readData = str(ob.data.rstrip().decode('utf-8'))
+		print('readData',readData)
+		if not visitor.in_time and visitor.expected_in_time:
+			visitor = display_visitors.filter(token=readData).order_by('-id').first()
+			if visitor:
+				return redirect('/photoscan/'+str(visitor.id)+'/')
+			else:
+				messages.error(request, f'Invalid token scanned! Please scan again')
+				return redirect('/')
+		elif visitor.in_time and not visitor.out_time:
+			if readData == visitor.token:
+				visitor.out_time = datetime.now()
+				visitor.save()
+				send_normal_email(visitor)
+				messages.success(request, f'QR Code scanned successfully!')
+				return redirect(f'{reverse("home")}')
+		else:
+			messages.error(request, f'No entry to change!')
+			return redirect(reverse('home'))
+
+		template_name = 'home/home.html'
 		
 def send_normal_email(Visitor):
 	to_email = Visitor.user.email
@@ -113,7 +110,7 @@ def send_normal_email(Visitor):
 		message = 'Hello!\n\n\t' + Visitor.name + ' has left the Atlas Copco campus at ' + str(Visitor.out_time.date()) + ' ' + Visitor.out_time.strftime("%X") + '.'
 	else:
 		subject = Visitor.name + ' is visiting Atlas Copco'
-		message = 'Hello!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + Visitor.in_time.strftime("%X") + '.'
+		message = 'Hello!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + Visitor.in_time.strftime("%X") + 'with ' + Visitor.actual_visitors + '.'
 	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
 	email.content_subtype='html'
 	email.send(fail_silently=False)

@@ -130,6 +130,7 @@ def photoscan(request, **kwargs):
 		if instance.actual_visitors:
 			if instance.actual_visitors <= visitorcount:
 				instance.in_time = datetime.now()
+				views.send_normal_email(instance)
 				instance.save()
 				return redirect('/')
 		context = {'form':form, 'visitor': instance, 'current_visitor': (visitorcount+1)}
@@ -137,7 +138,7 @@ def photoscan(request, **kwargs):
 			form = PhotoForm(request.POST, request.FILES)
 			if not instance.actual_visitors:
 				if int(request.POST['actual_visitors']) > instance.no_of_people:
-					messages.error(request, "Too many visitors")
+					messages.error(request, "These many visitors were not allowed!")
 					return  render(request, 'home/photoscan.html', context)
 				instance.actual_visitors = int(request.POST['actual_visitors'])
 				instance.save()
