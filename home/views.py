@@ -19,7 +19,14 @@ from entry import views
 
 def is_admin(user):
 	try:
-		admin = User.objects.get(username=user).is_superuser
+		admin = User.objects.get(username=user).is_superuser and User.objects.get(username=user).is_staff
+		return admin
+	except:
+		return False
+
+def is_security(user):
+	try:
+		admin = not User.objects.get(username=user).is_superuser and User.objects.get(username=user).is_staff
 		return admin
 	except:
 		return False
@@ -139,6 +146,7 @@ class VisitorDetailView(LoginRequiredMixin, DetailView):
 		return context
 
 @login_required
+@user_passes_test(is_security)
 def photoscan(request, **kwargs):
 	if request.user.is_staff and not request.user.is_superuser:
 		instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
@@ -190,42 +198,38 @@ class AllVisitorsListView(LoginRequiredMixin, ListView):
 @user_passes_test(is_admin)
 def get_table_data(request):
 	display_visitors = Visitor.objects.filter(session_expired=False)
-	visitor_list = display_visitors.order_by('-in_time')
 	search_query = ''
 	if request.method == 'POST':
 		search_query = request.POST['search']
-		for i in [1]:
-			print(visitor_list[1].in_time.date(), search_query)
-			search_date = None
-			sort = False
-			try:
-				search_date = datetime.strptime(search_query, '%d-%m-%Y')
-				print(search_date)
-			except:
-				pass
-			try:
-				user = User.objects.get(username__icontains=search_query)
-				visitor_list = display_visitors.filter(user=user)
-				if visitor_list:
-					sort = True
-			except:
-				pass
-			if search_date:
-				visitor_list = display_visitors.filter(in_time__date = search_date)
-			elif not sort:
-				visitor_list = display_visitors.filter(name__icontains=search_query)
-				print(visitor_list)
-			else:
-				break
+		search_date = None
+		try:
+			search_date = datetime.strptime(search_query, '%d-%m-%Y')
+			print(search_date)
+		except:
+			pass
+		try:
+			user = User.objects.get(username__icontains=search_query)
+		except:
+			user = None
+		visitor_list_employee = display_visitors.filter(user=user)
+		if search_date:
+			visitor_list_intime = display_visitors.filter(in_time__date = search_date)
+		else:
+			visitor_list_intime = display_visitors.filter(user=None)
+		visitor_list_name = display_visitors.filter(name__icontains=search_query)
+		visitor_list = visitor_list_employee.union(visitor_list_intime, visitor_list_name)
+		print(visitor_list)
 		if search_query == '':
 			visitor_list = display_visitors.order_by('-in_time')
+	else:
+		visitor_list = display_visitors.order_by('-in_time')
 
 	context = {'visitor_list': visitor_list, 'search_query': search_query}
 
 	return render(request, 'home/table.html', context=context)
 
 
-
+@user_passes_test(is_admin)
 @login_required()
 def visitor_in(request):
 	display_visitors = Visitor.objects.filter(session_expired=False)

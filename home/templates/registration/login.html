@@ -24,7 +24,7 @@
 							<div class="col-lg-12">
 								<div class="p-5">
 									{% for message in messages %}
-										<div class="alert alert-danger text-center col-sm-9" style="margin: auto;" id="messages">{{ message }}</div>
+										<div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} text-center col-sm-9" style="margin: auto;" id="messages">{{ message }}</div>
 										<hr>
 									{% endfor %}
 									<div class="text-center">
