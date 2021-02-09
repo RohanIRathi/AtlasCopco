@@ -2,8 +2,8 @@
 {% block content %}
 
 <div id="layoutSidenav_content" align="center">
-
-        <ul class="nav nav-tabs">
+    <ul class="nav justify-content-center">
+        <ul class="nav nav-pills">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'charts:show-charts1'%}">Week-wise</a>
           </li>
@@ -14,7 +14,7 @@
             <a class="nav-link" href="{% url 'charts:show-charts3'%}">Year-wise</a>
           </li>
         </ul>
-
+    </ul>
 <main>
         <div id="container" style="width:90%;">
             <canvas id="visitor-chart" data-url="{% url 'charts:visitor-chart1' %}"></canvas>
