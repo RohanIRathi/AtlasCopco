@@ -8,76 +8,70 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'home/style.css' %}">
     <title>AtlasCopco</title>
 </head>
 
 <body>
 
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark sticky-top">
-        <a class="navbar-brand" href="{% url 'home' %}">Atlas Copco</a> {% if request.user.is_superuser %}<button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button> {% endif %}
-        <!-- Navbar Search-->
-        <span class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0 navbar-brand"> Welcome, {{ request.user.first_name }}</span>
-        <!-- Navbar-->
+    <nav class="sb-topnav navbar navbar-expand navbar-light sticky-top" style="padding-left: 0; padding-top: 0; padding-bottom: 0; z-index: 1040;">
+        <a class="navbar-brand" href="{% url 'home' %}" style="padding: 0;"><img class="logo" src="{% static 'base/AtlasCopcoLogo.png' %}" alt="Atlas Copco" width="150px" height="55px"></a> <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
         <ul class="navbar-nav ml-auto ">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% if request.user.employee.pic %}<img src="{{ request.user.employee.pic.url }}" style="width: 40px; height: 40px; border-radius: 100%;">{% else %}<img class="fas fa-user fa-fw"></img>{% endif %}</a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="{% url 'reset_password' %}">Reset Password</a>
-                    <div class="dropdown-divider"></div>
+            <li class="nav-item">
                     <form>
-                        <a class="dropdown-item" type="button" name="logout-btn" href="{% url 'logout' %}">Logout</a>
+                        <a class="logout-button" type="button" name="logout-btn" href="{% url 'logout' %}"><i class="fas fa-power-off fa-2x"></i></a>
                     </form>
-                </div>
             </li>
         </ul>
     </nav>
 
     <div id="layoutSidenav">
-        
-        {% if request.user.is_superuser %}
         <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion" style="background-color: #173F5F;">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <div class="profile_info">
+                            <i class="fas fa-user-circle fa-5x"style="color:white"></i>
+                            <h4 class="profile-info-text">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+                            <h4 class="profile-info-text" style="font-size: small;">{% if request.user.is_superuser and request.user.is_staff %} Admin{% elif request.user.is_staff and not request.user.is_superuser %} Security{% else %} Employee{% endif %} | <a class="reset" href="{% url 'reset_password' %}"><span>Reset Password</span></a></h4>
+                        </div>
                         <a class="nav-link" href="{% url 'home' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-desktop"></i></div>
                             Dashboard <br>
-                            <a class="nav-link" href="{% url 'user-signup' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
-                                User Registration
-                            </a>
-
-                            <a class="nav-link" href="{% url 'entry:new-visitor' %}">
-                                <div class="sb-nav-link-icon"><i class="fa fa-user-plus fa-fw"></i></div>
-                                ADD new visitor
-                            </a>
-
-                            <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" href="{% url 'charts:show-charts1'%}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Charts
-                            </a>
-                            <a class="nav-link" href="{% url 'tables' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Tables
-                            </a>
-                            <a class="nav-link" href="{% url 'disabled' %}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-user-slash"></i></div>
-                                Expired Bookings
-                            </a>
+                        </a>
+                        {% if request.user.is_superuser and request.user.is_staff %}
+                        <a class="nav-link" href="{% url 'user-signup' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
+                            User Registration
+                        </a>
+                        {% endif %}
+                        {% if request.user.is_superuser or not request.user.is_staff %}
+                        <a class="nav-link" href="{% url 'entry:new-visitor' %}">
+                            <div class="sb-nav-link-icon"><i class="fa fa-user fa-fw"></i></div>
+                            ADD new visitor
+                        </a>
+                        {% endif %}
+                        {% if request.user.is_superuser and request.user.is_staff %}
+                        <a class="nav-link" href="{% url 'charts:show-charts1'%}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-pie"></i></div>
+                            Charts
+                        </a>
+                        <a class="nav-link" href="{% url 'tables' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                            Tables
+                        </a>
+                        <a class="nav-link" href="{% url 'disabled' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-user-slash"></i></div>
+                            Expired Bookings
+                        </a>
+                        {% endif %}
                     </div>
-                </div>
-                <div class="sb-sidenav-footer">
-                    <div class="large">Logged in as: {{ request.user.first_name }}</div>
                 </div>
             </nav>
         </div>
-        {% endif %}
         <!-- <div id="layoutSidenav_content"> -->
         <div id="layoutSidenav_content">
         {% if messages %} {% for message in messages %}
@@ -85,6 +79,9 @@
             {{ message }}
         </div>
         {% endfor %} {% endif %}
+        <div class="content">
+            <div class="hero-image"></div>
+        </div>
         {% block content %} {% endblock content %}
         </div>
 

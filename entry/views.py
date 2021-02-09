@@ -16,6 +16,7 @@ from .forms import *
 import cv2
 import numpy as np
 import pyzbar.pyzbar as pb
+from home import views as hviews
 
 
 # Create your views here.
@@ -33,8 +34,22 @@ def new_visitor(request):
 			os.remove(qrcodeimg)
 			visitor.save()
 			messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
-			messages.success(request, f'The Visitor has been booked for entry')
-			return redirect('/')
+			if hviews.is_security(request.user):
+				visitor.actual_visitors = visitor.no_of_people
+				try:
+					for visitor_no in range(1, visitor.no_of_people + 1):
+						name = request.POST['name_'+visitor_no]
+						email = request.POST['email_'+visitor_no]
+						photo = request.FILES['photo_'+visitor_no]
+						photo_id = request.FILES['photo_id_'+visitor_no]
+						photo_id_number = request.FILES['photo_id_number_'+visitor_no]
+						VisitorsDetail.objects.create(name=name, email=email, safety_training=True, photo=photo, photo_id=photo_id, photo_id_number=photo_id_number, visitor=visitor.id)
+					visitor.in_time = datetime.now()
+					visitor.save()
+				except:
+					visitor.in_time = datetime.now()
+					visitor.save()
+				return redirect('/')
 		else:
 			print(form.errors)
 			messages.error(request, 'Error!')
