@@ -3,19 +3,19 @@
 
 
 <div id="layoutSidenav_content" align="center">
-
-    <ul class="nav nav-tabs">
-      <li class="nav-item">
-        <a class="nav-link "  href="{% url 'charts:show-charts1'%}">Week-wise</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="{% url 'charts:show-charts2'%}">Month-wise</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'charts:show-charts3'%}">Year-wise</a>
-      </li>
+    <ul class="nav justify-content-center">
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a class="nav-link "  href="{% url 'charts:show-charts1'%}">Week-wise</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'charts:show-charts2'%}">Month-wise</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'charts:show-charts3'%}">Year-wise</a>
+          </li>
+        </ul>
     </ul>
-
     <main>
             <div id="container" style="width:90%;">
                 <canvas id="visitor-chart" data-url="{% url 'charts:visitor-chart2' %}"></canvas>
