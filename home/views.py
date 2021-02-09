@@ -120,12 +120,37 @@ class NotVisitedListView(LoginRequiredMixin, ListView):
 
 		return render(request, 'home/not_visited.html', context)
 
-class VisitExpiredListView(LoginRequiredMixin, ListView):
-	def get(self, request):
-		expired = Visitor.objects.filter(session_expired=True)
-		context = {'visitor_list': expired}
 
-		return render(request, 'home/expired_booking.html', context)
+def expiredBooking(request):
+	expired = Visitor.objects.filter(session_expired=True)
+	context = {'visitor_list': expired}
+	if request.method == 'POST':
+		search_query = request.POST['search']
+		search_date = ''
+		try:
+			search_date = datetime.strptime(search_query, '%d-%m-%Y')
+			print(search_date)
+		except:
+			pass
+		try:
+			user = User.objects.get(username__icontains=search_query)
+		except:
+			user = None
+		visitor_list_employee = expired.filter(user=user)
+		if search_date:
+			visitor_list_intime = expired.filter(expired_in_time__date = search_date)
+		else:
+			visitor_list_intime = expired.filter(user=None)
+		visitor_list_name = expired.filter(name__icontains=search_query)
+		visitor_list = visitor_list_employee.union(visitor_list_intime, visitor_list_name)
+		if search_query == '':
+			visitor_list = expired
+		context = {'visitor_list': visitor_list, 'search_query': search_query}
+	else:
+		visitor_list = expired
+
+
+	return render(request, 'home/expired_booking.html', context)
 
 class AllVisitedListView(LoginRequiredMixin, ListView):
 	def get(self, request):
@@ -201,7 +226,7 @@ def get_table_data(request):
 	search_query = ''
 	if request.method == 'POST':
 		search_query = request.POST['search']
-		search_date = None
+		search_date = ''
 		try:
 			search_date = datetime.strptime(search_query, '%d-%m-%Y')
 			print(search_date)

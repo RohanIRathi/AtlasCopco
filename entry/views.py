@@ -86,7 +86,7 @@ def generateQR(id, qrtype):
 def scanQR(request, **kwargs):
 	display_visitors = Visitor.objects.filter(session_expired=False)
 	visitor = display_visitors.get(id=kwargs.get('id'))
-	frame = request.POST["qrimgdata"]
+	frame = request.POST['qrimgdata']
 	Read = pb.decode(frame)
 	for ob in Read:
 		readData = str(ob.data.rstrip().decode('utf-8'))
@@ -113,13 +113,12 @@ def scanQR(request, **kwargs):
 		
 def send_normal_email(Visitor):
 	to_email = Visitor.user.email
-	print(to_email)
 	if Visitor.out_time:
 		subject = Visitor.name + ' has left Atlas Copco Campus'
-		message = 'Hello!\n\n\t' + Visitor.name + ' has left the Atlas Copco campus at ' + str(Visitor.out_time.date()) + ' ' + Visitor.out_time.strftime("%X") + '.'
+		message = 'Hello!\n\n\t' + Visitor.name + ' has left the Atlas Copco campus at ' + str(Visitor.out_time.date()) + ' ' + str(Visitor.out_time.strftime("%X")) + '.'
 	else:
 		subject = Visitor.name + ' is visiting Atlas Copco'
-		message = 'Hello!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + Visitor.in_time.strftime("%X") + 'with ' + Visitor.actual_visitors + '.'
+		message = 'Hello!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + str(Visitor.in_time.strftime("%X")) + 'with ' + Visitor.actual_visitors + '.'
 	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
 	email.content_subtype='html'
 	email.send(fail_silently=False)
@@ -130,7 +129,6 @@ def send_qrcode_email(to_email, qrcodeimg):
 			PFA an attached QR Code which you will have to show when you leave our premises!'''
 	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
 	email.content_subtype='html'
-	print(to_email)
 	with open(os.path.join(settings.BASE_DIR, '') + qrcodeimg, mode='rb') as file:
 		email.attach(os.path.join(settings.BASE_DIR, '') + qrcodeimg, file.read(), 'image/png')
 	
