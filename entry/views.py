@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.urls.base import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView
@@ -18,43 +18,37 @@ import numpy as np
 import pyzbar.pyzbar as pb
 from home import views as hviews
 
+def is_security(user):
+	try:
+		admin = not User.objects.get(username=user).is_superuser and User.objects.get(username=user).is_staff
+		return admin
+	except:
+		return False
 
 # Create your views here.
 @login_required
 def new_visitor(request):
-	employees = User.objects.all()
-	form = NewVisitorForm()
-	if request.method == 'POST':
-		form = NewVisitorForm(request.POST, request.FILES)
-		if form.is_valid():
-			visitor = form.save(commit=False)
-			visitor.save()
-			qrcodeimg, visitor.token = generateQR(visitor.id, 'booking')
-			send_qrcode_email(visitor.email, qrcodeimg) # email to send the qr code to the visitor
-			os.remove(qrcodeimg)
-			visitor.save()
-			messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
-			if hviews.is_security(request.user):
-				visitor.actual_visitors = visitor.no_of_people
-				try:
-					for visitor_no in range(1, visitor.no_of_people + 1):
-						name = request.POST['name_'+visitor_no]
-						email = request.POST['email_'+visitor_no]
-						photo = request.FILES['photo_'+visitor_no]
-						photo_id = request.FILES['photo_id_'+visitor_no]
-						photo_id_number = request.FILES['photo_id_number_'+visitor_no]
-						VisitorsDetail.objects.create(name=name, email=email, safety_training=True, photo=photo, photo_id=photo_id, photo_id_number=photo_id_number, visitor=visitor.id)
-					visitor.in_time = datetime.now()
-					visitor.save()
-				except:
-					visitor.in_time = datetime.now()
-					visitor.save()
+	if not hviews.is_security(request.user):
+		employees = User.objects.all()
+		form = NewVisitorForm()
+		if request.method == 'POST':
+			form = NewVisitorForm(request.POST, request.FILES)
+			if form.is_valid():
+				visitor = form.save(commit=False)
+				visitor.save()
+				qrcodeimg, visitor.token = generateQR(visitor.id, 'booking')
+				send_qrcode_email(visitor.email, qrcodeimg) # email to send the qr code to the visitor
+				os.remove(qrcodeimg)
+				visitor.save()
+				messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
 				return redirect('/')
-		else:
-			print(form.errors)
-			messages.error(request, 'Error!')
-	context = {'form': form, 'employees': employees}
-	return render(request, 'entry/visitor_booking.html', context)
+			else:
+				print(form.errors)
+				messages.error(request, 'Error!')
+		context = {'form': form, 'employees': employees}
+		return render(request, 'entry/visitor_booking.html', context)
+	else:
+		return redirect('/')
 
 
 def generateQR(id, qrtype):
@@ -88,6 +82,7 @@ def generateQR(id, qrtype):
 
 @csrf_exempt
 @login_required()
+@user_passes_test(is_security)
 def scanQR(request, **kwargs):
 	display_visitors = Visitor.objects.filter(session_expired=False)
 	visitor = display_visitors.get(id=kwargs.get('id'))

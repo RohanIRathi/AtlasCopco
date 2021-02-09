@@ -34,6 +34,7 @@ def is_security(user):
 @login_required
 @user_passes_test(is_admin)
 def signup(request):
+	form = CreateUserForm()
 	if request.method == "POST":
 		form = CreateUserForm(request.POST)
 		# employee_form = CreateEmployeeForm(request.POST)
@@ -62,7 +63,6 @@ def signup(request):
 			user = form.cleaned_data.get('username')
 			messages.success(request, 'Account was created ')
 			return redirect('/login/')
-	form = CreateUserForm()
 	# employee_form = CreateEmployeeForm()
 	context = {'form': form,} # 'employee_form': employee_form}
 	return render(request, 'registration/signup.html', context)
