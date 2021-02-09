@@ -140,8 +140,11 @@
                         display: true,
                         scaleLabel: {
                             display: true,
-                            labelString: data.scaletype
-
+                            labelString: data.scaletype,
+                            fontSize: 20
+                        },
+                        ticks: {
+                            fontSize: 15
                         },
                         offset: true,
                     }],
@@ -149,14 +152,19 @@
                         display: true,
                         scaleLabel: {
                             display: true,
-                            labelString: 'No Of Visitors'
+                            labelString: 'No Of Visitors',
+                            fontSize: 20
                         },
-
+                        ticks: {
+                            fontSize: 15,
+                            min:0,
+                            precision: 0,
+                        }
                         }]
                     },
                     title: {
                         display: true,
-                        text: 'Charts'
+
                         },
                     tooltips : {
                             position: 'nearest',
