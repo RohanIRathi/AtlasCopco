@@ -193,18 +193,23 @@ def photoscan(request, **kwargs):
 				instance.actual_visitors = int(request.POST['actual_visitors'])
 				instance.save()
 			if form.is_valid():
-				visitorsdetail = form.save(commit=False)
-				visitorsdetail.safety_training = True
-				visitorsdetail.visitor = instance
-				visitorsdetail.save()
-				qrcodeimg = views.generateQR(visitorsdetail.id, 'details')
-				views.send_qrcode_email(visitorsdetail.email, qrcodeimg)
-				os.remove(qrcodeimg)
-				if int(instance.actual_visitors) < visitorcount:
-					success_url = '/'
-				else:
-					success_url = reverse('photoscan', kwargs={'id': kwargs.get('id')})
-				return redirect(success_url, context)
+				print("Test:", request.FILES['photo'].read())
+			else:
+				messages.error(request, f'Error!')
+			context = {'form':form, 'visitor': instance, 'current_visitor': (visitorcount+1)}
+
+		# 		visitorsdetail = form.save(commit=False)
+		# 		visitorsdetail.safety_training = True
+		# 		visitorsdetail.visitor = instance
+		# 		visitorsdetail.save()
+		# 		qrcodeimg = views.generateQR(visitorsdetail.id, 'details')
+		# 		views.send_qrcode_email(visitorsdetail.email, qrcodeimg)
+		# 		os.remove(qrcodeimg)
+		# 		if int(instance.actual_visitors) < visitorcount:
+		# 			success_url = '/'
+		# 		else:
+		# 			success_url = reverse('photoscan', kwargs={'id': kwargs.get('id')})
+		# 		return redirect(success_url, context)
 		return  render(request, 'home/photoscan.html', context)
 	else:
 		return redirect('/')

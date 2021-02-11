@@ -9,11 +9,6 @@
                     <h5 class="m-0 font-weight-bold text-primary">Scan Photo & ID: Visitor no. {{ current_visitor }}
                     </h5>
                 </div>
-                {% if form.errors %}
-                {% for field, error in form.errors %}
-                {{ error }}
-                {% endfor %}
-                {% endif %}
                 <div class="card-body mt-3">
                     <div class="table-responsive">
                         <form action="" method="post" enctype="multipart/form-data" onsubmit="return confirm('Is Security Training Given?');">
@@ -27,10 +22,12 @@
                                     <tr>
                                         <td>Name</td>
                                         <td><input type="text" class="form-control form-control-user" {% if current_visitor == 1 %} value="{{ visitor.name }}" {% endif %}name="name" required</td>
+                                        {% if form.name.errors %}<td>{% for error in form.name.errors %}{{ error }}{% endfor %}</td>{% endif %}
                                     </tr>
                                     <tr>
                                         <td>E-mail</td>
                                         <td><input type="email" class="form-control form-control-user" {% if current_visitor == 1 %} value="{{ visitor.email }}" {% endif %}name="email" required</td>
+                                    {% if form.email.errors %}<td>{% for error in form.email.errors %}{{ error }}{% endfor %}</td>{% endif %}
                                     </tr>
                                     <tr>
                                         <td>Purpose of Visit</td>
