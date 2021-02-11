@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.urls.base import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import UpdateView
@@ -16,33 +16,42 @@ from .forms import *
 import cv2
 import numpy as np
 import pyzbar.pyzbar as pb
+from home import views as hviews
 
+def is_security(user):
+	try:
+		admin = not User.objects.get(username=user).is_superuser and User.objects.get(username=user).is_staff
+		return admin
+	except:
+		return False
 
 # Create your views here.
 @login_required
 def new_visitor(request):
-	employees = User.objects.all()
-	form = NewVisitorForm()
-	if request.method == 'POST':
-		form = NewVisitorForm(request.POST, request.FILES)
-		if form.is_valid():
-			visitor = form.save(commit=False)
-			visitor.save()
-			qrcodeimg, visitor.token = generateQR(visitor.id)
-			visitor.qrcode = qrcodeimg
-			send_qrcode_email(visitor.email, qrcodeimg) # email to send the qr code to the visitor
-			visitor.save()
-			messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
-			messages.success(request, f'The Visitor has been booked for entry')
-			return redirect('/')
-		else:
-			print(form.errors)
-			messages.error(request, 'Error!')
-	context = {'form': form, 'employees': employees}
-	return render(request, 'entry/visitor_booking.html', context)
+	if not hviews.is_security(request.user):
+		employees = User.objects.all()
+		form = NewVisitorForm()
+		if request.method == 'POST':
+			form = NewVisitorForm(request.POST, request.FILES)
+			if form.is_valid():
+				visitor = form.save(commit=False)
+				visitor.save()
+				qrcodeimg, visitor.token = generateQR(visitor.id, 'booking')
+				send_qrcode_email(visitor.email, qrcodeimg) # email to send the qr code to the visitor
+				os.remove(qrcodeimg)
+				visitor.save()
+				messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
+				return redirect('/')
+			else:
+				print(form.errors)
+				messages.error(request, 'Error!')
+		context = {'form': form, 'employees': employees}
+		return render(request, 'entry/visitor_booking.html', context)
+	else:
+		return redirect('/')
 
 
-def generateQR(id):
+def generateQR(id, qrtype):
 	import qrcode
 	display_visitors = Visitor.objects.filter(session_expired=False)
 	qr = qrcode.QRCode(
@@ -51,60 +60,65 @@ def generateQR(id):
 		box_size=5,
 		border=4
 	)
-	visitor = display_visitors.get(id=id)  # visitors id
-	token = str(visitor.name).upper() + ' ' + str(visitor.id) + ' (V)'
-	qr.add_data(token)
-	qr.make(fit=True)
-	img = qr.make_image(fill_color="black", back_color="white")
-	qrname = str(visitor.id) + "_" + str(hash(visitor.name))
-	img.save("./media/qrcodes/" + qrname + ".png")
-	
-	return "/media/qrcodes/" + qrname + ".png", token
-	
-	# visitor.qrcode = "/media/qrcodes/" + qrname + ".png"
-	# visitor.save()
-# @csrf_exempt
-# @login_required()
-# def scanQR(request, **kwargs):
-#	display_visitors = Visitor.objects.filter(session_expired=False)
-# 	if kwargs.get('id'):
-# 		visitor = display_visitors.get(id=kwargs.get('id'))
-# 	Read = pb.decode(frame)
-# 	for ob in Read:
-# 		readData = str(ob.data.rstrip().decode('utf-8'))
-# 		print('readData',readData)
-# 		if kwargs.get('qr') == 'userQR':
-# 			visitor = display_visitors.filter(token=readData).order_by('-id').first()
-# 			if visitor:
-# 				print('/updatevisitor/'+str(visitor.id)+'/')
-# 				return redirect('/photoscan/'+str(visitor.id)+"/")
-# 		elif visitor.visit_token:
-# 			print(visitor.visit_token)
-# 			if readData == visitor.visit_token:
-# 				visitor.out_time = datetime.now()
-# 				visitor.save()
-# 				send_normal_email(visitor)
-# 				messages.success(request, f'QR Code scanned successfully!')
-# 				return redirect(f'{reverse("home")}')
-#	 	else:
-#	 		visitor.visit_token = readData
-#	 		visitor.in_time = datetime.now()
-#	 		visitor.save()
-#	 		send_normal_email(visitor)
-#	 		messages.success(request, f'QR Code scanned with value: { readData }')
-#	 		return redirect(reverse('home'))
-	
-# 		template_name = 'home/home.html'
+	if qrtype == 'booking':
+		visitor = display_visitors.get(id=id)  # visitors id
+		token = str(visitor.name).upper() + ' ' + str(visitor.id) + ' (V)'
+		qr.add_data(token)
+		qr.make(fit=True)
+		img = qr.make_image(fill_color="black", back_color="white")
+		qrpath = "./media/qrcodes/" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png"
+		img.save(qrpath)
+		
+		return qrpath, token
+	elif qrtype == 'details':
+		visitor = VisitorsDetail.objects.get(id=id)
+		token = str(visitor.name).upper() + ' ' + str(visitor.visitor.id) + '-' + str(visitor.id) + ' (V)'
+		qr.add_data(token)
+		qr.make(fit=True)
+		img = qr.make_image(fill_color="black", back_color="white")
+		qrpath = "./media/qrcodes/" + str(visitor.visitor.id) + "-" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png"
+		img.save(qrpath)
+		return qrpath
+
+@csrf_exempt
+@login_required()
+@user_passes_test(is_security)
+def scanQR(request, **kwargs):
+	display_visitors = Visitor.objects.filter(session_expired=False)
+	visitor = display_visitors.get(id=kwargs.get('id'))
+	frame = request.POST['qrimgdata']
+	Read = pb.decode(frame)
+	for ob in Read:
+		readData = str(ob.data.rstrip().decode('utf-8'))
+		print('readData',readData)
+		if not visitor.in_time and visitor.expected_in_time:
+			visitor = display_visitors.filter(token=readData).order_by('-id').first()
+			if visitor:
+				return redirect('/photoscan/'+str(visitor.id)+'/')
+			else:
+				messages.error(request, f'Invalid token scanned! Please scan again')
+				return redirect('/')
+		elif visitor.in_time and not visitor.out_time:
+			if readData == visitor.token:
+				visitor.out_time = datetime.now()
+				visitor.save()
+				send_normal_email(visitor)
+				messages.success(request, f'QR Code scanned successfully!')
+				return redirect(f'{reverse("home")}')
+		else:
+			messages.error(request, f'No entry to change!')
+			return redirect(reverse('home'))
+
+		template_name = 'home/home.html'
 		
 def send_normal_email(Visitor):
 	to_email = Visitor.user.email
-	print(to_email)
 	if Visitor.out_time:
 		subject = Visitor.name + ' has left Atlas Copco Campus'
-		message = 'Hello!\n\n\t' + Visitor.name + ' has left the Atlas Copco campus at ' + str(Visitor.out_time.date()) + ' ' + Visitor.out_time.strftime("%X") + '.'
+		message = 'Hello!\n\n\t' + Visitor.name + ' has left the Atlas Copco campus at ' + str(Visitor.out_time.date()) + ' ' + str(Visitor.out_time.strftime("%X")) + '.'
 	else:
 		subject = Visitor.name + ' is visiting Atlas Copco'
-		message = 'Hello!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + Visitor.in_time.strftime("%X") + '.'
+		message = 'Hello!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + str(Visitor.in_time.strftime("%X")) + 'with ' + Visitor.actual_visitors + '.'
 	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
 	email.content_subtype='html'
 	email.send(fail_silently=False)
@@ -115,7 +129,6 @@ def send_qrcode_email(to_email, qrcodeimg):
 			PFA an attached QR Code which you will have to show when you leave our premises!'''
 	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
 	email.content_subtype='html'
-	
 	with open(os.path.join(settings.BASE_DIR, '') + qrcodeimg, mode='rb') as file:
 		email.attach(os.path.join(settings.BASE_DIR, '') + qrcodeimg, file.read(), 'image/png')
 	
@@ -123,7 +136,7 @@ def send_qrcode_email(to_email, qrcodeimg):
 	
 class VisitorUpdateView(LoginRequiredMixin, UpdateView):
 	model = Visitor
-	fields = ['name', 'purpose', 'no_of_people', 'email', 'mobile', 'photo_id_number', 'photo_id', 'user']
+	fields = ['name', 'purpose', 'no_of_people', 'email', 'mobile', 'user']
 	success_url = reverse_lazy('home')
 	template_name = 'entry/visitor_booking.html'
 	

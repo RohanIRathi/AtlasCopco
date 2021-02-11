@@ -2,8 +2,8 @@
 
     <main>
         <div class="container-fluid">
-            <h1 class="mt-4">Dashboard</h1>
-            <div class="row mt-3">
+            <h1 class="mt-2">Dashboard</h1>
+            <div class="row mb-2">
                 {% if request.user.is_superuser %}
                 <div class="col-xl-3 col-md-6 mb-3 mt-2">
                     <div class="card bg-primary text-white">
@@ -53,20 +53,22 @@
     <main>
         <div class="container-fluid">
             <!-- DataTales Example -->
-            <div class="card shadow mb-4 mt-2">
+            <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <div class="row">
+                        {% if not request.user.is_staff or request.user.is_superuser %}
                         <div class="col-md-auto">
                             <h6 class="m-0 font-weight-bold text-primary">New Visitor
                                 <a href="{% url 'entry:new-visitor' %}" class="ml-3 btn btn-primary text-left">Add</a>
                             </h6>
                         </div>
+                        {% endif %}
                         {% if request.user.is_staff and not request.user.is_superuser %}
-                            <div class="col-md-auto">
-                                <h6 class="m-0 font-weight-bold text-primary">Scan Visitor's QR Code
-                                    <a href="#" class="ml-3 btn btn-primary text-left">Scan</a>
-                                </h6>
-                            </div>
+                        <div class="col-md-auto">
+                            <h6 class="m-0 font-weight-bold text-primary">Scan Visitor's QR Code
+                                <a href="#" class="ml-3 btn btn-primary text-left">Scan</a>
+                            </h6>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -79,9 +81,10 @@
                                     <th> Email </th>
                                     <th> No.of Visitors </th>
                                     <th> Phone No. </th>
-                                    <th> Time </th>
+                                    <th> Visit Time </th>
+                                    <th> Purpose </th>
                                     {% if request.user.is_staff and not request.user.is_superuser %}
-                                        <th> Photo </th>
+                                        <th> Details </th>
                                         <th> QR Code </th>
                                     {% endif %}
                                 </tr>
@@ -93,9 +96,14 @@
                                     <td>{{ visitor.email }}</td>
                                     <td>{{ visitor.no_of_people }}</td>
                                     <td>{{ visitor.mobile }}</td>
-                                    <td>{{ visitor.expected_in_time }}</td>
+                                    {% if visitor.in_time %}
+                                        <td>{{ visitor.in_time }}</td>
+                                    {% else %}
+                                        <td>{{ visitor.expected_in_time }}</td>
+                                    {% endif %}
+                                    <td>{{ visitor.purpose }}</td>
                                     {% if request.user.is_staff and not request.user.is_superuser %}
-                                        {% if not visitor.photo %}
+                                        {% if not visitor.in_time %}
                                         <td>
                                             <input type="hidden" name="edit_id" value="">
                                             <a type="submit" href="{% url 'photoscan' visitor.id %}" name="photo_btn" class="btn btn-success"> Scan </a>
@@ -106,12 +114,12 @@
                                         </td>
                                         {% endif %}
                                         <td>
-                                            {% if visitor.visit_token %}
+                                            {% if not visitor.out_time and visitor.in_time %}
                                             <form action="#" method="post">
                                                 <input type="hidden" name="scan_id" value="">
                                                 <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
                                             </form>
-                                            {% else %} Visiting Token<br>Not Assigned {% endif %}
+                                            {% else %} NA {% endif %}
                                         </td>
                                     {% endif %}
                                 </tr>

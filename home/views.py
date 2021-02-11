@@ -15,10 +15,18 @@ from django.contrib.auth.models import User
 
 from .forms import *
 from entry.models import *
+from entry import views
 
 def is_admin(user):
 	try:
-		admin = User.objects.get(username=user).is_superuser
+		admin = User.objects.get(username=user).is_superuser and User.objects.get(username=user).is_staff
+		return admin
+	except:
+		return False
+
+def is_security(user):
+	try:
+		admin = not User.objects.get(username=user).is_superuser and User.objects.get(username=user).is_staff
 		return admin
 	except:
 		return False
@@ -26,6 +34,7 @@ def is_admin(user):
 @login_required
 @user_passes_test(is_admin)
 def signup(request):
+	form = CreateUserForm()
 	if request.method == "POST":
 		form = CreateUserForm(request.POST)
 		# employee_form = CreateEmployeeForm(request.POST)
@@ -34,10 +43,26 @@ def signup(request):
 			"""employee = employee_form.save(commit=False)
 			employee.user = user
 			employee.save()"""
+			if request.POST['role'] == 'admin':
+				user.is_active = True
+				user.is_staff = True
+				user.is_superuser = True
+			elif request.POST['role'] == 'security':
+				user.is_active = True
+				user.is_staff = True
+				user.is_superuser = False
+			elif request.POST['role'] == 'employee':
+				user.is_active = True
+				user.is_staff = False
+				user.is_superuser = False
+			else:
+				messages.error(request, f'Error')
+				context = {'form': form}
+				return render(request, 'registration/signup.html', context)
+			user.save()
 			user = form.cleaned_data.get('username')
 			messages.success(request, 'Account was created ')
 			return redirect('/login/')
-	form = CreateUserForm()
 	# employee_form = CreateEmployeeForm()
 	context = {'form': form,} # 'employee_form': employee_form}
 	return render(request, 'registration/signup.html', context)
@@ -69,6 +94,8 @@ def logout_user(request):
 
 class VisitorListView(LoginRequiredMixin, ListView):
 	def get(self, request):
+		if not request.user.is_staff and not request.user.is_superuser:
+			return redirect('/entry/newvisitor')
 		all = Visitor.objects.all()
 		for visitor in all:
 			if visitor.expected_in_time:
@@ -93,12 +120,37 @@ class NotVisitedListView(LoginRequiredMixin, ListView):
 
 		return render(request, 'home/not_visited.html', context)
 
-class VisitExpiredListView(LoginRequiredMixin, ListView):
-	def get(self, request):
-		expired = Visitor.objects.filter(session_expired=True)
-		context = {'visitor_list': expired}
 
-		return render(request, 'home/expired_booking.html', context)
+def expiredBooking(request):
+	expired = Visitor.objects.filter(session_expired=True)
+	context = {'visitor_list': expired}
+	if request.method == 'POST':
+		search_query = request.POST['search']
+		search_date = ''
+		try:
+			search_date = datetime.strptime(search_query, '%d-%m-%Y')
+			print(search_date)
+		except:
+			pass
+		try:
+			user = User.objects.get(username__icontains=search_query)
+		except:
+			user = None
+		visitor_list_employee = expired.filter(user=user)
+		if search_date:
+			visitor_list_intime = expired.filter(expired_in_time__date = search_date)
+		else:
+			visitor_list_intime = expired.filter(user=None)
+		visitor_list_name = expired.filter(name__icontains=search_query)
+		visitor_list = visitor_list_employee.union(visitor_list_intime, visitor_list_name)
+		if search_query == '':
+			visitor_list = expired
+		context = {'visitor_list': visitor_list, 'search_query': search_query}
+	else:
+		visitor_list = expired
+
+
+	return render(request, 'home/expired_booking.html', context)
 
 class AllVisitedListView(LoginRequiredMixin, ListView):
 	def get(self, request):
@@ -119,6 +171,7 @@ class VisitorDetailView(LoginRequiredMixin, DetailView):
 		return context
 
 @login_required
+@user_passes_test(is_security)
 def photoscan(request, **kwargs):
 	if request.user.is_staff and not request.user.is_superuser:
 		instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
@@ -127,13 +180,15 @@ def photoscan(request, **kwargs):
 		if instance.actual_visitors:
 			if instance.actual_visitors <= visitorcount:
 				instance.in_time = datetime.now()
+				views.send_normal_email(instance)
+				instance.save()
 				return redirect('/')
 		context = {'form':form, 'visitor': instance, 'current_visitor': (visitorcount+1)}
 		if request.method == 'POST':
 			form = PhotoForm(request.POST, request.FILES)
 			if not instance.actual_visitors:
 				if int(request.POST['actual_visitors']) > instance.no_of_people:
-					messages.error(request, "Too many visitors")
+					messages.error(request, "These many visitors were not allowed!")
 					return  render(request, 'home/photoscan.html', context)
 				instance.actual_visitors = int(request.POST['actual_visitors'])
 				instance.save()
@@ -141,11 +196,14 @@ def photoscan(request, **kwargs):
 				visitorsdetail = form.save(commit=False)
 				visitorsdetail.safety_training = True
 				visitorsdetail.visitor = instance
+				visitorsdetail.save()
+				qrcodeimg = views.generateQR(visitorsdetail.id, 'details')
+				views.send_qrcode_email(visitorsdetail.email, qrcodeimg)
+				os.remove(qrcodeimg)
 				if int(instance.actual_visitors) < visitorcount:
 					success_url = '/'
 				else:
 					success_url = reverse('photoscan', kwargs={'id': kwargs.get('id')})
-				visitorsdetail.save()
 				return redirect(success_url, context)
 		return  render(request, 'home/photoscan.html', context)
 	else:
@@ -165,42 +223,38 @@ class AllVisitorsListView(LoginRequiredMixin, ListView):
 @user_passes_test(is_admin)
 def get_table_data(request):
 	display_visitors = Visitor.objects.filter(session_expired=False)
-	visitor_list = display_visitors.order_by('-in_time')
 	search_query = ''
 	if request.method == 'POST':
 		search_query = request.POST['search']
-		for i in [1]:
-			print(visitor_list[1].in_time.date(), search_query)
-			search_date = None
-			sort = False
-			try:
-				search_date = datetime.strptime(search_query, '%d-%m-%Y')
-				print(search_date)
-			except:
-				pass
-			try:
-				user = User.objects.get(username__icontains=search_query)
-				visitor_list = display_visitors.filter(user=user)
-				if visitor_list:
-					sort = True
-			except:
-				pass
-			if search_date:
-				visitor_list = display_visitors.filter(in_time__date = search_date)
-			elif not sort:
-				visitor_list = display_visitors.filter(name__icontains=search_query)
-				print(visitor_list)
-			else:
-				break
+		search_date = ''
+		try:
+			search_date = datetime.strptime(search_query, '%d-%m-%Y')
+			print(search_date)
+		except:
+			pass
+		try:
+			user = User.objects.get(username__icontains=search_query)
+		except:
+			user = None
+		visitor_list_employee = display_visitors.filter(user=user)
+		if search_date:
+			visitor_list_intime = display_visitors.filter(in_time__date = search_date)
+		else:
+			visitor_list_intime = display_visitors.filter(user=None)
+		visitor_list_name = display_visitors.filter(name__icontains=search_query)
+		visitor_list = visitor_list_employee.union(visitor_list_intime, visitor_list_name)
+		print(visitor_list)
 		if search_query == '':
 			visitor_list = display_visitors.order_by('-in_time')
+	else:
+		visitor_list = display_visitors.order_by('-in_time')
 
 	context = {'visitor_list': visitor_list, 'search_query': search_query}
 
 	return render(request, 'home/table.html', context=context)
 
 
-
+@user_passes_test(is_admin)
 @login_required()
 def visitor_in(request):
 	display_visitors = Visitor.objects.filter(session_expired=False)

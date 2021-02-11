@@ -1,3 +1,69 @@
+.hero-image {
+    /* Use "linear-gradient" to add a darken background effect to the image (photographer.jpg). This will make the text easier to read */
+    background-image: url("../base/AtlasVMSBackground2.png");
+    /* Set a specific height */
+    height: 100%;
+    width: 100%;
+    /* Position and center the image to scale nicely on all screens */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position:sticky;
+}
+
+.content{
+    width: 100%;
+    margin-top: 0px;
+    background: url(background.png) no-repeat;
+    background-position: center;
+    background-size: cover;
+    height: 10rem;
+    transition: 0.5s;
+    position: sticky;
+    z-index: 1000;
+}
+
+.profile_info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+    padding-top: 20px;
+    background-color: #212529;
+}
+
+.profile-info-text {
+    color: white;
+}
+
+.layoutSidenav_nav {
+    background-color: rgba(169, 169, 169, 0.233);
+}
+
+.sidebar .profile_info .profile_image{
+    width: 100px;
+    height: 100px;
+    border-radius: 100px;
+    margin-bottom: 10px;
+}
+
+.fa-power-off {
+    color: #44546A;
+}
+
+.fa-power-off:hover {
+    color: red;
+}
+
+.reset {
+    color: white;
+}
+
+.reset:hover {
+    color: red;
+}
+
 form.user .custom-checkbox.small label {
     line-height: 1.5rem
 }
@@ -59,7 +125,6 @@ form.user .btn-user {
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     min-width: 0;
     flex-grow: 1;
     min-height: calc(100vh - 56px);
@@ -154,6 +219,7 @@ form.user .btn-user {
     padding-left: 0;
     height: 56px;
     z-index: 1039;
+    background-color: #E7E6E6;
 }
 
 .sb-topnav .navbar-brand {
@@ -161,14 +227,19 @@ form.user .btn-user {
     padding-left: 1rem;
     padding-right: 1rem;
     margin: 0;
+    background-color: white;
+    text-align: center;
 }
 
 .sb-topnav.navbar-dark #sidebarToggle {
-    color: rgba(255, 255, 255, 0.5);
+    color: #44546A;
+}
+.sb-topnav.navbar-light #sidebarToggle:hover {
+    color: #5b9bd5;
 }
 
 .sb-topnav.navbar-light #sidebarToggle {
-    color: #212529;
+    color: #44546A;
 }
 
 .sb-sidenav {
@@ -227,24 +298,28 @@ form.user .btn-user {
 }
 
 .sb-sidenav-dark {
-    background-color: #212529;
-    color: rgba(255, 255, 255, 0.5);
+    background-color: #e9ecef;
+    color: #2f323a;
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
-    color: rgba(255, 255, 255, 0.25);
+    color: #44546A;
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link {
-    color: rgba(255, 255, 255, 0.5);
+    color: #44546A;
+}
+.sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
+    color: rgba(71, 71, 71, 0.5);
+    background: rgba(91, 155, 213, 0.6);
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-    color: rgba(255, 255, 255, 0.25);
+    color: #44546A;
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-sidenav-collapse-arrow {
-    color: rgba(255, 255, 255, 0.25);
+    color: #44546A;
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
@@ -253,6 +328,7 @@ form.user .btn-user {
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
     color: #fff;
+    background: #5B9BD5;
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
@@ -260,7 +336,7 @@ form.user .btn-user {
 }
 
 .sb-sidenav-dark .sb-sidenav-footer {
-    background-color: #343a40;
+    background-color:#2f323a;
 }
 
 .sb-sidenav-light {

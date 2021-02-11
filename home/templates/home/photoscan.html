@@ -26,11 +26,11 @@
                                     </tr>
                                     <tr>
                                         <td>Name</td>
-                                        <td><input type="text" class="form-control form-control-user" {% if current_visitor == 1 %} value="{{ visitor.name }}" disabled {% else %} required {% endif %}name="name"</td>
+                                        <td><input type="text" class="form-control form-control-user" {% if current_visitor == 1 %} value="{{ visitor.name }}" {% endif %}name="name" required</td>
                                     </tr>
                                     <tr>
                                         <td>E-mail</td>
-                                        <td><input type="email" class="form-control form-control-user" {% if current_visitor == 1 %} value="{{ visitor.email }}" disabled {% else %} required {% endif %}name="email"</td>
+                                        <td><input type="email" class="form-control form-control-user" {% if current_visitor == 1 %} value="{{ visitor.email }}" {% endif %}name="email" required</td>
                                     </tr>
                                     <tr>
                                         <td>Purpose of Visit</td>

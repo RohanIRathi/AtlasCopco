@@ -6,22 +6,30 @@
                 <div class="col-xl-10 col-lg-10 col-md-10">
                     <div class="card o-hidden border-0 shadow-lg my-5">
                         <div class="card-body p-0">
-                            {% if form.errors %} {{ form.errors }} {% endif %}
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="p-5">
                                         <div class="text-center">
                                             <h1 class="h4 text-gray-900 mb-4">Add User</h1>
                                         </div>
-                                        <small class="form-text text-danger">Fields marked * are required.</small><br> {{ form.errors }}
+                                        <small class="form-text text-danger">Fields marked * are required.</small><br>
                                         <form class="user" method="post" enctype="multipart/form-data">
-                                            {% csrf_token %} {{ form.errors|crispy }}
+                                            {% csrf_token %}
 
                                             <div id="div_id_username" class="form-group">
                                                 <label for="id_username" class=" requiredField">Username<span class="asteriskField text-danger">*</span> </label>
                                                 <div class=""> <input type="text" name="username" maxlength="150" {% if form.username.value %}value="{{ form.username.value }}" {% else %}placeholder="Enter Username" {% endif %} autofocus class="textinput textInput form-control form-control-user"
                                                         required id="id_username">
                                                 </div>
+                                                {% if form.username.errors %}
+                                                    <div>
+                                                    <ul class="list-group">
+                                                    {% for error in form.username.errors %}
+                                                    <li class="list-group-item"><small class="text-danger">{{ error }}</small></li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                    </div>
+                                                {% endif %}
                                             </div>
 
                                             <div class="row">
@@ -30,12 +38,62 @@
                                                         <label>First Name<span class="asteriskField text-danger">*</span></label>
                                                         <input type="text" name="first_name" {% if form.first_name.value %}value="{{ form.first_name.value }}" {% else %}placeholder="Enter First Name" {% endif %} class="form-control form-control-user" placeholder="Enter First Name">
                                                     </div>
+                                                    {% if form.first_name.errors %}
+                                                    <div>
+                                                    <ul class="list-group">
+                                                    {% for error in form.first_name.errors %}
+                                                    <li class="list-group-item"><small class="text-danger">{{ error }}</small></li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                    </div>
+                                                    {% endif %}
                                                 </div>
                                                 <div class="col">
                                                     <div class="form-group pb-2">
                                                         <label>Last Name</label>
                                                         <input type="text" name="last_name" {% if form.last_name.value %}value="{{ form.last_name.value }}" {% else %}placeholder="Enter Last Name" {% endif %} class="form-control form-control-user" placeholder="Enter Last Name">
                                                     </div>
+                                                    {% if form.last_name.errors %}
+                                                    <div>
+                                                    <ul class="list-group">
+                                                    {% for error in form.last_name.errors %}
+                                                    <li class="list-group-item"><small class="text-danger">{{ error }}</small></li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group pb-2">
+                                                        <label>Password<span class="asteriskField text-danger">*</span></label>
+                                                        <input type="password" name="password1" class="form-control form-control-user" placeholder="Enter Password">
+                                                    </div>
+                                                    {% if form.password.errors %}
+                                                    <div>
+                                                    <ul class="list-group">
+                                                    {% for error in form.password.errors %}
+                                                    <li class="list-group-item"><small class="text-danger">{{ error }}</small></li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col">
+                                                    <div class="form-group pb-2">
+                                                        <label>Confirm Password<span class="asteriskField text-danger">*</span></label>
+                                                        <input type="password" name="password2" class="form-control form-control-user" placeholder="Re-enter password">
+                                                    </div>
+                                                    {% if form.password2.errors %}
+                                                    <div>
+                                                    <ul class="list-group list-group-flush">
+                                                    {% for error in form.password2.errors %}
+                                                    <li class="list-group-item"><small class="text-danger">{{ error }}</small></li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                    </div>
+                                                    {% endif %}
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -44,37 +102,33 @@
                                                         <label>Email<span class="asteriskField text-danger">*</span></label>
                                                         <input type="email" name="email" {% if form.email.value %}value="{{ form.email.value }}" {% else %}placeholder="Enter Email" {% endif %} class="form-control form-control-user" placeholder="Enter Email">
                                                     </div>
-                                                </div>
-                                                <!-- <div class="col">
-                                                    <div class="form-group pb-2">
-                                                        <label>Phone No.<span class="asteriskField text-danger">*</span></label>
-                                                        <input type="number" name="mobile" {% if form.mobile.value %}value="{{ form.mobile.value }}" {% else %}placeholder="Enter Mobile" {% endif %} class="form-control form-control-user" placeholder="Enter Phone No.">
+                                                    {% if form.email.errors %}
+                                                    <div>
+                                                    <ul class="list-group list-group-flush">
+                                                    {% for error in form.email.errors %}
+                                                    <li class="list-group-item"><small class="text-danger">{{ error }}</small></li>
+                                                    {% endfor %}
+                                                    </ul>
                                                     </div>
-                                                </div> -->
-
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <div class="form-group pb-2">
-                                                        <label>Password<span class="asteriskField text-danger">*</span></label>
-                                                        <input type="password" name="password1" class="form-control form-control-user" placeholder="Enter Password">
-                                                    </div>
+                                                    {% endif %}
                                                 </div>
                                                 <div class="col">
-                                                    <div class="form-group pb-2">
-                                                        <label>Confirm Password<span class="asteriskField text-danger">*</span></label>
-                                                        <input type="password" name="password2" class="form-control form-control-user" placeholder="Re-enter password">
+                                                    <div id="div_id_user" class="form-group">
+                                                        <label for="id_role" class=" requiredField">Role<span class="asteriskField text-danger">*</span></label>
+                                                        <div class="">
+                                                            <select name="role" class="select form-control" required id="id_role">
+                                                                    <option value="employee" selected>Employee</option>
+                                                                    <option value="security">Security</option>
+                                                                    <option value="admin">Admin</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-											<div class="form-group ml-4 mt-4">
-                                                <label>Check If new user is admin</label>
-                                                {{ form.is_superuser  }}
                                             </div>
 
 
                                             <hr>
-                                            <input type="submit" name="add_btn" class="btn btn-primary btn-user btn-block" style="border-radius: 10rem;">
+                                            <input type="submit" name="add_btn" class="btn btn-primary btn-user btn-block" style="border-radius: 10rem;" value="Register">
                                             <hr>
                                         </form>
                                     </div>

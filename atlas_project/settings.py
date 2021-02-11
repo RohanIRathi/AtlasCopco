@@ -92,17 +92,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'atlas_project.wsgi.application'
-ASGI_APPLICATION = 'atlas_project.asgi.application'
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('peaceful-dusk-14195.herokuapp.com', 6379), ('127.0.0.1', 6379)],
-        },
-
-    },
-}
 
 # # For simple usernames (e.g. "username"):
 # LDAP_AUTH_FORMAT_USERNAME = "django_python3_ldap.utils.format_username_active_directory"
