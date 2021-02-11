@@ -32,7 +32,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 local_apps = [
-    # 'stream',
     'entry.apps.EntryConfig',
     'home.apps.HomeConfig',
     'charts.apps.ChartsConfig',

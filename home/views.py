@@ -1,17 +1,19 @@
-from datetime import datetime, timedelta
-from django.http import request
+from datetime import datetime
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import F
 from django.urls import reverse
-from django.urls.base import reverse_lazy
+from PIL import Image
 from django.views.generic import ListView, DetailView
 from django.conf import settings
-import os
+import base64
 from django.contrib.auth.models import User
+import os
 
 from .forms import *
 from entry.models import *
@@ -192,24 +194,50 @@ def photoscan(request, **kwargs):
 					return  render(request, 'home/photoscan.html', context)
 				instance.actual_visitors = int(request.POST['actual_visitors'])
 				instance.save()
-			if form.is_valid():
-				print("Test:", request.FILES['photo'].read())
+			name = request.POST['name']
+			email = request.POST['email']
+			photo = request.POST['photo']
+			photo_id = request.POST['photo_id']
+			photo_id_number = request.POST['photo_id_number']
+			if name and email and photo and photo_id and photo_id_number:
+				visitorsdetail = VisitorsDetail.objects.create(name = name, email = email, photo_id_number = photo_id_number, safety_training = True, visitor = instance)
+				photoField = visitorsdetail.photo
+				photo_name = visitorsdetail.name + str(instance.token) + '.png'
+				photo_path = os.path.join('photo/', photo_name)
+				framephoto = base64.b64decode(photo)
+				framephoto = BytesIO(framephoto)
+				framephoto = Image.open(framephoto)
+				buffer = BytesIO()
+				framephoto.save(fp=buffer, format="PNG")
+				photoImg = ContentFile(buffer.getvalue())
+				photoField.save(photo_name, InMemoryUploadedFile(
+					photoImg, None, photo_name, 'image/png', photoImg.size, None
+				))
+				photoField = visitorsdetail.photo_id
+				photo_name = visitorsdetail.name + str(instance.token) + '.png'
+				photo_path = os.path.join('photo_id/', photo_name)
+				framephoto = base64.b64decode(photo)
+				framephoto = BytesIO(framephoto)
+				framephoto = Image.open(framephoto)
+				buffer = BytesIO()
+				framephoto.save(fp=buffer, format="PNG")
+				photoImg = ContentFile(buffer.getvalue())
+				photoField.save(photo_name, InMemoryUploadedFile(
+					photoImg, None, photo_name, 'image/png', photoImg.size, None
+				))
+				visitorsdetail.save()
+				qrcodeimg = views.generateQR(visitorsdetail.id, 'details')
+				views.send_qrcode_email(visitorsdetail.email, qrcodeimg)
+				os.remove(qrcodeimg)
+				if int(instance.actual_visitors) < visitorcount:
+					success_url = '/'
+				else:
+					success_url = reverse('photoscan', kwargs={'id': kwargs.get('id')})
+				return redirect(success_url, context)
 			else:
 				messages.error(request, f'Error!')
 			context = {'form':form, 'visitor': instance, 'current_visitor': (visitorcount+1)}
 
-		# 		visitorsdetail = form.save(commit=False)
-		# 		visitorsdetail.safety_training = True
-		# 		visitorsdetail.visitor = instance
-		# 		visitorsdetail.save()
-		# 		qrcodeimg = views.generateQR(visitorsdetail.id, 'details')
-		# 		views.send_qrcode_email(visitorsdetail.email, qrcodeimg)
-		# 		os.remove(qrcodeimg)
-		# 		if int(instance.actual_visitors) < visitorcount:
-		# 			success_url = '/'
-		# 		else:
-		# 			success_url = reverse('photoscan', kwargs={'id': kwargs.get('id')})
-		# 		return redirect(success_url, context)
 		return  render(request, 'home/photoscan.html', context)
 	else:
 		return redirect('/')
