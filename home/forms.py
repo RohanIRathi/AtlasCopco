@@ -9,10 +9,3 @@ class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
-
-
-
-class PhotoForm(ModelForm):
-    class Meta:
-        model = VisitorsDetail
-        fields = ['name', 'email', 'safety_training', 'photo', 'photo_id', 'photo_id_number']

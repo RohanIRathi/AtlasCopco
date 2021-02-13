@@ -14,6 +14,8 @@ from django.conf import settings
 import base64
 from django.contrib.auth.models import User
 import os
+from sys import getsizeof
+import django
 
 from .forms import *
 from entry.models import *
@@ -39,13 +41,10 @@ def signup(request):
 	form = CreateUserForm()
 	if request.method == "POST":
 		form = CreateUserForm(request.POST)
-		# employee_form = CreateEmployeeForm(request.POST)
-		if form.is_valid() :  # and employee_form.is_valid():
-			user = form.save()
-			"""employee = employee_form.save(commit=False)
-			employee.user = user
-			employee.save()"""
-			if request.POST['role'] == 'admin':
+		if form.is_valid():
+			print(request.POST['username'])
+			user = form.save(commit=False)
+			if request.POST['role'] == 'admin' and request.POST['email'].endswith('@atlascopco.com'):
 				user.is_active = True
 				user.is_staff = True
 				user.is_superuser = True
@@ -53,12 +52,12 @@ def signup(request):
 				user.is_active = True
 				user.is_staff = True
 				user.is_superuser = False
-			elif request.POST['role'] == 'employee':
+			elif request.POST['role'] == 'employee' and request.POST['email'].endswith('@atlascopco.com'):
 				user.is_active = True
 				user.is_staff = False
 				user.is_superuser = False
 			else:
-				messages.error(request, f'Error')
+				messages.error(request, f'Error! Invalid email! Admin or employee must have an Atlas Copco email!')
 				context = {'form': form}
 				return render(request, 'registration/signup.html', context)
 			user.save()
@@ -72,7 +71,8 @@ def signup(request):
 
 def login_validate(request):
 	if request.method == "POST":
-		user_name = request.POST['username']
+		user = User.objects.get(email=request.POST['username'])
+		user_name = user.username
 		password = request.POST['password']
 		user = authenticate(request, username=user_name, password=password)
 		if user is not None:
@@ -177,7 +177,6 @@ class VisitorDetailView(LoginRequiredMixin, DetailView):
 def photoscan(request, **kwargs):
 	if request.user.is_staff and not request.user.is_superuser:
 		instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
-		form = PhotoForm()
 		visitorcount = VisitorsDetail.objects.filter(visitor=instance).count()
 		if instance.actual_visitors:
 			if instance.actual_visitors <= visitorcount:
@@ -185,9 +184,8 @@ def photoscan(request, **kwargs):
 				views.send_normal_email(instance)
 				instance.save()
 				return redirect('/')
-		context = {'form':form, 'visitor': instance, 'current_visitor': (visitorcount+1)}
+		context = {'visitor': instance, 'current_visitor': (visitorcount+1)}
 		if request.method == 'POST':
-			form = PhotoForm(request.POST, request.FILES)
 			if not instance.actual_visitors:
 				if int(request.POST['actual_visitors']) > instance.no_of_people:
 					messages.error(request, "These many visitors were not allowed!")
@@ -199,6 +197,7 @@ def photoscan(request, **kwargs):
 			photo = request.POST['photo']
 			photo_id = request.POST['photo_id']
 			photo_id_number = request.POST['photo_id_number']
+			print(getsizeof(name), getsizeof(email), getsizeof(photo_id_number), getsizeof(photo), getsizeof(photo_id))
 			if name and email and photo and photo_id and photo_id_number:
 				visitorsdetail = VisitorsDetail.objects.create(name = name, email = email, photo_id_number = photo_id_number, safety_training = True, visitor = instance)
 				photoField = visitorsdetail.photo
@@ -236,7 +235,7 @@ def photoscan(request, **kwargs):
 				return redirect(success_url, context)
 			else:
 				messages.error(request, f'Error!')
-			context = {'form':form, 'visitor': instance, 'current_visitor': (visitorcount+1)}
+			context = {'visitor': instance, 'current_visitor': (visitorcount+1)}
 
 		return  render(request, 'home/photoscan.html', context)
 	else:
