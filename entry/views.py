@@ -112,7 +112,7 @@ def send_normal_email(Visitor):
 		message = 'Hello!\n\n\t' + Visitor.name + ' has left the Atlas Copco campus at ' + str(Visitor.out_time.date()) + ' ' + str(Visitor.out_time.strftime("%X")) + '.'
 	else:
 		subject = Visitor.name + ' is visiting Atlas Copco'
-		message = 'Hello!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + str(Visitor.in_time.strftime("%X")) + 'with ' + Visitor.actual_visitors + '.'
+		message = 'Hello!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + str(Visitor.in_time.strftime("%X")) + 'with ' + str(Visitor.actual_visitors) + '.'
 	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
 	email.content_subtype='html'
 	email.send(fail_silently=False)

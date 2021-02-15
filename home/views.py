@@ -10,12 +10,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from PIL import Image
 from django.views.generic import ListView, DetailView
-from django.conf import settings
 import base64
 from django.contrib.auth.models import User
 import os
-from sys import getsizeof
-import django
 
 from .forms import *
 from entry.models import *
@@ -105,7 +102,9 @@ class VisitorListView(LoginRequiredMixin, ListView):
 					visitor.session_expired = True
 					visitor.save()
 		display_visitors = Visitor.objects.filter(session_expired=False)
-		visitor_list = display_visitors.filter(expected_in_time__date=datetime.now().date()).filter(out_time__isnull=True)
+		visitor_list1 = display_visitors.filter(expected_in_time__contains=datetime.now().date()).filter(out_time__isnull=True).order_by('-expected_in_time')
+		visitor_list2 = display_visitors.filter(in_time__contains=datetime.now().date()).filter(out_time__isnull=True).order_by('in_time')
+		visitor_list = visitor_list1.union(visitor_list2)
 		visitors = display_visitors.count()
 		visited = display_visitors.filter(out_time__isnull=False).count()
 		to_visit = display_visitors.filter(in_time__isnull=True).count()
@@ -196,10 +195,9 @@ def photoscan(request, **kwargs):
 			email = request.POST['email']
 			photo = request.POST['photo']
 			photo_id = request.POST['photo_id']
-			photo_id_number = request.POST['photo_id_number']
-			print(getsizeof(name), getsizeof(email), getsizeof(photo_id_number), getsizeof(photo), getsizeof(photo_id))
-			if name and email and photo and photo_id and photo_id_number:
-				visitorsdetail = VisitorsDetail.objects.create(name = name, email = email, photo_id_number = photo_id_number, safety_training = True, visitor = instance)
+			mobile = request.POST['mobile']
+			if name and email and photo and photo_id and mobile:
+				visitorsdetail = VisitorsDetail.objects.create(name = name, email = email, mobile = mobile, safety_training = True, visitor = instance)
 				photoField = visitorsdetail.photo
 				photo_name = visitorsdetail.name + str(instance.token) + '.png'
 				photo_path = os.path.join('photo/', photo_name)
