@@ -28,7 +28,7 @@
 										<hr>
 									{% endfor %}
 									<div class="text-center">
-										<h1 class="h4 text-gray-900 mb-4">Atlas Copco</h1>
+										<h1 class="h4 text-gray-900 mb-4"><img class="logo" src="{% static 'base/AtlasCopcoLogo.png' %}" alt="Atlas Copco" width="auto" height="60px"></h1>
 									</div>
 									<form action="{% url 'login' %}" class="user" name="form1" method="POST">
 										{% csrf_token %}
