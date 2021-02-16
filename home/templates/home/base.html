@@ -35,7 +35,7 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="profile_info pb-2">
-                            <i class="fas fa-user-circle fa-5x "style="color:white"></i>
+                            <i class="fas fa-user-circle fa-3x pb-1"style="color:white"></i>
                             <h4 class="profile-info-text pt-2">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
                             <h4 class="profile-info-text pb-3" style="font-size: small;">{% if request.user.is_superuser and request.user.is_staff %} Admin{% elif request.user.is_staff and not request.user.is_superuser %} Security{% else %} Employee{% endif %}</h4>
                         </div>
