@@ -81,7 +81,10 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body" style="position: static">
-                                                <div id="interactive" class="viewport"></div>
+                                                <div id="interactive" class="viewport">
+                                                    <video crossorigin="anonymous" autoplay width="300px" height="300px" id="interactive-video"></video>
+                                                    <canvas id="canvas"></canvas>
+                                                </div>
                                                 <div class="error"></div>
                                             </div>
                                             <div class="modal-footer">
@@ -89,8 +92,10 @@
                                                     <i class="fa fa-camera"></i> Use camera app
                                                     <input type="file" accept="image/*;capture=camera" capture="camera" class="hidden">
                                                 </label>-->
-                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Capture</button>
-                                                <a href="" class="btn btn-success" data-dismiss="modal">Submit</a>
+                                                <button type="button" id="capture" class="btn btn-primary">Capture</button>
+                                                <form action="{% url 'entry:scanQR' %}" method="post">
+                                                <input type="hidden" name="imgdata" value="" id="imgdata">
+                                                <input type="submit" class="btn btn-success" value="Submit">
                                             </div>
                                         </div> <!-- /.modal-content -->
                                     </div> <!-- /.modal-dialog -->

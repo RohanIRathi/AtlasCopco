@@ -13,8 +13,8 @@ import os
 from datetime import datetime
 from PIL import Image
 from .forms import *
-import cv2
-import numpy as np
+from io import BytesIO
+import base64
 import pyzbar.pyzbar as pb
 from home import views as hviews
 
@@ -85,31 +85,25 @@ def generateQR(id, qrtype):
 @user_passes_test(is_security)
 def scanQR(request, **kwargs):
 	display_visitors = Visitor.objects.filter(session_expired=False)
-	visitor = display_visitors.get(id=kwargs.get('id'))
-	frame = request.POST['qrimgdata']
+	frame = base64.b64decode(request.POST['imgdata'])
+	frame = BytesIO(frame)
+	frame = Image.open(frame)
 	Read = pb.decode(frame)
 	for ob in Read:
 		readData = str(ob.data.rstrip().decode('utf-8'))
 		print('readData',readData)
-		if not visitor.in_time and visitor.expected_in_time:
-			visitor = display_visitors.filter(token=readData).order_by('-id').first()
-			if visitor:
-				return redirect('/photoscan/'+str(visitor.id)+'/')
-			else:
-				messages.error(request, f'Invalid token scanned! Please scan again')
-				return redirect('/')
-		elif visitor.in_time and not visitor.out_time:
-			if readData == visitor.token:
+		visitor = display_visitors.filter(token=readData).first()
+		if visitor:
+			if not visitor.in_time and visitor.expected_in_time:
+				return redirect('/photoscan/' + str(visitor.id))
+			elif visitor.in_time and not visitor.out_time:
 				visitor.out_time = datetime.now()
 				visitor.save()
-				send_normal_email(visitor)
-				messages.success(request, f'QR Code scanned successfully!')
-				return redirect(f'{reverse("home")}')
+				messages.success(request, f'Visitor has left')
+				return redirect('/')
 		else:
-			messages.error(request, f'No entry to change!')
-			return redirect(reverse('home'))
-
-		template_name = 'home/home.html'
+			messages.error(request, f'Invalid Token Scanned!')
+			return redirect('/')
 		
 def send_normal_email(Visitor):
 	to_email = Visitor.user.email
@@ -118,7 +112,7 @@ def send_normal_email(Visitor):
 		message = 'Hello!\n\n\t' + Visitor.name + ' has left the Atlas Copco campus at ' + str(Visitor.out_time.date()) + ' ' + str(Visitor.out_time.strftime("%X")) + '.'
 	else:
 		subject = Visitor.name + ' is visiting Atlas Copco'
-		message = 'Hello!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + str(Visitor.in_time.strftime("%X")) + 'with ' + Visitor.actual_visitors + '.'
+		message = 'Hello!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + str(Visitor.in_time.strftime("%X")) + 'with ' + str(Visitor.actual_visitors) + '.'
 	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
 	email.content_subtype='html'
 	email.send(fail_silently=False)

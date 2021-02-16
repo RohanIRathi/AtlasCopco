@@ -1,17 +1,18 @@
-from datetime import datetime, timedelta
-from django.http import request
+from datetime import datetime
+from io import BytesIO
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import F
 from django.urls import reverse
-from django.urls.base import reverse_lazy
+from PIL import Image
 from django.views.generic import ListView, DetailView
-from django.conf import settings
-import os
+import base64
 from django.contrib.auth.models import User
+import os
 
 from .forms import *
 from entry.models import *
@@ -37,13 +38,10 @@ def signup(request):
 	form = CreateUserForm()
 	if request.method == "POST":
 		form = CreateUserForm(request.POST)
-		# employee_form = CreateEmployeeForm(request.POST)
-		if form.is_valid() :  # and employee_form.is_valid():
-			user = form.save()
-			"""employee = employee_form.save(commit=False)
-			employee.user = user
-			employee.save()"""
-			if request.POST['role'] == 'admin':
+		if form.is_valid():
+			print(request.POST['username'])
+			user = form.save(commit=False)
+			if request.POST['role'] == 'admin' and request.POST['email'].endswith('@atlascopco.com'):
 				user.is_active = True
 				user.is_staff = True
 				user.is_superuser = True
@@ -51,12 +49,12 @@ def signup(request):
 				user.is_active = True
 				user.is_staff = True
 				user.is_superuser = False
-			elif request.POST['role'] == 'employee':
+			elif request.POST['role'] == 'employee' and request.POST['email'].endswith('@atlascopco.com'):
 				user.is_active = True
 				user.is_staff = False
 				user.is_superuser = False
 			else:
-				messages.error(request, f'Error')
+				messages.error(request, f'Error! Invalid email! Admin or employee must have an Atlas Copco email!')
 				context = {'form': form}
 				return render(request, 'registration/signup.html', context)
 			user.save()
@@ -70,7 +68,8 @@ def signup(request):
 
 def login_validate(request):
 	if request.method == "POST":
-		user_name = request.POST['username']
+		user = User.objects.get(email=request.POST['username'])
+		user_name = user.username
 		password = request.POST['password']
 		user = authenticate(request, username=user_name, password=password)
 		if user is not None:
@@ -103,7 +102,9 @@ class VisitorListView(LoginRequiredMixin, ListView):
 					visitor.session_expired = True
 					visitor.save()
 		display_visitors = Visitor.objects.filter(session_expired=False)
-		visitor_list = display_visitors.filter(expected_in_time__date=datetime.now().date()).filter(out_time__isnull=True)
+		visitor_list1 = display_visitors.filter(expected_in_time__contains=datetime.now().date()).filter(out_time__isnull=True).order_by('-expected_in_time')
+		visitor_list2 = display_visitors.filter(in_time__contains=datetime.now().date()).filter(out_time__isnull=True).order_by('in_time')
+		visitor_list = visitor_list1.union(visitor_list2)
 		visitors = display_visitors.count()
 		visited = display_visitors.filter(out_time__isnull=False).count()
 		to_visit = display_visitors.filter(in_time__isnull=True).count()
@@ -175,7 +176,6 @@ class VisitorDetailView(LoginRequiredMixin, DetailView):
 def photoscan(request, **kwargs):
 	if request.user.is_staff and not request.user.is_superuser:
 		instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
-		form = PhotoForm()
 		visitorcount = VisitorsDetail.objects.filter(visitor=instance).count()
 		if instance.actual_visitors:
 			if instance.actual_visitors <= visitorcount:
@@ -183,19 +183,45 @@ def photoscan(request, **kwargs):
 				views.send_normal_email(instance)
 				instance.save()
 				return redirect('/')
-		context = {'form':form, 'visitor': instance, 'current_visitor': (visitorcount+1)}
+		context = {'visitor': instance, 'current_visitor': (visitorcount+1)}
 		if request.method == 'POST':
-			form = PhotoForm(request.POST, request.FILES)
 			if not instance.actual_visitors:
 				if int(request.POST['actual_visitors']) > instance.no_of_people:
 					messages.error(request, "These many visitors were not allowed!")
 					return  render(request, 'home/photoscan.html', context)
 				instance.actual_visitors = int(request.POST['actual_visitors'])
 				instance.save()
-			if form.is_valid():
-				visitorsdetail = form.save(commit=False)
-				visitorsdetail.safety_training = True
-				visitorsdetail.visitor = instance
+			name = request.POST['name']
+			email = request.POST['email']
+			photo = request.POST['photo']
+			photo_id = request.POST['photo_id']
+			mobile = request.POST['mobile']
+			if name and email and photo and photo_id and mobile:
+				visitorsdetail = VisitorsDetail.objects.create(name = name, email = email, mobile = mobile, safety_training = True, visitor = instance)
+				photoField = visitorsdetail.photo
+				photo_name = visitorsdetail.name + str(instance.token) + '.png'
+				photo_path = os.path.join('photo/', photo_name)
+				framephoto = base64.b64decode(photo)
+				framephoto = BytesIO(framephoto)
+				framephoto = Image.open(framephoto)
+				buffer = BytesIO()
+				framephoto.save(fp=buffer, format="PNG")
+				photoImg = ContentFile(buffer.getvalue())
+				photoField.save(photo_name, InMemoryUploadedFile(
+					photoImg, None, photo_name, 'image/png', photoImg.size, None
+				))
+				photoField = visitorsdetail.photo_id
+				photo_name = visitorsdetail.name + str(instance.token) + '.png'
+				photo_path = os.path.join('photo_id/', photo_name)
+				framephoto = base64.b64decode(photo)
+				framephoto = BytesIO(framephoto)
+				framephoto = Image.open(framephoto)
+				buffer = BytesIO()
+				framephoto.save(fp=buffer, format="PNG")
+				photoImg = ContentFile(buffer.getvalue())
+				photoField.save(photo_name, InMemoryUploadedFile(
+					photoImg, None, photo_name, 'image/png', photoImg.size, None
+				))
 				visitorsdetail.save()
 				qrcodeimg = views.generateQR(visitorsdetail.id, 'details')
 				views.send_qrcode_email(visitorsdetail.email, qrcodeimg)
@@ -205,6 +231,10 @@ def photoscan(request, **kwargs):
 				else:
 					success_url = reverse('photoscan', kwargs={'id': kwargs.get('id')})
 				return redirect(success_url, context)
+			else:
+				messages.error(request, f'Error!')
+			context = {'visitor': instance, 'current_visitor': (visitorcount+1)}
+
 		return  render(request, 'home/photoscan.html', context)
 	else:
 		return redirect('/')

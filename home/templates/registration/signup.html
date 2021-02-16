@@ -1,5 +1,4 @@
-{% extends 'home/base.html' %} {% load crispy_forms_tags %} {% load static %} {{ form.errors }}  {% block content %}
-<div id="layoutSidenav_content">
+{% extends 'home/base.html' %} {% load static %} {% block content %}
     <main>
         <div class="container">
             <div class="row justify-content-center">
@@ -12,16 +11,16 @@
                                         <div class="text-center">
                                             <h1 class="h4 text-gray-900 mb-4">Add User</h1>
                                         </div>
-                                        <small class="form-text text-danger">Fields marked * are required.</small><br>
+                                        <!-- <small class="form-text text-danger">Fields marked * are required.</small><br> -->
                                         <form class="user" method="post" enctype="multipart/form-data">
                                             {% csrf_token %}
 
-                                            <div id="div_id_username" class="form-group">
-                                                <label for="id_username" class=" requiredField">Username<span class="asteriskField text-danger">*</span> </label>
-                                                <div class=""> <input type="text" name="username" maxlength="150" {% if form.username.value %}value="{{ form.username.value }}" {% else %}placeholder="Enter Username" {% endif %} autofocus class="textinput textInput form-control form-control-user"
+                                            <!-- <div id="div_id_username" class="form-group">
+                                                <label for="id_username" class=" requiredField">Username<span class="asteriskField text-danger">*</span> </label> -->
+                                                <div class=""> <input type="hidden" name="username" maxlength="150" {% if form.username.value %}value="{{ form.username.value }}" {% else %}placeholder="Enter Username" {% endif %} autofocus class="textinput textInput form-control form-control-user"
                                                         required id="id_username">
                                                 </div>
-                                                {% if form.username.errors %}
+                                                <!-- {% if form.username.errors %}
                                                     <div>
                                                     <ul class="list-group">
                                                     {% for error in form.username.errors %}
@@ -30,7 +29,7 @@
                                                     </ul>
                                                     </div>
                                                 {% endif %}
-                                            </div>
+                                            </div> -->
 
                                             <div class="row">
                                                 <div class="col">
@@ -100,7 +99,7 @@
                                                 <div class="col">
                                                     <div class="form-group pb-2">
                                                         <label>Email<span class="asteriskField text-danger">*</span></label>
-                                                        <input type="email" name="email" {% if form.email.value %}value="{{ form.email.value }}" {% else %}placeholder="Enter Email" {% endif %} class="form-control form-control-user" placeholder="Enter Email">
+                                                        <input type="email" id="id_email" name="email" {% if form.email.value %}value="{{ form.email.value }}" {% else %}placeholder="Enter Email" {% endif %} class="form-control form-control-user" placeholder="Enter Email">
                                                     </div>
                                                     {% if form.email.errors %}
                                                     <div>
@@ -125,10 +124,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
                                             <hr>
-                                            <input type="submit" name="add_btn" class="btn btn-primary btn-user btn-block" style="border-radius: 10rem;" value="Register">
+                                            <input type="submit" id='register' name="add_btn" class="btn btn-primary btn-user btn-block" style="border-radius: 10rem;" value="Register">
                                             <hr>
                                         </form>
                                     </div>
@@ -140,7 +137,13 @@
             </div>
         </div>
     </main>
-</div>
+<script>
+    document.getElementById('register').onclick = () => {
+        console.log('submitted');
+        document.getElementById('id_username').setAttribute('value', document.getElementById('id_email').value);
+        console.log(document.getElementById('id_username').value);
+    };
+</script>
 {% endblock content %}
 
 
