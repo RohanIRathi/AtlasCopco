@@ -101,9 +101,9 @@ def scanQR(request, **kwargs):
 				visitor.save()
 				messages.success(request, f'Visitor has left')
 				return redirect('/')
-		else:
-			messages.error(request, f'Invalid Token Scanned!')
-			return redirect('/')
+	messages.error(request, f'Invalid Token Scanned!')
+	return redirect('/')
+	
 		
 def send_normal_email(Visitor):
 	to_email = Visitor.user.email

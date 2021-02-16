@@ -25,7 +25,7 @@
 						<!-- Nested Row within Card Body -->
 						<div class="row">
 							<div class="col-lg-12">
-								<div class="p-5">
+								<div class="pl-5 pr-5 pb-5 pt-1">
 									{% for message in messages %}
 										<div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-{{ message.tags }}{% endif %} text-center col-sm-9" style="margin: auto;" id="messages">{{ message }}</div>
 										<hr>
