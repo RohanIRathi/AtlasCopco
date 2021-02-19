@@ -27,7 +27,7 @@ SECRET_KEY = '1244ztx296$iq9s3peaw3y8ab@h9i-3q$sher8or68_#7^)x=c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', os.environ.get('HOST_IP'), '127.0.0.1']
 
 # Application definition
 
@@ -61,7 +61,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'atlas_project.authentication_middleware.AutomaticUserLoginMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]

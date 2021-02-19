@@ -178,7 +178,7 @@ def photoscan(request, **kwargs):
 		instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
 		visitorcount = VisitorsDetail.objects.filter(visitor=instance).count()
 		if instance.actual_visitors:
-			if instance.actual_visitors <= visitorcount:
+			if instance.actual_visitors <= visitorcount and not instance.in_time:
 				instance.in_time = datetime.now()
 				views.send_normal_email(instance)
 				instance.save()
@@ -234,9 +234,16 @@ def photoscan(request, **kwargs):
 			else:
 				messages.error(request, f'Error!')
 			context = {'visitor': instance, 'current_visitor': (visitorcount+1)}
-
 		return  render(request, 'home/photoscan.html', context)
 	else:
+		return redirect('/')
+
+def pseudophotoscan(request, **kwargs):
+	instance = Visitor.objects.get(pk=kwargs.get('id'))
+	if not instance.in_time:
+		instance.in_time = datetime.now()
+		instance.save()
+		views.send_normal_email(instance)
 		return redirect('/')
 
 class AllVisitorsListView(LoginRequiredMixin, ListView):

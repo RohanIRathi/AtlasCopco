@@ -14,6 +14,7 @@ urlpatterns = [
 	path('allbookedvisitors/', views.AllVisitorsListView.as_view(), name='all-booked-visitors'),
 	path('logout/', views.logout_user, name='logout'),
 	path('photoscan/<int:id>/', views.photoscan, name='photoscan'),
+	path('photoscan/<int:id>/addlater/', views.pseudophotoscan, name='pseudophotoscan'),
 	path('tables/', views.get_table_data, name='tables'),
 	path('visitor_in/', views.visitor_in, name='visitor_in'),
 	# password reset urls

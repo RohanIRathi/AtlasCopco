@@ -148,10 +148,8 @@
                                         {% endif %}
                                         <td>
                                             {% if not visitor.out_time and visitor.in_time %}
-                                            <form action="#" method="post">
-                                                <input type="hidden" name="scan_id" value="">
-                                                <button type="submit" name="scan_btn" class="btn btn-danger"> Scan </button>
-                                            </form>
+                                            <input type="hidden" name="scan_id" value="">
+                                            <button type="button" data-toggle="modal" data-target="#livestream_scanner" name="scan_btn" class="btn btn-danger"> Scan </button>
                                             {% else %} NA {% endif %}
                                         </td>
                                     {% endif %}
