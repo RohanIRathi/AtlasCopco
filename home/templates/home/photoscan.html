@@ -63,69 +63,51 @@
                             </div> <!-- /.modal-content -->
                         </div> <!-- /.modal-dialog -->
                     </div> <!-- /.modal -->
-                        <form method="post" onsubmit="return confirm('Is Security Training Given?');">
+                        <table class="table table-bordered table-sm" id="dataTable" width="100%" cellspacing="0">
+                           
+                            <form method="post" onsubmit="return confirm('Is Security Training Given?');">
                             {% csrf_token %}
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group row col-md-12 col-form-label">Purpose of Visit: {{ visitor.purpose }}
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group row col-md-12 col-form-label">Employee to Visit: {{ visitor.user.first_name }} {{ visitor.user.last_name }}
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group row col-md-12 col-form-label">Booked Visitor: <input type="hidden" value="{{ visitor.id }}" disabled name="visitor">{{ visitor.name }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-4">
-                                    <div class="form-group row">
-                                        <label for="actual_visitors" class="col-md-6 col-form-label">Actual No. of Visitors:</label> 
-                                        <div class="col-md-6"><input type="number" class="form-control"{% if visitor.actual_visitors %} value="{{ visitor.actual_visitors }}" disabled{% else %} required{% endif %} name="actual_visitors"></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group row">
-                                        <label for="name" class="col-md-3 col-form-label">Name:</label>
-                                        <div class="col-md-9"><input type="text" class="form-control" {% if current_visitor == 1 %} value="{{ visitor.name }}" {% endif %}name="name" placeholder="Name of visitor" required></div>
-                                        {% if form.name.errors %}{% for error in form.name.errors %}{{ error }}{% endfor %}{% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group row">
-                                        <label for="email" class="col-md-3 col-form-label">E-mail:</label>
-                                        <div class="col-md-9"><input type="email" class="form-control" {% if current_visitor == 1 %} value="{{ visitor.email }}" {% endif %}name="email" placeholder="Email of visitor" required></div>
-                                    {% if form.email.errors %}{% for error in form.email.errors %}{{ error }}{% endfor %}{% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-3">
-                                    <div class="form-group row">
-                                        <label for="photo" class="col-md-5 col-form-label">Scan Photo<span class="text-danger">*</span></label>
-                                        <div class="col-md-7"><input type="hidden" id="photo" name="photo"><button data-toggle="modal" id="photobutton" data-target="#livestream_photo" type="button" class="btn btn-info">Take Photo</button></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label for="mobile" class="col-md-4 col-form-label">Mobile Number<span class="text-danger">*</span></label>
-                                        <div class="col-md-8"><input type="text" class="form-control" {% if form.mobile.value %}value="{{ form.mobile.value }}"{% endif %} name="mobile" placeholder="Enter Mobile Number" required></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group row">
-                                        <label for="photo_id" class="col-md-4 col-form-label">Scan Id<span class="text-danger">*</span></label>
-                                        <div class="col-md-8"><input type="hidden" id="photo_id" name="photo_id"><button data-toggle="modal" data-target="#livestream_photo_id" type="button" class="btn btn-info">Take ID</button></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right mt-3">
-                                <input class="text-right btn btn-success mr-2" type="submit" value="Add Visitor">
-                                <a href="{% url 'pseudophotoscan' visitor.id %}"><button class="text-right btn btn-success" name="addlater" value="AddLater" type="button">Add Later</button></a>
-                            </div>
-                        </form>
+                            <tbody>
+                                  <tr>
+                                    <td class="pt-2 pb-2">Purpose of Visit:</td>
+                                    <td class="pt-2 pb-2">{{ visitor.name }}</td>
+                                    <td class="pt-2 pb-2">Employee to Visit:</td>
+                                    <td class="pt-2 pb-2">{{ visitor.user.first_name }} {{ visitor.user.last_name }}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Booked Visitor: </td>
+                                    <td><input type="hidden" value="{{ visitor.id }}" disabled name="visitor">{{ visitor.name }}</td>
+                                    <td>Actual No. of Visitors:</td>
+                                    <td><input type="number" class="form-control"{% if visitor.actual_visitors %} value="{{ visitor.actual_visitors }}" disabled{% else %} required{% endif %} name="actual_visitors"></td>
+                                  </tr>
+                                  <tr>
+                                    <td>Name</td>
+                                    <td><input type="text" class="form-control" {% if current_visitor == 1 %} value="{{ visitor.name }}" {% endif %}name="name" placeholder="Name of visitor" required>
+                                        {% if form.name.errors %}{% for error in form.name.errors %}{{ error }}{% endfor %}{% endif %}</td>
+                                    <td>E-mail:</td>
+                                    <td><input type="email" class="form-control" {% if current_visitor == 1 %} value="{{ visitor.email }}" {% endif %}name="email" placeholder="Email of visitor" required>
+                                        {% if form.email.errors %}{% for error in form.email.errors %}{{ error }}{% endfor %}{% endif %}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Scan Photo<span class="text-danger">*</span></td>
+                                    <td><input type="hidden" id="photo" name="photo"><button data-toggle="modal" id="photobutton" data-target="#livestream_photo" type="button" class="btn btn-info">Take Photo</button></td>
+                                    <td>Scan Id<span class="text-danger">*</span></td>
+                                    <td><input type="hidden" id="photo_id" name="photo_id"><button data-toggle="modal" data-target="#livestream_photo_id" type="button" class="btn btn-info">Take ID</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Mobile Number<span class="text-danger">*</span></td>
+                                    <td><input type="text" class="form-control" {% if form.mobile.value %}value="{{ form.mobile.value }}"{% endif %} name="mobile" placeholder="Enter Mobile Number" required></td>
+                                </tr>
+                                </tbody>
+                                <caption class="text-right">
+                                    <input class="btn btn-success mr-2" type="submit" value="Add Visitor">
+                                    <a href="{% url 'pseudophotoscan' visitor.id %}"><button class="btn btn-success" name="addlater" value="AddLater" type="button">Add Later</button></a>
+                                </caption>
+                            </form>
+                        </table>
+                    
+                            
+                      
                     </div>
                 </div>
             </div>
