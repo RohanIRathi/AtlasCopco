@@ -39,13 +39,13 @@
 												<div class="col">
 													<div class="form-group">
 														<label>Name<span class="asteriskField text-danger">*</span></label>
-														<input type="text" class="form-control form-control-user" placeholder="Enter Name of the Visitor" name="name" {% if form.name.value %}value="{{ form.name.value }}"{% endif %} required>
+														<input type="text" class="form-control" placeholder="Enter Name of the Visitor" name="name" {% if form.name.value %}value="{{ form.name.value }}"{% endif %} required>
 													</div>
 												</div>
 												{% comment %} <div class="col">
 													<div class="form-group">
 														<label>Last Name</label>
-														<input type="text" class="form-control form-control-user" placeholder="Enter Last Name" name="last_name" required>
+														<input type="text" class="form-control" placeholder="Enter Last Name" name="last_name" required>
 													</div>
 												</div> {% endcomment %}
 											</div>
@@ -53,13 +53,13 @@
 												<div class="col">
 													<div class="form-group">
 														<label>Email<span class="asteriskField text-danger">*</span></label>
-														<input type="email" name="email" class="form-control form-control-user" placeholder="Enter Email" {% if form.email.value %}value="{{ form.email.value }}"{% endif %} required>
+														<input type="email" name="email" class="form-control" placeholder="Enter Email" {% if form.email.value %}value="{{ form.email.value }}"{% endif %} required>
 													</div>
 												</div>
 												<div class="col">
 													<div class="form-group">
 														<label>No.of Visitors<span class="asteriskField text-danger">*</span></label>
-														<input type="number" name="no_of_people" class="form-control form-control-user" placeholder="Enter No.of Visitors" {% if form.no_of_people.value %}value="{{ form.no_of_people.value }}"{% endif %} required>
+														<input type="number" name="no_of_people" class="form-control" placeholder="Enter No.of Visitors" {% if form.no_of_people.value %}value="{{ form.no_of_people.value }}"{% endif %} required>
 													</div>
 												</div>
 											</div>
@@ -68,18 +68,18 @@
 												{% comment %} <div class="col">
 													<div class="form-group">
 														<label>ID Proof No.</label>
-														<input type="text" name="photo_id_number" class="form-control form-control-user" placeholder="Enter ID No." {% if form.photo_id_number.value %}value="{{ form.photo_id_number.value }}"{% endif %}>
+														<input type="text" name="photo_id_number" class="form-control" placeholder="Enter ID No." {% if form.photo_id_number.value %}value="{{ form.photo_id_number.value }}"{% endif %}>
 													</div>
 												</div> {% endcomment %}
 												<div class="col">
 													<div class="form-group">
 														<label>Purpose Of Visit<span class="asteriskField text-danger">*</span></label><br>
-														<input type="text" name="purpose" placeholder="Enter Purpose of Visit" class="form-control form-control-user" {% if form.purpose.value %}value="{{ form.purpose.value }}"{% endif %} required>
+														<input type="text" name="purpose" placeholder="Enter Purpose of Visit" class="form-control" {% if form.purpose.value %}value="{{ form.purpose.value }}"{% endif %} required>
 													</div>
 												</div>
 												<div class="col">
 													<div id="div_id_expected_in_time" class="form-group">
-														<label for="id_expected_in_time" class=" requiredField">Visit In-Time<span class="asteriskField text-danger">*</span></label>
+														<label for="id_expected_in_time"  class=" requiredField">Visit In-Time<span class="asteriskField text-danger">*</span></label>
 														<div class="">
 															<div class="input-group date">
 																<input type="text" name="expected_in_time" class="form-control datepickerinput" {% if form.expected_in_time.value %} value="{{ form.expected_in_time.value }}" {% endif %} id="id_expected_in_time" dp_config="{&quot;id&quot;: &quot;dp_1&quot;, &quot;picker_type&quot;: &quot;DATE&quot;, &quot;linked_to&quot;: null, &quot;options&quot;: {&quot;showClose&quot;: true, &quot;showClear&quot;: true, &quot;showTodayButton&quot;: true, &quot;format&quot;: &quot;DD/MM/YYYY hh:mm A&quot;}}" required>
@@ -95,7 +95,7 @@
 												<div class="col">
 													<div class="form-group">
 														<label>Phone No.<span class="asteriskField text-danger">*</span></label>
-														<input type="text" name="mobile" class="form-control form-control-user" placeholder="Enter Phone No." {% if form.mobile.value %}value="{{ form.mobile.value }}"{% endif %} required>
+														<input type="text" name="mobile" class="form-control" placeholder="Enter Phone No." {% if form.mobile.value %}value="{{ form.mobile.value }}"{% endif %} required>
 													</div>
 												</div>
 												<div class="col">
