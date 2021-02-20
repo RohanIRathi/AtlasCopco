@@ -66,7 +66,7 @@ def generateQR(id, qrtype):
 		qr.add_data(token)
 		qr.make(fit=True)
 		img = qr.make_image(fill_color="black", back_color="white")
-		qrpath = "./media/qrcodes/" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png"
+		qrpath = "./media/" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png"
 		img.save(qrpath)
 		
 		return qrpath, token
@@ -76,7 +76,7 @@ def generateQR(id, qrtype):
 		qr.add_data(token)
 		qr.make(fit=True)
 		img = qr.make_image(fill_color="black", back_color="white")
-		qrpath = "./media/qrcodes/" + str(visitor.visitor.id) + "-" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png"
+		qrpath = "./media/" + str(visitor.visitor.id) + "-" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png"
 		img.save(qrpath)
 		return qrpath
 
