@@ -8,6 +8,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.core import mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
 from PIL import Image
 from django.views.generic import ListView, DetailView
 import base64
@@ -65,8 +69,73 @@ def signup(request):
 	context = {'form': form,} # 'employee_form': employee_form}
 	return render(request, 'registration/signup.html', context)
 
+def employee_signup(request):
+	form = CreateUserForm()
+	if request.method == "POST":
+		form = CreateUserForm(request.POST)
+		if form.is_valid():
+			user = form.save(commit=False)
+			if(request.POST['email'].endswith('@atlascopco.com')):
+				user.is_active = False
+				user.is_staff = False
+				user.is_superuser = False
+			else:
+				messages.error(request, f'Error! Invalid email! Employee must have an Atlas Copco email!')
+				context = {'form': form, 'employeesignup': True}
+				return render(request, 'registration/signup.html', context)
+			user.save()
+			ref = request.META['wsgi.url_scheme'] + "://" + request.META['HTTP_HOST']
+			send_request_email(user, ref)
+			user = form.cleaned_data.get('username')
+			messages.success(request, 'Account was created! Waiting to activate your account!')
+			return redirect('/login/')
+	# employee_form = CreateEmployeeForm()
+	context = {'form': form, 'employeesignup': True} # 'employee_form': employee_form}
+	return render(request, 'registration/signup.html', context)
+
+def send_request_email(user, host):
+	mail_details = {
+		'id': user.id,
+		'first_name': user.first_name,
+		'last_name': user.last_name,
+		'host': host,
+	}
+	to_email = []
+	admins = User.objects.filter(is_superuser=True).filter(is_staff=True)
+	for admin in admins:
+		to_email.append(admin.email)
+	subject = "Request to create an account"
+	html_message = render_to_string('registration/email.html', mail_details)
+	message = strip_tags(html_message)
+	from_email = settings.EMAIL_HOST_USER
+	
+	mail.send_mail(subject, message, from_email, to_email, html_message=html_message, fail_silently=False)
+
+@login_required()
+@user_passes_test(is_admin)
+def accept_employee(request, pk):
+	try:
+		user = User.objects.get(pk = pk)
+		if not user.is_active:
+			user.is_active = True
+			user.save()
+			subject = "Your account has been created!"
+			message = "Your account has been approved! You can now log into your account using your email id and password."
+			from_email = settings.EMAIL_HOST_USER
+			to_email = user.email
+			
+			mail.send_mail(subject, message, from_email, to_email, fail_silently=False)
+
+			messages.success(request, f'Employee registered!')
+		else:
+			messages.info(request, f'The employee has been accepted by another admin')
+		return redirect('/')
+	except:
+		messages.error(request, f'No such user approval pending!')
+		return redirect('/')
 
 def login_validate(request):
+	print(request.META)
 	if request.method == "POST":
 		user = User.objects.get(email=request.POST['username'])
 		user_name = user.username

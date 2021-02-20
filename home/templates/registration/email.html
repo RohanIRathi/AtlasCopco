@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Atlas Copco</title>
+    <style>
+        .margin-auto {
+            margin: auto;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="margin-auto text-center">Request for creating account for an employee in Atlas Copco Visitor Management System</h1>
+    <p>Dear Admin,</p>
+    <p style="margin-left: 30px;">{{ first_name }} {{ last_name }} is requesting to sign up as an employee for the Visitor Management System</p><br>
+    <p>Click on the following link to approve them as an employee:</p>
+    <a style="margin-left: 50px;" href="{{ host }}{% url 'adminaccept' id %}" target="blank">{{ host }}{% url 'adminaccept' id %}</a>
+</body>

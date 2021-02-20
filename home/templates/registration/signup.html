@@ -2,17 +2,20 @@
     <main>
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-xl-10 col-lg-10 col-md-10">
+                <div class="col-xl-8 col-lg-8 col-md-8">
                     <div class="card o-hidden border-0 shadow-lg my-5">
                         <div class="card-body p-0">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <div class="p-5">
+                                    <div class="p-3">
+                                        <div class="text-center">
+                                            <h1 class="h4 text-gray-900 mb-3"><img class="logo" src="{% static 'base/AtlasCopcoLogo.png' %}" alt="Atlas Copco" width="auto" height="70px"></h1>
+                                        </div>
                                         <div class="text-center">
                                             <h1 class="h4 text-gray-900"style="background-color:#E7E6E6;border-radius:10px;padding-top:5px;padding-bottom:5px;">Add User</h1>
                                         </div>
                                         <!--<small class="form-text text-danger">Fields marked * are required.</small><br> -->
-                                        <form class="user p-3" method="post" enctype="multipart/form-data">
+                                        <form class="user p-1" method="post" enctype="multipart/form-data">
                                             {% csrf_token %}
 
                                             <!-- <div id="div_id_username" class="form-group">
@@ -115,19 +118,25 @@
                                                     <div id="div_id_user" class="form-group">
                                                         <label for="id_role" class=" requiredField">Role<span class="asteriskField text-danger">*</span></label>
                                                         <div class="">
-                                                            <select name="role" class="select form-control" required id="id_role">
+                                                            <select name="role" class="select form-control" {% if employeesignup %}disabled{% else %}required{% endif %} id="id_role">
                                                                     <option value="employee" selected>Employee</option>
-                                                                    <option value="security">Security</option>
-                                                                    <option value="admin">Admin</option>
+                                                                    {% if not employeesignup %}
+                                                                        <option value="security">Security</option>
+                                                                        <option value="admin">Admin</option>
+                                                                    {% endif %}
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <hr>
                                             <input type="submit" id='register' name="add_btn" class="btn btn-primary btn-user btn-block" style="border-radius: 10rem;" value="Register">
                                             <hr>
                                         </form>
+                                        {% if employeesignup %}
+                                            <div class="text-center">
+                                            Already have an account? <a href="{% url 'login' %}">Log In Here</a>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
