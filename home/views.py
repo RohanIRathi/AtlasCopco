@@ -94,8 +94,9 @@ def employee_signup(request):
 	return render(request, 'registration/signup.html', context)
 
 def send_request_email(user, host):
+	token = str(hash(user.last_name)) + '~' + str(user.id)
 	mail_details = {
-		'id': user.id,
+		'token': token,
 		'first_name': user.first_name,
 		'last_name': user.last_name,
 		'host': host,
@@ -113,29 +114,33 @@ def send_request_email(user, host):
 
 @login_required()
 @user_passes_test(is_admin)
-def accept_employee(request, pk):
+def accept_employee(request, token):
 	try:
+		pk = int(token.split('~')[1])
 		user = User.objects.get(pk = pk)
-		if not user.is_active:
-			user.is_active = True
-			user.save()
-			subject = "Your account has been created!"
-			message = "Your account has been approved! You can now log into your account using your email id and password."
-			from_email = settings.EMAIL_HOST_USER
-			to_email = user.email
-			
-			mail.send_mail(subject, message, from_email, to_email, fail_silently=False)
+		if str(token.split('~')[0]) == str(hash(user.last_name)):
+			if not user.is_active:
+				user.is_active = True
+				user.save()
+				subject = "Your account has been created!"
+				message = "Your account has been approved! You can now log into your account using your email id and password."
+				from_email = settings.EMAIL_HOST_USER
+				to_email = user.email
+				
+				mail.send_mail(subject, message, from_email, [to_email], fail_silently=False)
 
-			messages.success(request, f'Employee registered!')
+				messages.success(request, f'Employee registered!')
+			else:
+				messages.info(request, f'The employee has been accepted by another admin')
+			return redirect('/')
 		else:
-			messages.info(request, f'The employee has been accepted by another admin')
-		return redirect('/')
+			messages.error(request, f'Invalid link!')
+			return redirect('/')
 	except:
-		messages.error(request, f'No such user approval pending!')
+		messages.error(request, f'No such user to validate!')
 		return redirect('/')
 
 def login_validate(request):
-	print(request.META)
 	if request.method == "POST":
 		user = User.objects.get(email=request.POST['username'])
 		user_name = user.username

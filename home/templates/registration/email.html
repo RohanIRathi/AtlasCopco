@@ -16,5 +16,5 @@
     <p>Dear Admin,</p>
     <p style="margin-left: 30px;">{{ first_name }} {{ last_name }} is requesting to sign up as an employee for the Visitor Management System</p><br>
     <p>Click on the following link to approve them as an employee:</p>
-    <a style="margin-left: 50px;" href="{{ host }}{% url 'adminaccept' id %}" target="blank">{{ host }}{% url 'adminaccept' id %}</a>
+    <a style="margin-left: 50px;" href="{{ host }}{% url 'adminaccept' token %}" target="blank">{{ host }}{% url 'adminaccept' token %}</a>
 </body>
