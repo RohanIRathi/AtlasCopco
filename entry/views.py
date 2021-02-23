@@ -41,14 +41,14 @@ def new_visitor(request):
 				os.remove(qrcodeimg)
 				visitor.save()
 				messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
-				return redirect('/')
+				return redirect('/vms/')
 			else:
 				print(form.errors)
 				messages.error(request, 'Error!')
 		context = {'form': form, 'employees': employees}
 		return render(request, 'entry/visitor_booking.html', context)
 	else:
-		return redirect('/')
+		return redirect('/vms/')
 
 
 def generateQR(id, qrtype):
@@ -100,9 +100,9 @@ def scanQR(request, **kwargs):
 				visitor.out_time = datetime.now()
 				visitor.save()
 				messages.success(request, f'Visitor has left')
-				return redirect('/')
+				return redirect('/vms/')
 	messages.error(request, f'Invalid Token Scanned!')
-	return redirect('/')
+	return redirect('/vms/')
 	
 		
 def send_normal_email(Visitor):

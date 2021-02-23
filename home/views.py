@@ -64,7 +64,7 @@ def signup(request):
 			user.save()
 			user = form.cleaned_data.get('username')
 			messages.success(request, 'Account was created ')
-			return redirect('/login/')
+			return redirect('/vms/login/')
 	# employee_form = CreateEmployeeForm()
 	context = {'form': form,} # 'employee_form': employee_form}
 	return render(request, 'registration/signup.html', context)
@@ -88,7 +88,7 @@ def employee_signup(request):
 			send_request_email(user, ref)
 			user = form.cleaned_data.get('username')
 			messages.success(request, 'Account was created! Waiting to activate your account!')
-			return redirect('/login/')
+			return redirect('/vms/login/')
 	# employee_form = CreateEmployeeForm()
 	context = {'form': form, 'employeesignup': True} # 'employee_form': employee_form}
 	return render(request, 'registration/signup.html', context)
@@ -132,13 +132,13 @@ def accept_employee(request, token):
 				messages.success(request, f'Employee registered!')
 			else:
 				messages.info(request, f'The employee has been accepted by another admin')
-			return redirect('/')
+			return redirect('/vms/')
 		else:
 			messages.error(request, f'Invalid link!')
-			return redirect('/')
+			return redirect('/vms/')
 	except:
 		messages.error(request, f'No such user to validate!')
-		return redirect('/')
+		return redirect('/vms/')
 
 def login_validate(request):
 	if request.method == "POST":
@@ -162,7 +162,7 @@ def login_validate(request):
 @login_required
 def logout_user(request):
 	logout(request)
-	return redirect('/')
+	return redirect('/vms/')
 
 
 class VisitorListView(LoginRequiredMixin, ListView):
@@ -256,7 +256,7 @@ def photoscan(request, **kwargs):
 				instance.in_time = datetime.now()
 				views.send_normal_email(instance)
 				instance.save()
-				return redirect('/')
+				return redirect('/vms/')
 		context = {'visitor': instance, 'current_visitor': (visitorcount+1)}
 		if request.method == 'POST':
 			if not instance.actual_visitors:
@@ -301,7 +301,7 @@ def photoscan(request, **kwargs):
 				views.send_qrcode_email(visitorsdetail.email, qrcodeimg)
 				os.remove(qrcodeimg)
 				if int(instance.actual_visitors) < visitorcount:
-					success_url = '/'
+					success_url = '/vms/'
 				else:
 					success_url = reverse('photoscan', kwargs={'id': kwargs.get('id')})
 				return redirect(success_url, context)
@@ -310,7 +310,7 @@ def photoscan(request, **kwargs):
 			context = {'visitor': instance, 'current_visitor': (visitorcount+1)}
 		return  render(request, 'home/photoscan.html', context)
 	else:
-		return redirect('/')
+		return redirect('/vms/')
 
 def pseudophotoscan(request, **kwargs):
 	instance = Visitor.objects.get(pk=kwargs.get('id'))
@@ -318,7 +318,7 @@ def pseudophotoscan(request, **kwargs):
 		instance.in_time = datetime.now()
 		instance.save()
 		views.send_normal_email(instance)
-		return redirect('/')
+		return redirect('/vms/')
 
 class AllVisitorsListView(LoginRequiredMixin, ListView):
 	def get(self, request):
