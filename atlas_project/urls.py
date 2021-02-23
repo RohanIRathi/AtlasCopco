@@ -20,10 +20,10 @@ from django.conf import settings
 
 urlpatterns = [
 
-    path('admin/', admin.site.urls),
-    path('', include('home.urls')),
-    path('entry/',include('entry.urls')),
-    path('charts/', include('charts.urls')),
+    path('vms/admin/', admin.site.urls),
+    path('vms/', include('home.urls')),
+    path('vms/entry/',include('entry.urls')),
+    path('vms/charts/', include('charts.urls')),
 
 ]
 
