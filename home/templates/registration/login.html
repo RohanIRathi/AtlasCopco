@@ -42,13 +42,13 @@
 											<input type="password" name="password" autocomplete="current-password" class="textinput textInput form-control form-control-user" required id="id_password" placeholder="Password">
 										</div>
 										<input type="submit" name="login_btn" class="btn btn-primary btn-user btn-block" value="Login">
-										<div class="text-center mt-3">
+										<div class="text-center small mt-3">
 											<a href="{% url 'reset_password' %}">Forgot password</a>
 										</div>
-										<div class="text-center mt-1">
+										<hr>
+										<div class="text-center small mt-1">
 											Don't have an account? <a href="{% url 'employee_signup' %}">Sign up here</a>
 										</div>
-										<hr>
 									</form>
 
 								</div>
