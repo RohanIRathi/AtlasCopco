@@ -12,13 +12,12 @@ Django==3.1.1
 django-bootstrap-datepicker-plus==3.0.5
 django-bootstrap4==2.3.1
 django-crispy-forms==1.9.2
-hiredis==1.1.0
 hyperlink==20.0.1
 idna==2.10
 incremental==17.5.0
-ldap3==2.8.1
 msgpack==1.0.0
 msgpack-python==0.5.6
+mysqlclient==2.0.3
 numpy==1.19.2
 opencv-python==4.4.0.42
 Pillow==7.2.0
