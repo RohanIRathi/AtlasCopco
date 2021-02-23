@@ -16,20 +16,20 @@
 </head>
 
 <body>
-
-    <nav class="sb-topnav navbar navbar-expand navbar-light sticky-top" style="padding-left: 0; padding-top: 0; padding-bottom: 0; z-index: 1040;">
-        <a class="navbar-brand" href="{% url 'home' %}" style="padding: 0;"><img class="logo" src="{% static 'base/AtlasCopcoLogo.png' %}" alt="Atlas Copco" width="auto" height="56px"></a> <a class="logout-button pl-3" id="sidebarToggle"><i class="fas fa-bars"></i></a>
-        <ul class="navbar-nav ml-auto ">
-            <li class="nav-item">
-                    <form>
-                        <a class="logout-button" type="button" name="logout-btn" href="{% url 'logout' %}"><i class="fas fa-power-off fa-2x"></i></a>
-                    </form>
-            </li>
-        </ul>
-    </nav>
-
+    {% if not employeesignup %}
+        <nav class="sb-topnav navbar navbar-expand navbar-light sticky-top" style="padding-left: 0; padding-top: 0; padding-bottom: 0; z-index: 1040;">
+            <a class="navbar-brand" href="{% url 'home' %}" style="padding: 0;"><img class="logo" src="{% static 'base/AtlasCopcoLogo.png' %}" alt="Atlas Copco" width="auto" height="56px"></a> <a class="logout-button pl-3" id="sidebarToggle"><i class="fas fa-bars"></i></a>
+            <ul class="navbar-nav ml-auto ">
+                <li class="nav-item">
+                        <form>
+                            <a class="logout-button" type="button" name="logout-btn" href="{% url 'logout' %}"><i class="fas fa-power-off fa-2x"></i></a>
+                        </form>
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
     <div id="layoutSidenav">
-        {% if request.user.is_active %}
+        {% if request.user.is_active and not employeesignup %}
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
@@ -62,7 +62,7 @@
                         </a>
                         <a class="nav-link" href="{% url 'tables' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            History
+                            Reports
                         </a>
                         <a class="nav-link" href="{% url 'disabled' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-user-slash"></i></div>

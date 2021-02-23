@@ -105,7 +105,9 @@
 															<select name="user" class="select form-control" required id="id_user">
 																	<option value="" selected>---------</option>
 																	{% for employee in employees %}
+																	{% if not employee.is_staff or employee.is_superuser %}
 																		<option value="{{ employee.id }}"  {% if form.user.value == employee.id %} selected {% elif request.user.id == employee.id %} selected {% endif %}>{{ employee.first_name }} {{ employee.last_name }}</option>
+																	{% endif %}
 																	{% endfor %}
 																</select>
 														</div>
