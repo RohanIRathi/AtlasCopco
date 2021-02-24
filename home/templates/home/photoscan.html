@@ -21,8 +21,8 @@
                                 </div>
                                 <div class="modal-body" style="position: static">
                                     <div id="interactive" class="viewport">
-                                        <video crossorigin="anonymous" autoplay width="300px" height="300px" id="photo-interactive-video"></video>
-                                        <canvas id="photo-canvas"></canvas>
+                                        <video class="col ml-auto" crossorigin="anonymous" autoplay id="photo-interactive-video"></video>
+                                        <canvas style="display: none;" id="photo-canvas"></canvas>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -37,7 +37,7 @@
                         </div> <!-- /.modal-dialog -->
                     </div> <!-- /.modal -->
                     <div class="modal" id="livestream_photo_id">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-dialog-centered mt-0">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title">Capture Photo Id</h4>
@@ -45,10 +45,10 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <div class="modal-body" style="position: static">
+                                <div class="modal-body">
                                     <div id="interactive" class="viewport">
-                                        <video crossorigin="anonymous" autoplay width="300px" height="300px" id="photo-id-interactive-video"></video>
-                                        <canvas id="photo-id-canvas"></canvas>
+                                        <video class="col ml-auto" crossorigin="anonymous" autoplay id="photo-id-interactive-video"></video>
+                                        <canvas style="display:none;" id="photo-id-canvas"></canvas>
                                     </div>
                                     <div class="error"></div>
                                 </div>
@@ -105,12 +105,8 @@
                                 </caption>
                             </form>
                         </table>
-                    
-                            
-                      
                     </div>
                 </div>
             </div>
-        </div>
     </main>
 {% endblock content %}

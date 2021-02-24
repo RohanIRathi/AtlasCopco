@@ -216,7 +216,7 @@
                 var video = document.querySelector("#interactive-video");
                 if (navigator.mediaDevices.getUserMedia) {
 
-                navigator.mediaDevices.getUserMedia({ video: true })
+                navigator.mediaDevices.getUserMedia({ video: { width: 300, height: 300, facingMode: "environment" } })
                     .then(function (stream) {
                     video.srcObject = stream;
                     })
@@ -228,7 +228,7 @@
                 const doScreenshot = () => {
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
-                    canvas.getContext('2d').drawImage(video, 0, 0);
+                    // canvas.getContext('2d').drawImage(video, 0, 0);
                     video.pause();
                     var imagedata = canvas.toDataURL('image/png');
                     document.getElementById('imgdata').setAttribute("value", imagedata.split(',')[1]);
@@ -249,7 +249,7 @@
                 var video = document.querySelector("#photo-interactive-video");
                 if (navigator.mediaDevices.getUserMedia) {
 
-                navigator.mediaDevices.getUserMedia({ video: true })
+                navigator.mediaDevices.getUserMedia({ video: { width: 300, height: 300, facingMode: "environment" } })
                     .then(function (stream) {
                     video.srcObject = stream;
                     })
@@ -282,7 +282,7 @@
                 var video = document.querySelector("#photo-id-interactive-video");
                 if (navigator.mediaDevices.getUserMedia) {
 
-                navigator.mediaDevices.getUserMedia({ video: true })
+                navigator.mediaDevices.getUserMedia({ video: { width: 300, height: 300, facingMode: "environment" } })
                     .then(function (stream) {
                     video.srcObject = stream;
                     })
