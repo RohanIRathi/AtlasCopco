@@ -15,7 +15,6 @@
 									<th> Name </th>
 									<th> Email </th>
 									<th> Phone no. </th>
-									{% comment %} <th> Date </th> {% endcomment %}
 									<th> In Time </th>
 									<th> Out Time </th>
 									<th> Purpose </th>
@@ -28,7 +27,6 @@
 									<td>{{ visitor.name }}</td>
 									<td>{{ visitor.email }}</td>
 									<td>{{ visitor.mobile }}</td>
-									{% comment %} <td>{{ visitor.in_time.date }}</td> {% endcomment %}
 									<td>{% if visitor.in_time %}{{ visitor.in_time }}{% else %} NA {% endif %}</td>
 									<td>{% if visitor.out_time %}{{ visitor.out_time }}{% else %} NA {% endif %}</td>
 									<td>{{ visitor.purpose}}</td>
@@ -45,19 +43,6 @@
 			</div>
 		</div>
 	</main>
-	<div class="footer">
-		<footer class="py-4 bg-light mt-auto">
-			<div class="container-fluid">
-				<div class="d-flex align-items-center justify-content-between small">
-					<div class="text-muted">Copyright &copy; Atlas Copco 2020</div>
-					<div>
-						<a href="#">Privacy Policy</a> &middot;
-						<a href="#">Terms &amp; Conditions</a>
-					</div>
-				</div>
-			</div>
-		</footer>
-	</div>
 	<script>
 		setTimeout(() => {
 			window.location.reload(1);
