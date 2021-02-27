@@ -15,7 +15,6 @@
 									<th> Name </th>
 									<th> Email </th>
 									<th> Phone no. </th>
-									{% comment %} <th> Date </th> {% endcomment %}
 									<th> In Time </th>
 									<th> Out Time </th>
 									<th> Purpose </th>
@@ -28,7 +27,6 @@
 									<td>{{ visitor.name }}</td>
 									<td>{{ visitor.email }}</td>
 									<td>{{ visitor.mobile }}</td>
-									{% comment %} <td>{{ visitor.in_time.date }}</td> {% endcomment %}
 									{% timezone "Asia/Kolkata" %}
 										<td>{% if visitor.in_time %}{{ visitor.in_time }}{% else %} NA {% endif %}</td>
 										<td>{% if visitor.out_time %}{{ visitor.out_time }}{% else %} NA {% endif %}</td>

@@ -62,7 +62,7 @@ def generateQR(id, qrtype):
 	)
 	if qrtype == 'booking':
 		visitor = display_visitors.get(id=id)  # visitors id
-		token = str(visitor.name).upper() + ' ' + str(visitor.id) + ' (V)'
+		token = str(visitor.name).upper() + '.' + str(visitor.id) + '(V)'
 		qr.add_data(token)
 		qr.make(fit=True)
 		img = qr.make_image(fill_color="black", back_color="white")
@@ -72,7 +72,7 @@ def generateQR(id, qrtype):
 		return qrpath, token
 	elif qrtype == 'details':
 		visitor = VisitorsDetail.objects.get(id=id)
-		token = str(visitor.name).upper() + ' ' + str(visitor.visitor.id) + '-' + str(visitor.id) + ' (V)'
+		token = str(visitor.name).upper() + '.' + str(visitor.visitor.id) + '-' + str(visitor.id) + '(V)'
 		qr.add_data(token)
 		qr.make(fit=True)
 		img = qr.make_image(fill_color="black", back_color="white")

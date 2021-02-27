@@ -11,9 +11,9 @@
                 {% if request.user.is_superuser %}
                 <div class="col-xl-3 col-md-6 mb-3 mt-2">
                     <div class="card bg-primary text-white">
-                        <div class="card-body">Total Registrations <span class="badge badge-pill badge-light">{{ visitor_count }}</span>
+                        <div class="card-header">Total Registrations <span class="badge badge-pill badge-light">{{ visitor_count }}</span>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between">
+                        <div class="card-body d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'all-booked-visitors' %}">View Details</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
@@ -21,9 +21,9 @@
                 </div>
                 <div class="col-xl-3 col-md-6 mb-3 mt-2">
                     <div class="card bg-info text-white">
-                        <div class="card-body">Visitor in Primises <span class="badge badge-pill badge-light">{{ visiting_count }}</span> 
+                        <div class="card-header">Visitor in Primises <span class="badge badge-pill badge-light">{{ visiting_count }}</span> 
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between">
+                        <div class="card-body d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'visitor_in' %}">View Details</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
@@ -31,9 +31,9 @@
                 </div>
                 <div class="col-xl-3 col-md-6 mb-3 mt-2">
                     <div class="card bg-success text-white">
-                        <div class="card-body">Total Visitors <span class="badge badge-pill badge-light">{{ visited_count }}</span>
+                        <div class="card-header">Total Visitors <span class="badge badge-pill badge-light">{{ visited_count }}</span>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between">
+                        <div class="card-body d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'all-visitors' %}">View Details</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
@@ -41,9 +41,9 @@
                 </div>
                 <div class="col-xl-3 col-md-6 mb-3 mt-2">
                     <div class="card bg-danger text-white">
-                        <div class="card-body">Booked but not Visited <span class="badge badge-pill badge-light">{{ not_visited_count }}</span>
+                        <div class="card-header">Not Visited <span class="badge badge-pill badge-light">{{ not_visited_count }}</span>
                         </div>
-                        <div class="card-footer d-flex align-items-center justify-content-between">
+                        <div class="card-body d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link" href="{% url 'not-visited' %}">View Details</a>
                             <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                         </div>
@@ -88,10 +88,6 @@
                                                 <div class="error"></div>
                                             </div>
                                             <div class="modal-footer">
-                                                <!--<label class="btn btn-default pull-left">
-                                                    <i class="fa fa-camera"></i> Use camera app
-                                                    <input type="file" accept="image/*;capture=camera" capture="camera" class="hidden">
-                                                </label>-->
                                                 <button type="button" id="capture" class="btn btn-primary">Capture</button>
                                                 <form action="{% url 'entry:scanQR' %}" method="post">
                                                 <input type="hidden" name="imgdata" value="" id="imgdata">

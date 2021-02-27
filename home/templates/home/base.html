@@ -22,7 +22,7 @@
             <ul class="navbar-nav ml-auto ">
                 <li class="nav-item">
                         <form>
-                            <a class="logout-button" type="button" name="logout-btn" href="{% url 'logout' %}"><i class="fas fa-power-off fa-2x"></i></a>
+                            <a class="logout-button" type="button" onclick="return confirm('Do you want to logout?');" name="logout-btn" href="{% url 'logout' %}"><i class="fas fa-power-off fa-2x"></i></a>
                         </form>
                 </li>
             </ul>
@@ -77,10 +77,9 @@
             </nav>
         </div>
         {% endif %}
-        <!-- <div id="layoutSidenav_content"> -->
         <div id="layoutSidenav_content">
         {% if messages %} {% for message in messages %}
-        <div class="row alert {% if message.tags == 'error' %} alert-danger{% else %} alert-{{ message.tags }}{% endif %}">
+        <div class="row ml-2 mr-2 alert {% if message.tags == 'error' %} alert-danger{% else %} alert-{{ message.tags }}{% endif %}">
             {{ message }}
         </div>
         {% endfor %} {% endif %}
@@ -93,9 +92,7 @@
             <footer class="bg-light">
                 <div class="container-fluid">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <!-- <div class="text-muted">Copyright &copy; Atlas Copco 2020</div> -->
                         <div>
-                            
                         </div>
                         <div>
                             <p class="mt-2">Developed by | Smart Factory Solutions Team(I4.0)</p>

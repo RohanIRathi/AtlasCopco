@@ -43,22 +43,22 @@ def signup(request):
 	if request.method == "POST":
 		form = CreateUserForm(request.POST)
 		if form.is_valid():
-			print(request.POST['username'])
 			user = form.save(commit=False)
-			if request.POST['role'] == 'admin' and request.POST['email'].endswith('@atlascopco.com'):
-				user.is_active = True
-				user.is_staff = True
-				user.is_superuser = True
-			elif request.POST['role'] == 'security':
-				user.is_active = True
-				user.is_staff = True
-				user.is_superuser = False
-			elif request.POST['role'] == 'employee' and request.POST['email'].endswith('@atlascopco.com'):
-				user.is_active = True
-				user.is_staff = False
-				user.is_superuser = False
+			if request.POST['email'].endswith('@atlascopco.com'):
+				if request.POST['role'] == 'admin':
+					user.is_active = True
+					user.is_staff = True
+					user.is_superuser = True
+				elif request.POST['role'] == 'security':
+					user.is_active = True
+					user.is_staff = True
+					user.is_superuser = False
+				elif request.POST['role'] == 'employee':
+					user.is_active = True
+					user.is_staff = False
+					user.is_superuser = False
 			else:
-				messages.error(request, f'Error! Invalid email! Admin or employee must have an Atlas Copco email!')
+				messages.error(request, f'Error! Invalid email! User must have an Atlas Copco email!')
 				context = {'form': form}
 				return render(request, 'registration/signup.html', context)
 			user.save()
