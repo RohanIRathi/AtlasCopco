@@ -23,18 +23,22 @@ from entry.models import *
 from entry import views
 
 def is_admin(user):
+	admin = True
 	try:
 		admin = User.objects.get(username=user).is_superuser and User.objects.get(username=user).is_staff
-		return admin
 	except:
-		return False
+		admin = False
+	finally:
+		return admin
 
 def is_security(user):
+	security = False
 	try:
-		admin = not User.objects.get(username=user).is_superuser and User.objects.get(username=user).is_staff
-		return admin
+		security = not User.objects.get(username=user).is_superuser and User.objects.get(username=user).is_staff
 	except:
-		return False
+		pass
+	finally:
+		return security
 
 @login_required
 @user_passes_test(is_admin)
