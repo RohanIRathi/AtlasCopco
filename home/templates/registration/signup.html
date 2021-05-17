@@ -11,6 +11,15 @@
                                         <div class="text-center">
                                             <h1 class="h4 text-gray-900"style="background-color:#E7E6E6;border-radius:10px;padding-top:5px;padding-bottom:5px;">Add User</h1>
                                         </div>
+                                        {% if form.username.errors %}
+                                            <div>
+                                                <ul class="list-group">
+                                                    {% for error in form.username.errors %}
+                                                        <li class="list-group-item"><small class="text-danger">{{ error }}</small></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
                                         <!--<small class="form-text text-danger">Fields marked * are required.</small><br> -->
                                         <form class="user p-1" method="post" enctype="multipart/form-data">
                                             {% csrf_token %}

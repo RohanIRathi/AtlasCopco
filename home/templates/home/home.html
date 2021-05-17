@@ -1,170 +1,192 @@
 {% extends 'home/base.html' %} {% block content %}
 
 <style>
-    #interactive.viewport {position: relative; width: 100%; height: auto; overflow: hidden; text-align: center;}
-    #interactive.viewport > canvas, #interactive.viewport > video {max-width: 100%; width: 100%;}
-    canvas.drawing, canvas.drawingBuffer {position: absolute; left: 0; top: 0;}
-</style>
-    <main>
-        <div class="container-fluid pt-4">
-            <div class="row mb-2">
-                {% if request.user.is_superuser %}
-                <div class="col-xl-3 col-md-6 mb-3 mt-2">
-                    <div class="card bg-primary text-white">
-                        <div class="card-header">Total Registrations <span class="badge badge-pill badge-light">{{ visitor_count }}</span>
-                        </div>
-                        <div class="card-body d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{% url 'all-booked-visitors' %}">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6 mb-3 mt-2">
-                    <div class="card bg-info text-white">
-                        <div class="card-header">Visitor in Primises <span class="badge badge-pill badge-light">{{ visiting_count }}</span> 
-                        </div>
-                        <div class="card-body d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{% url 'visitor_in' %}">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6 mb-3 mt-2">
-                    <div class="card bg-success text-white">
-                        <div class="card-header">Total Visitors <span class="badge badge-pill badge-light">{{ visited_count }}</span>
-                        </div>
-                        <div class="card-body d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{% url 'all-visitors' %}">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6 mb-3 mt-2">
-                    <div class="card bg-danger text-white">
-                        <div class="card-header">Not Visited <span class="badge badge-pill badge-light">{{ not_visited_count }}</span>
-                        </div>
-                        <div class="card-body d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link" href="{% url 'not-visited' %}">View Details</a>
-                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
+    #interactive.viewport {
+        position: relative;
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+        text-align: center;
+    }
 
+    #interactive.viewport>canvas,
+    #interactive.viewport>video {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    canvas.drawing,
+    canvas.drawingBuffer {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+</style>
+<main>
+    <div class="container-fluid pt-4">
+        <div class="row mb-2">
+            {% if request.user.is_superuser %}
+            <div class="col-xl-3 col-md-6 mb-3 mt-2">
+                <div class="card bg-primary text-white">
+                    <div class="card-header">Total Registrations <span class="badge badge-pill badge-light">{{ visitor_count }}</span>
+                    </div>
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <a class="small text-white stretched-link" href="{% url 'all-booked-visitors' %}">View
+                            Details</a>
+                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                    </div>
+                </div>
             </div>
+            <div class="col-xl-3 col-md-6 mb-3 mt-2">
+                <div class="card bg-info text-white">
+                    <div class="card-header">Visitor in Primises <span class="badge badge-pill badge-light">{{ visiting_count }}</span>
+                    </div>
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <a class="small text-white stretched-link" href="{% url 'visitor_in' %}">View Details</a>
+                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3 mt-2">
+                <div class="card bg-success text-white">
+                    <div class="card-header">Total Visitors <span class="badge badge-pill badge-light">{{ visited_count }}</span>
+                    </div>
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <a class="small text-white stretched-link" href="{% url 'all-visitors' %}">View Details</a>
+                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3 mt-2">
+                <div class="card bg-danger text-white">
+                    <div class="card-header">Not Visited <span class="badge badge-pill badge-light">{{ not_visited_count }}</span>
+                    </div>
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <a class="small text-white stretched-link" href="{% url 'not-visited' %}">View Details</a>
+                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
         </div>
-    </main>
-    <main>
-        <div class="container-fluid">
-            <!-- DataTales Example -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <div class="row">
-                        {% if not request.user.is_staff or request.user.is_superuser %}
-                        <div class="col-md-auto">
-                            <h6 class="m-0 font-weight-bold text-primary">New Visitor
-                                <a href="{% url 'entry:new-visitor' %}" class="ml-3 btn btn-primary text-left">Add</a>
-                            </h6>
-                        </div>
-                        {% endif %}
-                        {% if request.user.is_staff and not request.user.is_superuser %}
-                        <div class="col-md-auto">
-                            <h6 class="m-0 font-weight-bold text-primary">Scan Visitor's QR Code
-                                <a data-toggle="modal" data-target="#livestream_scanner"class="ml-3 btn btn-primary text-left">Scan</a>
-                                <div class="modal" id="livestream_scanner">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Barcode Scanner</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
+    </div>
+</main>
+<main>
+    <div class="container-fluid">
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    {% if not request.user.is_staff or request.user.is_superuser %}
+                    <div class="col-md-auto">
+                        <h6 class="m-0 font-weight-bold text-primary">New Visitor
+                            <a href="{% url 'entry:new-visitor' %}" class="ml-3 btn btn-primary text-left">Add</a>
+                        </h6>
+                    </div>
+                    {% endif %}
+                    {% if request.user.is_staff and not request.user.is_superuser %}
+                    <div class="col-md-auto">
+                        <h6 class="m-0 font-weight-bold text-primary">Scan Visitor's QR Code
+                            <a data-toggle="modal" data-target="#livestream_scanner"
+                                class="ml-3 btn btn-primary text-left">Scan</a>
+                            <div class="modal" id="livestream_scanner">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Barcode Scanner</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="position: static">
+                                            <div id="interactive" class="viewport">
+                                                <video class="col ml-auto" crossorigin="anonymous" autoplay
+                                                    id="interactive-video"></video>
+                                                <canvas style="display: none;" id="canvas"></canvas>
                                             </div>
-                                            <div class="modal-body" style="position: static">
-                                                <div id="interactive" class="viewport">
-                                                    <video class="col ml-auto" crossorigin="anonymous" autoplay id="interactive-video"></video>
-                                                    <canvas style="display: none;" id="canvas"></canvas>
-                                                </div>
-                                                <div class="error"></div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" id="capture" class="btn btn-primary">Capture</button>
-                                                <form action="{% url 'entry:scanQR' %}" method="post">
+                                            <div class="error"></div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" id="capture" class="btn btn-primary">Capture</button>
+                                            <form action="{% url 'entry:scanQR' %}" method="post">
                                                 <input type="hidden" name="imgdata" value="" id="imgdata">
                                                 <input type="submit" class="btn btn-success" value="Submit">
-                                            </div>
-                                        </div> <!-- /.modal-content -->
-                                    </div> <!-- /.modal-dialog -->
-                                </div> <!-- /.modal -->
-                            </h6>
-                        </div>
-                        {% endif %}
+                                        </div>
+                                    </div> <!-- /.modal-content -->
+                                </div> <!-- /.modal-dialog -->
+                            </div> <!-- /.modal -->
+                        </h6>
                     </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th> Name </th>
-                                    <th> Email </th>
-                                    <th> No.of Visitors </th>
-                                    <th> Phone No. </th>
-                                    <th> Visit Time </th>
-                                    <th> Purpose </th>
-                                    {% if request.user.is_staff and not request.user.is_superuser %}
-                                        <th> Details </th>
-                                        <th> QR Code </th>
-                                    {% endif %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if visitor_list %} {% for visitor in visitor_list %}
-                                <tr>
-                                    <td>{{ visitor.name }}</td>
-                                    <td>{{ visitor.email }}</td>
-                                    <td>{{ visitor.no_of_people }}</td>
-                                    <td>{{ visitor.mobile }}</td>
-                                    {% if visitor.in_time %}
-                                        <td>{{ visitor.in_time }}</td>
-                                    {% else %}
-                                        <td>{{ visitor.expected_in_time }}</td>
-                                    {% endif %}
-                                    <td>{{ visitor.purpose }}</td>
-                                    {% if request.user.is_staff and not request.user.is_superuser %}
-                                        {% if not visitor.in_time %}
-                                        <td>
-                                            <input type="hidden" name="edit_id" value="">
-                                            <a type="submit" href="{% url 'photoscan' visitor.id %}" name="photo_btn" class="btn btn-success"> Scan </a>
-                                        </td>
-                                        {% else %}
-                                        <td>
-                                            Photo Id Scanned
-                                        </td>
-                                        {% endif %}
-                                        <td>
-                                            {% if not visitor.out_time and visitor.in_time %}
-                                            <input type="hidden" name="scan_id" value="">
-                                            <button type="button" data-toggle="modal" data-target="#livestream_scanner" name="scan_btn" class="btn btn-danger"> Scan </button>
-                                            {% else %} NA {% endif %}
-                                        </td>
-                                    {% endif %}
-                                </tr>
-                                {% endfor %} {% endif %}
-                            </tbody>
-                        </table>
-
-                    </div>
+                    {% endif %}
                 </div>
             </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th> Name </th>
+                                <th> Email </th>
+                                <th> No.of Visitors </th>
+                                <th> Phone No. </th>
+                                <th> Visit Time </th>
+                                <th> Purpose </th>
+                                {% if request.user.is_staff and not request.user.is_superuser %}
+                                <th> Details </th>
+                                <th> QR Code </th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if visitor_list %} {% for visitor in visitor_list %}
+                            <tr>
+                                <td>{{ visitor.name }}</td>
+                                <td>{{ visitor.email }}</td>
+                                <td>{{ visitor.no_of_people }}</td>
+                                <td>{{ visitor.mobile|slice:"-10:" }}</td>
+                                {% if visitor.in_time %}
+                                <td>{{ visitor.in_time }}</td>
+                                {% else %}
+                                <td>{{ visitor.expected_in_time }}</td>
+                                {% endif %}
+                                <td>{{ visitor.purpose }}</td>
+                                {% if request.user.is_staff and not request.user.is_superuser %}
+                                {% if not visitor.in_time %}
+                                <td>
+                                    <input type="hidden" name="edit_id" value="">
+                                    <a type="submit" href="{% url 'photoscan' visitor.id %}" name="photo_btn"
+                                        class="btn btn-success"> Scan </a>
+                                </td>
+                                {% else %}
+                                <td>
+                                    Photo Id Scanned
+                                </td>
+                                {% endif %}
+                                <td>
+                                    {% if not visitor.out_time and visitor.in_time %}
+                                    <input type="hidden" name="scan_id" value="">
+                                    <button type="button" data-toggle="modal" data-target="#livestream_scanner"
+                                        name="scan_btn" class="btn btn-danger"> Scan </button>
+                                    {% else %} NA {% endif %}
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %} {% endif %}
+                        </tbody>
+                    </table>
 
+                </div>
+            </div>
         </div>
-        <!-- /.container-fluid -->
-    </main>
-    <script>
-        setTimeout(() => {
-            window.location.reload(1);
-        }, 600000);
-    </script>
+
+    </div>
+    <!-- /.container-fluid -->
+</main>
+<script>
+    setTimeout(() => {
+        window.location.reload(1);
+    }, 600000);
+</script>
 
 {% endblock content %}

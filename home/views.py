@@ -11,6 +11,8 @@ from django.urls import reverse
 from django.core import mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_text
 from django.conf import settings
 from PIL import Image
 from django.views.generic import ListView, DetailView
@@ -68,6 +70,8 @@ def signup(request):
 			user.save()
 			user = form.cleaned_data.get('username')
 			messages.success(request, 'Account was created ')
+			if request.user:
+				return redirect('/vms/')
 			return redirect('/vms/login/')
 	# employee_form = CreateEmployeeForm()
 	context = {'form': form,} # 'employee_form': employee_form}
@@ -98,7 +102,7 @@ def employee_signup(request):
 	return render(request, 'registration/signup.html', context)
 
 def send_request_email(user, host):
-	token = str(hash(user.last_name)) + '~' + str(user.id)
+	token = urlsafe_base64_encode(force_bytes(str(hash(user.last_name)) + '~' + str(user.id)))
 	mail_details = {
 		'token': token,
 		'first_name': user.first_name,
@@ -116,13 +120,14 @@ def send_request_email(user, host):
 	
 	mail.send_mail(subject, message, from_email, to_email, html_message=html_message, fail_silently=False)
 
-@login_required()
+@login_required
 @user_passes_test(is_admin)
 def accept_employee(request, token):
 	try:
-		pk = int(token.split('~')[1])
+		# pk = int(token.split('~')[1])
+		pk = force_text(urlsafe_base64_decode(token)).split('~')[1]
 		user = User.objects.get(pk = pk)
-		if str(token.split('~')[0]) == str(hash(user.last_name)):
+		if user:
 			if not user.is_active:
 				user.is_active = True
 				user.save()
@@ -140,26 +145,30 @@ def accept_employee(request, token):
 		else:
 			messages.error(request, f'Invalid link!')
 			return redirect('/vms/')
-	except:
+	except (TypeError, ValueError, OverflowError, User.DoesNotExist):
 		messages.error(request, f'No such user to validate!')
 		return redirect('/vms/')
 
 def login_validate(request):
 	if request.method == "POST":
-		user = User.objects.get(email=request.POST['username'])
-		user_name = user.username
-		password = request.POST['password']
-		user = authenticate(request, username=user_name, password=password)
-		if user is not None:
-			print('User')
-			login(request, user)
-			if user.is_superuser or user.is_staff:
-				return redirect(request.GET.get('next', 'home'))
+		if User.objects.filter(email=request.POST['username']).exists():
+			user1 = User.objects.get(email=request.POST['username'])
+			user_name = user1.username
+			password = request.POST['password']
+			user = authenticate(request, username=user_name, password=password)
+			if user:
+				login(request, user)
+				if user.is_superuser or user.is_staff:
+					return redirect(request.POST.get('next', '/vms/'))
+				else:
+					return redirect(reverse('entry:new-visitor'))
+			elif not user1.is_active:
+				messages.error(request, "User Not Approved Yet!")
 			else:
-				return redirect(reverse('entry:new-visitor'))
+				messages.error(request, "Incorrect Password!")
 		else:
-			print('Not a User')
-			messages.error(request, "Username or Password incorrect !")
+			messages.error(request, "Incorrect Email!")
+		return redirect(str(request.get_full_path()) + '?next=' + str(request.POST.get('next', '')))
 
 	return render(request, 'registration/login.html')
 
@@ -172,13 +181,15 @@ def logout_user(request):
 class VisitorListView(LoginRequiredMixin, ListView):
 	def get(self, request):
 		if not request.user.is_staff and not request.user.is_superuser:
-			return redirect('/entry/newvisitor')
-		all = Visitor.objects.all()
-		for visitor in all:
+			return redirect('/vms/entry/newvisitor/')
+		every = Visitor.objects.all()
+		for visitor in every:
 			if visitor.expected_in_time:
 				if visitor.expected_in_time.date() < datetime.now().date() and not visitor.in_time:
 					visitor.session_expired = True
-					visitor.save()
+				else:
+					visitor.session_expired = False
+				visitor.save()
 		display_visitors = Visitor.objects.filter(session_expired=False)
 		visitor_list1 = display_visitors.filter(expected_in_time__contains=datetime.now().date()).filter(out_time__isnull=True).order_by('-expected_in_time')
 		visitor_list2 = display_visitors.filter(in_time__contains=datetime.now().date()).filter(out_time__isnull=True).order_by('in_time')
@@ -239,15 +250,16 @@ class AllVisitedListView(LoginRequiredMixin, ListView):
 
 		return render(request, 'home/all_visitors.html', context)
 
-class VisitorDetailView(LoginRequiredMixin, DetailView):
-	model = Visitor
-	template_name = 'home/visitor_view.html'
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		print(context['visitor'].in_time)
-
-		return context
+@login_required
+@user_passes_test(is_admin)
+def visitor_detail(request, **kwargs):
+    pk = int(kwargs.get('pk'))
+    visitorlist = VisitorsDetail.objects.filter(visitor = pk)
+    visitor = Visitor.objects.get(id = pk)
+    visitor_count = visitorlist.count()
+    context = {'visitor_list': visitorlist, 'visitor': visitor, 'visitor_count': visitor_count}
+    
+    return render(request, 'home/visitor_view.html', context)
 
 @login_required
 @user_passes_test(is_security)
@@ -302,7 +314,7 @@ def photoscan(request, **kwargs):
 				))
 				visitorsdetail.save()
 				qrcodeimg = views.generateQR(visitorsdetail.id, 'details')
-				views.send_qrcode_email(visitorsdetail.email, qrcodeimg)
+				views.send_qrcode_email_details(visitorsdetail.email, qrcodeimg, visitorsdetail)
 				os.remove(qrcodeimg)
 				if int(instance.actual_visitors) < visitorcount:
 					success_url = '/vms/'

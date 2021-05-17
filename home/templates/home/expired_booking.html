@@ -35,8 +35,8 @@
 								<tr>
 									<td>{{ visitor.name }}</td>
 									<td>{{ visitor.email }}</td>
-									<td>{{ visitor.mobile }}</td>
-									<td>{{ visitor.user }}</td>
+									<td>{{ visitor.mobile|slice:"-10:" }}</td>
+									<td>{{ visitor.user.first_name }} {{ visitor.user.last_name }}</td>
 									<td>{{ visitor.expected_in_time }}</td>
 									<td>{{ visitor.purpose}}</td>
 								</tr>
@@ -51,6 +51,6 @@
 	<script>
 		setTimeout(() => {
 			window.location.reload(1);
-		}, 6000000);
+		}, 600000);
 	</script>
 {% endblock content %}

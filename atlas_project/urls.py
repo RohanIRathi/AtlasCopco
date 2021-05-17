@@ -5,7 +5,7 @@ from django.conf import settings
 
 urlpatterns = [
 
-    path('vms/admin/', admin.site.urls),
+    # path('vms/admin/', admin.site.urls),
     path('vms/', include('home.urls')),
     path('vms/entry/',include('entry.urls')),
     path('vms/charts/', include('charts.urls')),

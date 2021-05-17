@@ -17,4 +17,5 @@ Make sure to run `python3 manage.py makemigrations`, `python3 manage.py migrate`
 pyzbar installation is required
 <br>
 >Note: This part is optional only if you want to test deployment on IIS servers<br><br>
+
 Added the `web.config` file for deployment on IIS. Copy the file present in the main directory which contains the *manage.py* file, just outside the directory. Keep the `web.config` file in the static folder as it is.

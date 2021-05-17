@@ -41,6 +41,7 @@
 										<div class="form-group">
 											<input type="password" name="password" autocomplete="current-password" class="textinput textInput form-control form-control-user" required id="id_password" placeholder="Password">
 										</div>
+										<input type="hidden" name="next" value="{{ request.GET.next }}">
 										<input type="submit" name="login_btn" class="btn btn-primary btn-user btn-block" value="Login">
 										<div class="text-center small mt-3">
 											<a href="{% url 'reset_password' %}">Forgot password</a>

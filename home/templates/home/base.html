@@ -39,10 +39,12 @@
                             <h4 class="profile-info-text pt-2">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
                             <h4 class="profile-info-text pb-3" style="font-size: small;">{% if request.user.is_superuser and request.user.is_staff %} Admin{% elif request.user.is_staff and not request.user.is_superuser %} Security{% else %} Employee{% endif %}</h4>
                         </div>
+                        {% if request.user.is_superuser or request.user.is_staff %}
                         <a class="pt-3 nav-link" href="{% url 'home' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-desktop"></i></div>
                             Dashboard <br>
                         </a>
+                        {% endif %}
                         {% if request.user.is_superuser and request.user.is_staff %}
                         <a class="nav-link" href="{% url 'user-signup' %}">
                             <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
@@ -79,7 +81,7 @@
         {% endif %}
         <div id="layoutSidenav_content">
         {% if messages %} {% for message in messages %}
-        <div class="row ml-2 mr-2 alert {% if message.tags == 'error' %} alert-danger{% else %} alert-{{ message.tags }}{% endif %}">
+        <div class="row ml-2 mr-2 mt-2 alert {% if message.tags == 'error' %} alert-danger{% else %} alert-{{ message.tags }}{% endif %}">
             {{ message }}
         </div>
         {% endfor %} {% endif %}
@@ -226,12 +228,13 @@
                 const doScreenshot = () => {
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
-                    // canvas.getContext('2d').drawImage(video, 0, 0);
+                    canvas.getContext('2d').drawImage(video, 0, 0);
                     video.pause();
                     var imagedata = canvas.toDataURL('image/png');
                     document.getElementById('imgdata').setAttribute("value", imagedata.split(',')[1]);
                     // Stop all video streams.
                     video.srcObject.getVideoTracks().forEach(track => track.stop());
+                    console.log(imagedata)
                 };
 
                 screenshot.onclick = doScreenshot;

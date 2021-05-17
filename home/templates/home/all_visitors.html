@@ -26,7 +26,7 @@
 								<tr>
 									<td>{{ visitor.name }}</td>
 									<td>{{ visitor.email }}</td>
-									<td>{{ visitor.mobile }}</td>
+									<td>{{ visitor.mobile|slice:"-10:" }}</td>
 									{% timezone "Asia/Kolkata" %}
 										<td>{% if visitor.in_time %}{{ visitor.in_time }}{% else %} NA {% endif %}</td>
 										<td>{% if visitor.out_time %}{{ visitor.out_time }}{% else %} NA {% endif %}</td>

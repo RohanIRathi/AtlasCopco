@@ -15,35 +15,53 @@
 							<tbody>
 								<tr>
 									<td>Name</td>
-									<td>{{ visitor.name }}</td>
+									{% if visitor_list %}
+									{% for visitors in visitor_list %}
+									<td>{{ visitors.name }}</td>
+									{% endfor %}
+									{% else %}
+									<td>NA</td>
+									{% endif %}
 								</tr>
 								<tr>
 									<td>Email</td>
-									<td>{{ visitor.email }}</td>
+									{% if visitor_list %}
+									{% for visitors in visitor_list %}
+									<td>{{ visitors.email }}</td>
+									{% endfor %}
+									{% else %}
+									<td>NA</td>
+									{% endif %}
 								</tr>
 								<tr>
 									<td>Phone No</td>
-									<td>{{ visitor.mobile }}</td>
+									{% if visitor_list %}
+									{% for visitors in visitor_list %}
+									<td>{{ visitors.mobile }}</td>
+									{% endfor %}
+									{% else %}
+									<td>NA</td>
+									{% endif %}
 								</tr>
 								<tr>
 									<td>Purpose</td>
-									<td>{{ visitor.purpose }}</td>
+									<td colspan="{{ visitor_count }}">{{ visitor.purpose }}</td>
 								</tr>
 								<tr>
-									<td>No. of Visitors</td>
-									<td>{{ visitor.no_of_people }}</td>
+									<td>Actual No. of Visitors</td>
+									<td colspan="{{ visitor_count }}">{{ visitor.actual_visitors }}</td>
 								</tr>
 								<tr>
 									<td>In Time</td>
-									<td>{{ visitor.in_time }}</td>
+									<td colspan="{{ visitor_count }}">{{ visitor.in_time }}</td>
 								</tr>
 								<tr>
 									<td>Out Time</td>
-									<td>{{ visitor.out_time }}</td>
+									<td colspan="{{ visitor_count }}">{{ visitor.out_time }}</td>
 								</tr>
 								<tr>
 									<td>Employee to Visit</td>
-									<td>{{ visitor.user.first_name }} {{ visitor.user.last_name }}</td>
+									<td colspan="{{ visitor_count }}">{{ visitor.user.first_name }} {{ visitor.user.last_name }}</td>
 								</tr>
 								<!-- <tr>
 									<td>Photo Id No. </td>
@@ -67,6 +85,6 @@
 	<script>
 		setTimeout(() => {
 			window.location.reload(1);
-		}, 6000000);
+		}, 600000);
 	</script>
 {% endblock content %}
