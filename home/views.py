@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import BytesIO
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -102,7 +102,7 @@ def employee_signup(request):
 	return render(request, 'registration/signup.html', context)
 
 def send_request_email(user, host):
-	token = urlsafe_base64_encode(force_bytes(str(hash(user.last_name)) + '~' + str(user.id)))
+	token = urlsafe_base64_encode(force_bytes(str(datetime.now()) + '~' + str(user.id)))
 	mail_details = {
 		'token': token,
 		'first_name': user.first_name,
@@ -125,9 +125,11 @@ def send_request_email(user, host):
 def accept_employee(request, token):
 	try:
 		# pk = int(token.split('~')[1])
-		pk = force_text(urlsafe_base64_decode(token)).split('~')[1]
+		decoded = force_text(urlsafe_base64_decode(token))
+		request_date = decoded.strip().split('~')[0]
+		pk = decoded.split('~')[1]
 		user = User.objects.get(pk = pk)
-		if user:
+		if user and datetime.now() < request_date + timedelta(days=1):
 			if not user.is_active:
 				user.is_active = True
 				user.save()
