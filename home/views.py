@@ -170,7 +170,7 @@ def login_validate(request):
 				messages.error(request, "Incorrect Password!")
 		else:
 			messages.error(request, "Incorrect Email!")
-		return redirect(str(request.get_full_path()) + '?next=' + str(request.POST.get('next', '')))
+		return redirect(str(request.get_full_path()) + '?next=' + str(request.POST.get('next', '/vms/')))
 
 	return render(request, 'registration/login.html')
 
