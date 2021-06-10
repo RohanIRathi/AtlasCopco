@@ -8,6 +8,7 @@ from django.views.generic import UpdateView
 from django.urls import reverse
 from django.core.mail import EmailMessage
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 
 import os
 from datetime import datetime
@@ -34,11 +35,11 @@ def new_visitor(request):
 		if request.method == 'POST':
 			form = NewVisitorForm(request.POST, request.FILES)
 			if form.is_valid():
-				visitor = form.save(commit=False)
-				visitor.save()
-				qrcodeimg, visitor.token = generateQR(visitor.id, 'booking')
+				visitor = form.save()
+				qrcodeimg, visitor.token = generateQR(visitor.id)
 				send_qrcode_email(visitor.email, qrcodeimg, visitor) # email to send the qr code to the visitor
 				os.remove(qrcodeimg)
+				visitor.actual_visitors = visitor.no_of_people
 				visitor.save()
 				messages.success(request, 'QR Code has been sent to the visitor\'s email-id')
 				return redirect('/vms/')
@@ -51,7 +52,7 @@ def new_visitor(request):
 		return redirect('/vms/')
 
 
-def generateQR(id, qrtype):
+def generateQR(id, visitorcount=1):
 	import qrcode
 	display_visitors = Visitor.objects.filter(session_expired=False)
 	qr = qrcode.QRCode(
@@ -60,31 +61,26 @@ def generateQR(id, qrtype):
 		box_size=5,
 		border=4
 	)
-	if qrtype == 'booking':
+	try:
 		visitor = display_visitors.get(id=id)  # visitors id
-		token = str(visitor.name).upper() + '.' + str(visitor.id) + '(V)'
-		qr.add_data(token)
-		qr.make(fit=True)
-		img = qr.make_image(fill_color="black", back_color="white")
-		qrpath = os.path.join(settings.BASE_DIR, "media/" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png")
-		img.save(qrpath)
-		
-		return qrpath, token
-	elif qrtype == 'details':
+	except ObjectDoesNotExist:
 		visitor = VisitorsDetail.objects.get(id=id)
-		token = str(visitor.name).upper() + '.' + str(visitor.visitor.id) + '-' + str(visitor.id) + '(V)'
-		qr.add_data(token)
-		qr.make(fit=True)
-		img = qr.make_image(fill_color="black", back_color="white")
-		qrpath = os.path.join(settings.BASE_DIR, "media/" + str(visitor.visitor.id) + "-" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png")
-		img.save(qrpath)
-		return qrpath
+	token = str(visitor.name).upper() + '.' + str(visitorcount) + '-' + str(visitor.visitor.id) + '(V)'
+	qr.add_data(token)
+	qr.make(fit=True)
+	img = qr.make_image(fill_color="black", back_color="white")
+	qrpath = os.path.join(settings.BASE_DIR, "media/" + str(visitorcount) + "-" + str(visitor.id) + "_" + str(hash(visitor.name)) + ".png")
+	img.save(qrpath)
+	
+	return qrpath, token
 
 @csrf_exempt
 @login_required()
 @user_passes_test(is_security)
 def scanQR(request, **kwargs):
 	display_visitors = Visitor.objects.filter(session_expired=False)
+	action = kwargs.get('action')
+	print(action)
 	frame = base64.b64decode(request.POST['imgdata'])
 	frame = BytesIO(frame)
 	frame = Image.open(frame)
@@ -93,14 +89,26 @@ def scanQR(request, **kwargs):
 		frame.close()
 		readData = str(ob.data.rstrip().decode('utf-8'))
 		print('readData',readData)
-		visitor = display_visitors.filter(token=readData).first()
+		visitor_id = readData.split('-')[-1].split('(')[0]
+		visitor = display_visitors.get(id=visitor_id)
+		actualvisitors = visitor.actual_visitors or visitor.no_of_people
 		if visitor:
-			if not visitor.in_time and visitor.expected_in_time:
-				return redirect('/vms/photoscan/' + str(visitor.id))
-			elif visitor.in_time and not visitor.out_time:
-				visitor.out_time = datetime.now()
-				visitor.save()
-				messages.success(request, f'Visitor has left')
+			if action == 'add':
+				visitorscount = VisitorsDetail.objects.filter(visitor=visitor).count()
+				if visitorscount < actualvisitors:
+					return redirect(f'/vms/photoscan/{visitor.id}/')
+		if action == 'out':
+			groupvisitor = VisitorsDetail.objects.filter(token=readData).first()
+			if groupvisitor:
+				if groupvisitor.in_time:
+					groupvisitor.out_time = datetime.now()
+					groupvisitor.save()
+					messages.success(request, f'Visitor has left')
+				gvisitorsleft = VisitorsDetail.objects.filter(visitor=visitor).filter(out_time__isnull=False).count()
+				if gvisitorsleft == VisitorsDetail.objects.filter(visitor=visitor).count():
+					visitor.out_time = datetime.now()
+					send_normal_email(visitor)
+					visitor.save()
 				return redirect('/vms/')
 	frame.close()
 	messages.error(request, f'Invalid Token Scanned!')
@@ -114,7 +122,7 @@ def send_normal_email(Visitor):
 		message = 'Hello ' + str(Visitor.user.first_name) + '!\n\n\t' + Visitor.name + ' has left the Atlas Copco campus at ' + str(Visitor.out_time.date()) + ' ' + str(Visitor.out_time.strftime("%X")) + '.'
 	else:
 		subject = Visitor.name + ' is visiting Atlas Copco'
-		message = 'Hello ' + str(Visitor.user.first_name) + '!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + str(Visitor.in_time.strftime("%X")) + 'with ' + str(Visitor.actual_visitors) + ' visitors.'
+		message = 'Hello ' + str(Visitor.user.first_name) + '!\n\n\t' + Visitor.name + ' is visiting the Atlas Copco campus at ' + str(Visitor.in_time.date()) + ' ' + str(Visitor.in_time.strftime("%X")) + ' with ' + str(Visitor.actual_visitors) + ' visitors.'
 	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
 	email.content_subtype='html'
 	email.send(fail_silently=False)
@@ -123,7 +131,7 @@ def send_qrcode_email(to_email, qrcodeimg, visitor):
 	subject = 'QR Code for entry in Atlas Copco'
 	message = 'Hello ' + str(visitor.name) + '!\nGreetings of the day!\n\tYou have been granted the permission to visit Atlas Copco by ' + str(visitor.user.first_name) + ' on ' + str(visitor.expected_in_time.date()) + ' ' + str(visitor.expected_in_time.strftime("%X")) + ' with ' + str(visitor.no_of_people) + ''' visitors.\n 
 			PFA an attached QR Code which you will have to show when you leave our premises!'''
-	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email])
+	email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, [to_email], cc=[visitor.user.email])
 	email.content_subtype='html'
 	with open(qrcodeimg, mode='rb') as file:
 		email.attach(qrcodeimg, file.read(), 'image/png')

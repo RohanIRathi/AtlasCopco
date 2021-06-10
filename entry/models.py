@@ -32,6 +32,9 @@ class VisitorsDetail(models.Model):
 	photo = models.ImageField(verbose_name='Photo of the Visitor', upload_to='media/photo', null=True, blank=True)
 	mobile = models.BigIntegerField(verbose_name='Photo Id Number', blank=False, null=True, validators=[MinValueValidator(1000000000), MaxValueValidator(9999999999)])
 	photo_id = models.ImageField(verbose_name='Photo Id', upload_to='media/photo_id', null=True, blank=True)
+	in_time = models.DateTimeField(verbose_name="Visitor In Time", null=True, blank=True)
+	out_time = models.DateTimeField(verbose_name="Visitor Out Time", null=True, blank=True)
+	token = models.CharField(verbose_name='Token', max_length=200, null=True, blank=True)
 	visitor = models.ForeignKey(Visitor, verbose_name='Visitor:', on_delete=models.PROTECT)
 	
 	def __str__(self):

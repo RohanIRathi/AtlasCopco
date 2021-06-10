@@ -208,8 +208,9 @@
 
         // Start the live stream when the modal opens
             $('#livestream_scanner').on('shown.bs.modal', function (e) {
-                var screenshot = document.getElementById("capture");
+                var screenshot = document.getElementById("captureqr");
                 var canvas = document.getElementById("canvas");
+                var close = document.getElementById("close");
         // how to send camera to the pop-up window?
         // the code just belowe starts camera but is not displaying it in the pop-up window
 
@@ -235,9 +236,20 @@
                     // Stop all video streams.
                     video.srcObject.getVideoTracks().forEach(track => track.stop());
                     console.log(imagedata)
+                    document.getElementById("captureqr").style.display = "none";
+                    document.getElementById("add").style.display = "";
+                    document.getElementById("out").style.display = "";
                 };
 
+                const resetButtons = () => {
+                    video.srcObject.getVideoTracks().forEach(track => track.stop());
+                    document.getElementById("captureqr").style.display = "";
+                    document.getElementById("add").style.display = "none";
+                    document.getElementById("out").style.display = "none";
+                }
+
                 screenshot.onclick = doScreenshot;
+                close.onclick = resetButtons;
 
             });
 

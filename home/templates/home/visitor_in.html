@@ -11,10 +11,10 @@
                                 <tr>
                                     <th> Name </th>
                                     <th> Email </th>
-                                    <th> No.of Visitors </th>
+                                    <th> Employee </th>
                                     <th> Purpose </th>
                                     <th> Time </th>
-                                    <th> Qr Code </th>
+                                    <th> Details </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -22,17 +22,10 @@
                                 <tr>
                                     <td>{{ visitor.name }}</td>
                                     <td>{{ visitor.email }}</td>
-                                    <td>{{ visitor.no_of_people }}</td>
-                                    <td>{{ visitor.purpose }}</td>
+                                    <td>{{ visitor.visitor.user.first_name }} {{ visitor.visitor.user.last_name }}</td>
+                                    <td>{{ visitor.visitor.purpose }}</td>
                                     <td>{{ visitor.in_time }}</td>
-                                    <td>
-                                        {% if visitor.visit_token %}
-                                        <form action="{% url 'entry:scanQR' visitor.id %}" method="post">
-                                            <input type="hidden" name="scan_id" value="">
-                                            <button type="submit" name="scan_btn" class="btn btn-danger">Scan</button>
-                                        </form>
-                                        {% else %} Visiting Token<br>Not Assigned {% endif %}
-                                    </td>
+                                    <td><a class="btn btn-primary" href="{% url 'visitor-detail' visitor.id %}">Details</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

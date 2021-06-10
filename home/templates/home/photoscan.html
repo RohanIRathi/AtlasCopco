@@ -62,7 +62,7 @@
                         <tbody>
                             <tr>
                                 <td class="pt-2 pb-2">Purpose of Visit:</td>
-                                <td class="pt-2 pb-2">{{ visitor.name }}</td>
+                                <td class="pt-2 pb-2">{{ visitor.purpose }}</td>
                                 <td class="pt-2 pb-2">Employee to Visit:</td>
                                 <td class="pt-2 pb-2">{{ visitor.user.first_name }} {{ visitor.user.last_name }}</td>
                             </tr>
@@ -70,8 +70,8 @@
                                 <td>Booked Visitor: </td>
                                 <td><input type="hidden" value="{{ visitor.id }}" disabled name="visitor">{{ visitor.name }}</td>
                                 <td>Actual No. of Visitors<span class="text-danger">*</span>:</td>
-                                <td><input type="number" class="form-control" {% if visitor.actual_visitors %}
-                                        value="{{ visitor.actual_visitors }}" disabled{% else %} required{% endif %}
+                                <td><input type="number" class="form-control" {% if current_visitor != 1 %}
+                                        value="{{ visitor.actual_visitors }}"{% else %} value="{{ visitor.no_of_people }}" required{% endif %}
                                         name="actual_visitors"></td>
                             </tr>
                             <tr>
@@ -88,24 +88,30 @@
                             </tr>
                             <tr>
                                 <td>Scan Photo<span class="text-danger">*</span></td>
-                                <td><input type="hidden" id="photo" name="photo"><button data-toggle="modal"
+                                <td>
+                                    <input type="hidden" id="photo" name="photo" required><button data-toggle="modal"
                                         id="photobutton" data-target="#livestream_photo" type="button"
-                                        class="btn btn-info">Take Photo</button></td>
+                                        class="btn btn-info">Take Photo</button>
+                                    {% if photoerror %}<span><small class="text-danger ml-2">{{ photoerror }}</small></span>{% endif %}
+                                    </td>
                                 <td>Scan Id<span class="text-danger">*</span></td>
-                                <td><input type="hidden" id="photo_id" name="photo_id"><button data-toggle="modal"
+                                <td>
+                                <input type="hidden" id="photo_id" name="photo_id" required><button data-toggle="modal"
                                         data-target="#livestream_photo_id" type="button" class="btn btn-info">Take
-                                        ID</button></td>
+                                        ID</button>
+                                    {% if photoiderror %}<span><small class="text-danger ml-2">{{ photoiderror }}</small></span>{% endif %}
+                                    </td>
                             </tr>
                             <tr>
-                                <td>Mobile Number<span class="text-danger">*</span>:</td>
-                                <td><input type="text" class="form-control" {% if current_visitor == 1 %}
+                                <td colspan="2">Mobile Number<span class="text-danger">*</span>:</td>
+                                <td colspan="2"><input type="text" class="form-control" {% if current_visitor == 1 %}
                                     value="{{ visitor.mobile }}" {% endif %}name="mobile"
                                         placeholder="Enter Mobile Number" required>{% if form.email.errors %}{% for error in form.email.errors %}{{ error }}{% endfor %}{% endif %}</td>
                             </tr>
                         </tbody>
                         <caption class="text-right">
-                            <input class="btn btn-success mr-2" type="submit" value="Add Visitor">
-                            <a href="{% url 'pseudophotoscan' visitor.id %}"><button class="btn btn-success"
+                            <input class="btn btn-success mr-2" type="submit" value="Add Visitor" onclick="return document.getElementById">
+                            <a href="{% url 'home' %}"><button class="btn btn-success"
                                     name="addlater" value="AddLater" type="button">Add Later</button></a>
                         </caption>
                     </form>

@@ -95,7 +95,7 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title">Barcode Scanner</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
@@ -108,10 +108,11 @@
                                             <div class="error"></div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" id="capture" class="btn btn-primary">Capture</button>
-                                            <form action="{% url 'entry:scanQR' %}" method="post">
+                                            <button type="button" id="captureqr" class="btn btn-primary">Capture</button>
+                                            <form method="post">
                                                 <input type="hidden" name="imgdata" value="" id="imgdata">
-                                                <input type="submit" class="btn btn-success" value="Submit">
+                                                <input type="submit" id="add" class="btn btn-success" formaction="{% url 'entry:scanQR' 'add' %}" value="Add Visitor" style="display: none;">
+                                                <input type="submit" id="out" class="btn btn-danger" formaction="{% url 'entry:scanQR' 'out' %}" value="Out" style="display: none;">
                                         </div>
                                     </div> <!-- /.modal-content -->
                                 </div> <!-- /.modal-dialog -->
@@ -134,42 +135,34 @@
                                 <th> Purpose </th>
                                 {% if request.user.is_staff and not request.user.is_superuser %}
                                 <th> Details </th>
-                                <th> QR Code </th>
                                 {% endif %}
                             </tr>
                         </thead>
                         <tbody>
                             {% if visitor_list %} {% for visitor in visitor_list %}
                             <tr>
-                                <td>{{ visitor.name }}</td>
-                                <td>{{ visitor.email }}</td>
-                                <td>{{ visitor.no_of_people }}</td>
-                                <td>{{ visitor.mobile|slice:"-10:" }}</td>
-                                {% if visitor.in_time %}
-                                <td>{{ visitor.in_time }}</td>
+                                <td>{{ visitor.0.name }}</td>
+                                <td>{{ visitor.0.email }}</td>
+                                <td>{{ visitor.0.no_of_people }}</td>
+                                <td>{{ visitor.0.mobile|slice:"-10:" }}</td>
+                                {% if visitor.0.in_time %}
+                                <td>{{ visitor.0.in_time }}</td>
                                 {% else %}
-                                <td>{{ visitor.expected_in_time }}</td>
+                                <td>{{ visitor.0.expected_in_time }}</td>
                                 {% endif %}
-                                <td>{{ visitor.purpose }}</td>
+                                <td>{{ visitor.0.purpose }}</td>
                                 {% if request.user.is_staff and not request.user.is_superuser %}
-                                {% if not visitor.in_time %}
-                                <td>
-                                    <input type="hidden" name="edit_id" value="">
-                                    <a type="submit" href="{% url 'photoscan' visitor.id %}" name="photo_btn"
-                                        class="btn btn-success"> Scan </a>
-                                </td>
-                                {% else %}
-                                <td>
-                                    Photo Id Scanned
-                                </td>
-                                {% endif %}
-                                <td>
-                                    {% if not visitor.out_time and visitor.in_time %}
-                                    <input type="hidden" name="scan_id" value="">
-                                    <button type="button" data-toggle="modal" data-target="#livestream_scanner"
-                                        name="scan_btn" class="btn btn-danger"> Scan </button>
-                                    {% else %} NA {% endif %}
-                                </td>
+                                    {% if visitor.1 < visitor.0.actual_visitors %}
+                                    <td>
+                                        <input type="hidden" name="edit_id">
+                                        <a type="submit" href="{% url 'photoscan' visitor.0.id %}" name="photo_btn"
+                                            class="btn btn-success"> Scan </a>
+                                    </td>
+                                    {% else %}
+                                    <td>
+                                        Photo Id Scanned
+                                    </td>
+                                    {% endif %}
                                 {% endif %}
                             </tr>
                             {% endfor %} {% endif %}

@@ -196,11 +196,17 @@ class VisitorListView(LoginRequiredMixin, ListView):
 		visitor_list1 = display_visitors.filter(expected_in_time__contains=datetime.now().date()).filter(out_time__isnull=True).order_by('-expected_in_time')
 		visitor_list2 = display_visitors.filter(in_time__contains=datetime.now().date()).filter(out_time__isnull=True).order_by('in_time')
 		visitor_list = visitor_list1.union(visitor_list2)
+		home_visitors = []
+		for visitor in visitor_list:
+			visitordetails = []
+			visitordetails.append(visitor)
+			visitordetails.append(VisitorsDetail.objects.filter(visitor=visitor).count())
+			home_visitors.append(visitordetails)
 		visitors = display_visitors.count()
 		visited = display_visitors.filter(out_time__isnull=False).count()
 		to_visit = display_visitors.filter(in_time__isnull=True).count()
-		visiting = display_visitors.filter(in_time__isnull=False).filter(out_time__isnull=True).count()
-		context = {'visitor_list': visitor_list,  'visitor_count': visitors, 'visited_count': visited, 'not_visited_count': to_visit, 'visiting_count': visiting}
+		visiting = VisitorsDetail.objects.filter(in_time__isnull=False).filter(out_time__isnull=True).count()
+		context = {'visitor_list': home_visitors,  'visitor_count': visitors, 'visited_count': visited, 'not_visited_count': to_visit, 'visiting_count': visiting}
 
 		return render(request, 'home/home.html', context)
 
@@ -270,19 +276,13 @@ def photoscan(request, **kwargs):
 		instance = get_object_or_404(Visitor, pk = kwargs.get('id'))
 		visitorcount = VisitorsDetail.objects.filter(visitor=instance).count()
 		if instance.actual_visitors:
-			if instance.actual_visitors <= visitorcount and not instance.in_time:
-				instance.in_time = datetime.now()
-				views.send_normal_email(instance)
-				instance.save()
+			if instance.actual_visitors <= visitorcount:
 				return redirect('/vms/')
 		context = {'visitor': instance, 'current_visitor': (visitorcount+1)}
 		if request.method == 'POST':
-			if not instance.actual_visitors:
-				if int(request.POST['actual_visitors']) > instance.no_of_people:
-					messages.error(request, "These many visitors were not allowed!")
-					return  render(request, 'home/photoscan.html', context)
-				instance.actual_visitors = int(request.POST['actual_visitors'])
-				instance.save()
+			if int(request.POST['actual_visitors']) > instance.no_of_people:
+				messages.error(request, "These many visitors were not allowed!")
+				return  render(request, 'home/photoscan.html', context)
 			name = request.POST['name']
 			email = request.POST['email']
 			photo = request.POST['photo']
@@ -315,27 +315,33 @@ def photoscan(request, **kwargs):
 					photoImg, None, photo_name, 'image/png', photoImg.size, None
 				))
 				visitorsdetail.save()
-				qrcodeimg = views.generateQR(visitorsdetail.id, 'details')
-				views.send_qrcode_email_details(visitorsdetail.email, qrcodeimg, visitorsdetail)
-				os.remove(qrcodeimg)
+				if visitorcount == 0:
+					visitorsdetail.token = instance.token
+				else:
+					qrcodeimg, visitorsdetail.token = views.generateQR(visitorsdetail.id, visitorcount+1)
+					views.send_qrcode_email_details(visitorsdetail.email, qrcodeimg, visitorsdetail)
+					os.remove(qrcodeimg)
 				if int(instance.actual_visitors) < visitorcount:
 					success_url = '/vms/'
 				else:
 					success_url = reverse('photoscan', kwargs={'id': kwargs.get('id')})
+				instance.actual_visitors = int(request.POST['actual_visitors'])
+				instance.in_time = datetime.now()
+				instance.save()
+				visitorsdetail.in_time = datetime.now()
+				visitorsdetail.save()
+				if visitorcount == 0:
+					views.send_normal_email(instance)
 				return redirect(success_url, context)
 			else:
-				messages.error(request, f'Error!')
-			context = {'visitor': instance, 'current_visitor': (visitorcount+1)}
+				if not photo:
+					photoerror = "Photo Required"
+					context['photoerror'] = photoerror
+				if not photo_id:
+					photoiderror = "Photo ID Required"
+					context['photoiderror'] = photoiderror
 		return  render(request, 'home/photoscan.html', context)
 	else:
-		return redirect('/vms/')
-
-def pseudophotoscan(request, **kwargs):
-	instance = Visitor.objects.get(pk=kwargs.get('id'))
-	if not instance.in_time:
-		instance.in_time = datetime.now()
-		instance.save()
-		views.send_normal_email(instance)
 		return redirect('/vms/')
 
 class AllVisitorsListView(LoginRequiredMixin, ListView):
@@ -386,7 +392,6 @@ def get_table_data(request):
 @user_passes_test(is_admin)
 @login_required()
 def visitor_in(request):
-	display_visitors = Visitor.objects.filter(session_expired=False)
-	visitor_list = display_visitors.filter(in_time__isnull=False).filter(out_time__isnull=True)
+	visitor_list = VisitorsDetail.objects.filter(in_time__isnull=False).filter(out_time__isnull=True)
 	context = {'visitor_list': visitor_list}
 	return render(request, 'home/visitor_in.html',context)
